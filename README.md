@@ -18,7 +18,7 @@ Chrono is a self-hostable workspace for software engineering teams that unifies 
   <img src="assets/app-preview.svg" alt="Chrono Interface Preview" width="100%" />
 </p>
 
-## The Platform
+## <img src="assets/icons/layers.svg" width="18" height="18" align="absmiddle" /> The Platform
 
 At its core, Chrono handles daily task planning through interactive Kanban boards and dense backlog views. Issues receive sequential alphanumeric identifiers, priority weights, point estimates, target deadlines, and full Markdown descriptions. An immutable activity log records property changes with author timestamps, while a slide out drawer lets developers modify tasks without losing their place on the board. Everything is navigable through a global command palette available via Cmd+K or Ctrl+K.
 
@@ -26,11 +26,11 @@ Beyond basic task management, the platform bridges high-level roadmaps with day-
 
 For external tooling, Chrono ships with an embedded Model Context Protocol server that exposes issues and workspace state to local AI agents such as Claude Desktop or Cursor. Teams can interact with conversational models like Google Gemini, OpenAI, or Groq for automated backlog triage, import complete multi-project roadmaps directly from structured Markdown documents, and switch between five built in languages covering English, Italian, German, French, and Russian.
 
-## AI-Assisted Codebase and Security Audit
+## <img src="assets/icons/shield.svg" width="18" height="18" align="absmiddle" /> AI-Assisted Codebase and Security Audit
 
 During early prototyping phases, parts of the codebase were generated with artificial intelligence assistance to explore component compositions and data structures quickly. Before releasing Chrono as open source, every schema definition, API endpoint, and state machine was manually reviewed, refactored, and audited by human engineers. All PostgreSQL tables are strictly guarded by Row Level Security policies, runtime inputs pass through Zod validation, and TypeScript runs in strict mode across the entire repository to prevent data leakage and logic defects.
 
-## Architecture and Tenant Isolation
+## <img src="assets/icons/database.svg" width="18" height="18" align="absmiddle" /> Architecture and Tenant Isolation
 
 Chrono implements a strict multi-tenant model directly inside PostgreSQL on Supabase. Each workspace represents an isolated boundary. Memberships, projects, issue records, labels, notifications, and storage objects are verified at the database layer on every query. Users can never view or modify data outside their active workspace memberships.
 
@@ -38,7 +38,7 @@ Chrono implements a strict multi-tenant model directly inside PostgreSQL on Supa
   <img src="assets/architecture.svg" alt="Chrono System Architecture" width="100%" />
 </p>
 
-## Getting Started
+## <img src="assets/icons/terminal.svg" width="18" height="18" align="absmiddle" /> Getting Started
 
 Running Chrono requires Node.js version 18.18 or higher, npm or pnpm, and an active Supabase project instance either on Supabase Cloud or through the local Supabase CLI.
 
@@ -61,7 +61,7 @@ Create your local environment file by copying the example configuration.
 cp .env.example .env.local
 ```
 
-## Environment Configuration
+## <img src="assets/icons/sliders.svg" width="18" height="18" align="absmiddle" /> Environment Configuration
 
 Configure your credentials and database connection details inside the `.env.local` file.
 
@@ -78,7 +78,7 @@ Configure your credentials and database connection details inside the `.env.loca
 | `R2_BUCKET_NAME` | Optional | S3 or Cloudflare R2 bucket name for file attachments |
 | `R2_PUBLIC_DOMAIN` | Optional | Public CDN domain for uploaded media assets |
 
-## Supabase Database Setup
+## <img src="assets/icons/server.svg" width="18" height="18" align="absmiddle" /> Supabase Database Setup
 
 All database tables, performance indexes, and access control policies live in the `supabase/migrations/` directory.
 
@@ -92,7 +92,7 @@ Alternatively you can paste the migration files into the Supabase SQL Editor in 
 
 In the Supabase Authentication dashboard, enable the Email provider. Under URL Configuration, configure your primary domain in the Site URL field, such as `http://localhost:3000` during local development. Add appropriate wildcards to the Redirect URLs list, including `http://localhost:3000/**` and your production URL. If you want GitHub or Google login, configure the OAuth keys in the respective provider settings.
 
-## Available Scripts
+## <img src="assets/icons/code.svg" width="18" height="18" align="absmiddle" /> Available Scripts
 
 | Script | Purpose |
 | --- | --- |
@@ -101,6 +101,6 @@ In the Supabase Authentication dashboard, enable the Email provider. Under URL C
 | `npm run start` | Boots the compiled Next.js production build |
 | `npm run lint` | Executes static code analysis with ESLint |
 
-## License
+## <img src="assets/icons/book.svg" width="18" height="18" align="absmiddle" /> License
 
 Chrono is open source software released under the MIT License.
