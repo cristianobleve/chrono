@@ -2,165 +2,111 @@
   <img src="assets/header.svg" alt="Chrono" width="100%" />
 </p>
 
-Chrono è un software open source per il tracciamento delle issue, la pianificazione delle milestone e la gestione operativa dei team di sviluppo software. L'applicazione combina un'interfaccia ad alte prestazioni con sincronizzazione in tempo reale, supporto offline e isolamento dei dati a livello di workspace.
+Chrono is an open source issue tracking and project management platform built for software engineering teams. The application integrates high performance client side interactions with real time data synchronization, offline resilience, and strict workspace level data isolation.
 
-## Funzionalità principali
+## Engineering Origin and Security Verification
 
-### Gestione issue e task
-- Creazione e modifica rapida di task con identificatori alfanumerici progressivi
-- Assegnazione priorità (urgent, high, medium, low, none) e stime numeriche
-- Date di scadenza, promemoria e ricorrenze pianificate
-- Supporto markdown completo per descrizioni e commenti
-- Storico attività con tracciamento temporale di ogni mutazione
+Portions of this codebase were generated with generative artificial intelligence assistance during rapid prototyping phases. Every module, database schema, API route, and client state machine was subsequently reviewed, refactored, and audited by human engineers. All PostgreSQL tables are guarded by strict Row Level Security policies, inputs are validated with Zod schemas, and TypeScript runs in strict mode across the entire codebase to prevent regressions and unauthorized data access.
 
-### Viste di lavoro e Kanban
-- Tavola Kanban interattiva suddivisa per stati operativi (backlog, todo, in progress, done, canceled)
-- Ordinamento manuale e filtri combinati per progetto, assegnatario ed etichette
-- Modalità di visualizzazione compatta e densa per liste estese
-- Navigazione rapida tramite drawer laterale senza perdita del contesto di navigazione
+## Core Capabilities
 
-### Cronoprogramma e roadmap
-- Gestione milestone collegate agli obiettivi di rilascio
-- Calcolo automatico della percentuale di completamento in base alle issue risolte
-- Visualizzazione tabellare e cronologica degli eventi di workspace
-- Esportazione dei dati in formato tabellare per rendicontazione
+### Issue Tracking and Workflow Management
+Chrono provides structured task tracking with sequential alphanumeric identifiers for every recorded item. Each issue supports explicit priority rankings, numeric estimates, planned due dates, recurring schedules, and Markdown formatting for descriptions and comments. A persistent activity log records every modification, status shift, and property update with author timestamps.
 
-### Matrice di priorità e focus
-- Matrice Eisenhower a quattro quadranti per separare urgenza e importanza
-- Coda di lavoro dedicata per task in scadenza e bloccanti
-- Filtro rapido per issue assegnate all'utente attivo
+### Kanban Board and Workspace Views
+The interactive Kanban surface organizes work into explicit lifecycle columns covering backlog, todo, in progress, done, and canceled states. Teams can reorder items by priority or manual position, filter by project, assignee, or label, and inspect full task details in a slide out drawer without navigating away from the active board.
 
-### Strumenti di produttività personale
-- Habit tracker settimanale per il consolidamento delle routine operative
-- Pomodoro timer configurabile con associazione diretta all'issue in lavorazione
-- Tracciamento visivo delle serie consecutive di completamento
+### Project Milestones and Roadmaps
+Long term initiatives are structured through projects and associated milestones with target dates. Chrono automatically computes completion rates based on resolved issues, displays project progression across both timeline and tabular formats, and allows teams to review historical delivery logs.
 
-### Architettura e interfaccia
-- Command Palette globale accessibile da tastiera con la combinazione Cmd+K o Ctrl+K
-- Supporto multilingua completo per 5 lingue (italiano, inglese, spagnolo, francese, tedesco)
-- Modalità scura ad alto contrasto conforme alle specifiche del design system
-- Monitoraggio della connettività con indicatori di stato e sincronizzazione dati
+### Priority Matrix and Focus Queues
+To manage daily work queues, Chrono implements a four quadrant Eisenhower matrix that separates urgent tasks from important objectives. Dedicated focus views aggregate overdue deadlines, high priority assignments, and items linked to the current signed in member.
 
-### Agente AI e importazione
-- Assistente conversazionale per analisi del backlog e generazione bozze
-- Supporto modelli Google Gemini, OpenAI e Groq
-- Importazione diretta di strutture di progetto da file Markdown
+### Personal Productivity Routines
+A built in habit tracker allows developers to maintain recurring weekly development routines and track completion streaks over time. In addition, an integrated Pomodoro timer enables timed focus blocks linked directly to active issues, keeping track of completed sessions throughout the workday.
 
----
+### Global Command Palette and Design System
+Navigation across the entire application is keyboard driven via a global command palette triggered by the Cmd+K or Ctrl+K shortcut. The user interface adheres to a high contrast dark aesthetic, featuring responsive layout structures, zero layout shift, and network status monitoring with automatic reconnection handling.
 
-## Architettura dati e multi-tenant
+### Multilingual Support
+Chrono includes full localization across five languages including English, Italian, German, French, and Russian. Interface labels, date formatting, and system messages adjust according to user preferences stored per account.
 
-La piattaforma adotta un modello multi-tenant rigido basato su PostgreSQL e Supabase. Ogni workspace dispone di un perimetro isolato. L'accesso a team, progetti, issue e file allegati è regolato direttamente sul database tramite policy di Row Level Security (RLS). Nessun record può essere letto o mutato da utenti non appartenenti al workspace target.
+### Conversational Agent and Markdown Exchange
+An embedded assistant connects to Google Gemini, OpenAI, or Groq models to analyze backlogs, draft implementation plans, and extract project structures. Teams can also import or export entire projects using structured Markdown files containing metadata, milestones, and issues.
 
----
+## Multi-Tenant Data Architecture
 
-## Requisiti di sistema
+Data security relies on PostgreSQL Row Level Security on Supabase. Each workspace functions as an isolated tenancy boundary. Workspace memberships, projects, issues, comments, notifications, and uploaded files are verified directly inside the database query engine. No user can read, create, or alter records outside their assigned workspace memberships.
 
-- Node.js versione 18.18 o superiore
-- Gestore pacchetti npm oppure pnpm
-- Istanza attiva di Supabase (cloud oppure locale via Supabase CLI)
+## System Requirements
 
----
+Running Chrono requires Node.js version 18.18 or higher, npm or pnpm package manager, and an active Supabase project instance either on Supabase Cloud or locally through the Supabase CLI.
 
-## Installazione rapida
+## Installation and Local Setup
 
-Clonare il repository in locale ed entrare nella cartella di progetto.
+First clone the git repository to your local workstation and change into the directory.
 
 ```bash
 git clone https://github.com/cristianobleve/chrono.git
 cd chrono
 ```
 
-Installare i pacchetti necessari.
+Install the project dependencies using npm.
 
 ```bash
 npm install
 ```
 
-Configurare le variabili di ambiente creando il file `.env.local`.
+Create a local environment file by copying the provided example template.
 
 ```bash
 cp .env.example .env.local
 ```
 
----
+## Environment Variables
 
-## Variabili di ambiente
+The application reads external connection parameters and API credentials from the `.env.local` file.
 
-Il file `.env.local` richiede i parametri di connessione e le chiavi dei servizi esterni.
-
-| Variabile | Obbligatoria | Descrizione |
+| Variable | Required | Description |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Sì | URL HTTPS del progetto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Sì | Chiave pubblica anonima per le chiamate client Supabase |
-| `SUPABASE_URL` | Sì | URL del backend Supabase per le route server |
-| `SUPABASE_SECRET_KEY` | Sì | Chiave di servizio o segreto amministrativo per operazioni protette |
-| `DATABASE_URL` | Opzionale | Stringa di connessione PostgreSQL diretta o fallback locale |
-| `GEMINI_API_KEY` | Opzionale | Chiave API Google AI Studio per l'agente conversazionale |
-| `OPENAI_API_KEY` | Opzionale | Chiave API OpenAI per modelli alternativi |
-| `GROQ_API_KEY` | Opzionale | Chiave API Groq per inferenza rapida |
-| `R2_BUCKET_NAME` | Opzionale | Nome del bucket S3 o Cloudflare R2 per file allegati |
-| `R2_PUBLIC_DOMAIN` | Opzionale | Dominio pubblico per gli asset caricati su storage |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | HTTPS endpoint of the Supabase project |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anonymous public key for client side Supabase requests |
+| `SUPABASE_URL` | Yes | Supabase endpoint used by server side route handlers |
+| `SUPABASE_SECRET_KEY` | Yes | Administrative service key for privileged backend operations |
+| `DATABASE_URL` | Optional | Direct PostgreSQL connection string or local fallback |
+| `GEMINI_API_KEY` | Optional | Google AI Studio API key used by the workspace agent |
+| `OPENAI_API_KEY` | Optional | OpenAI API key for alternative LLM providers |
+| `GROQ_API_KEY` | Optional | Groq API key for low latency model inference |
+| `R2_BUCKET_NAME` | Optional | S3 or Cloudflare R2 bucket name for file attachments |
+| `R2_PUBLIC_DOMAIN` | Optional | Public CDN domain for uploaded media assets |
 
----
+## Supabase Configuration
 
-## Configurazione di Supabase
+### Database Schema and Migrations
+Database tables, indexes, and security functions are located in the `supabase/migrations/` directory.
 
-### 1. Creazione del database e tabelle
-
-Le definizioni dello schema e le regole di sicurezza sono organizzate nella cartella `supabase/migrations/`.
-
-Per applicare le migrazioni tramite Supabase CLI eseguire il comando seguente.
+To apply all migrations automatically using the Supabase CLI, run the database push command.
 
 ```bash
 npx supabase db push
 ```
 
-In alternativa è possibile aprire l'editor SQL nella dashboard di Supabase ed eseguire in sequenza i file delle migrazioni.
-- `20260831000000_init_chrono.sql` (schema relazionale di base, tabelle e viste)
-- `20260922000000_performance_indexes.sql` (indici di query per altezza e ordinamento)
-- `20260923000000_security_rls.sql` (funzioni di controllo accesso e policy Row Level Security)
-- `20260923010000_workspace_invitations.sql` (gestione inviti ai workspace)
-- `20260923020000_workspace_invitations_accepted_by.sql` (tracciamento accettazione inviti)
-- `20260923030000_workspace_notifications.sql` (notifiche e avvisi interni)
-- `20260923040000_workspace_notifications_alter.sql` (ottimizzazioni per il feed notifiche)
+If you prefer applying migrations manually through the Supabase web dashboard SQL Editor, execute the migration files in ascending chronological order starting with the base schema, followed by performance indexes, Row Level Security rules, workspace invitation tables, and notification schemas.
 
-### 2. Configurazione autenticazione (Auth)
+### Authentication Setup
+Open the Supabase dashboard and navigate to the Authentication provider settings. Enable the Email provider according to your team requirements. Under Authentication URL Configuration, define your primary application URL in the Site URL field, such as `http://localhost:3000` for local development. Add valid wildcards to the Redirect URLs list, including `http://localhost:3000/**` and your custom production domain. If third party OAuth login through GitHub or Google is desired, provide the corresponding Client ID and Client Secret in their respective provider tabs.
 
-1. Nel pannello di controllo di Supabase accedere alla sezione **Authentication > Providers**.
-2. Abilitare il provider **Email** (abilitare o disabilitare la conferma email a seconda delle esigenze di sviluppo).
-3. Nella sezione **Authentication > URL Configuration** effettuare le impostazioni seguenti.
-   - Impostare **Site URL** con l'indirizzo dell'applicazione (es. `http://localhost:3000` in locale o il dominio di produzione).
-   - Aggiungere ai **Redirect URLs** gli endpoint di ritorno per l'autenticazione.
-     - `http://localhost:3000/**`
-     - `https://tuodominio.com/**`
-4. Se si desidera abilitare OAuth con GitHub o Google, inserire i rispettivi Client ID e Client Secret nelle schede fornitore dedicate.
+## Development and Build Scripts
 
----
+The repository provides standard npm scripts for development, testing, and production builds.
 
-## Avvio del progetto
-
-Avviare il server locale di sviluppo.
-
-```bash
-npm run dev
-```
-
-L'applicazione sarà raggiungibile su `http://localhost:3000`.
-
----
-
-## Script disponibili
-
-| Comando | Descrizione |
+| Script | Purpose |
 | --- | --- |
-| `npm run dev` | Avvia Next.js in modalità sviluppo con hot reload |
-| `npm run build` | Compila l'applicazione per la produzione con verifica tipi TypeScript |
-| `npm run start` | Avvia il server di produzione Next.js compilato |
-| `npm run lint` | Esegue il controllo statico del codice con ESLint |
+| `npm run dev` | Starts the Next.js local development server with fast refresh |
+| `npm run build` | Compiles the production application and runs TypeScript type checking |
+| `npm run start` | Boots the compiled Next.js production server |
+| `npm run lint` | Runs static analysis checks using ESLint |
 
----
+## License
 
-## Licenza
-
-Distribuito sotto licenza MIT.
+Chrono is released under the MIT License.

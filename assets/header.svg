@@ -33,5 +33,5 @@
     <path d="M44.032 91.776C18.304 91.776 0 72.704 0 45.824C0 18.944 18.304 0 44.032 0C59.776 0 72.704 7.04 80.384 18.816L71.04 28.16C65.792 18.304 56.064 12.16 44.032 12.16C25.728 12.16 12.8 26.112 12.8 45.824C12.8 65.664 25.728 79.616 44.032 79.616C56.192 79.616 66.048 73.344 71.168 63.232L80.384 72.832C72.832 84.608 59.904 91.776 44.032 91.776Z"/>
   </g>
 
-  <text x="48" y="116" class="brand-sub">Sistema di tracciamento issue e gestione progetti per team di sviluppo.</text>
+  <text x="48" y="116" class="brand-sub">Issue tracking and project management system for software teams.</text>
 </svg>
