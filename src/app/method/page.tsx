@@ -1,0 +1,23 @@
+import Link from "next/link";
+import { ArrowUpRight, Check, CircleDot, Compass, Eye, Route } from "lucide-react";
+import { MarketingChrome } from "@/components/marketing/MarketingChrome";
+
+const principles = [
+  { number: "01", title: "Rendi visibile il lavoro", text: "Un team lavora meglio quando il lavoro attivo è leggibile. Chrono mette in primo piano ciò che è in corso, ciò che attende una decisione e ciò che rischia di rimanere fermo." },
+  { number: "02", title: "Mantieni il contesto vicino", text: "Una richiesta senza contesto torna indietro. Progetti, persone, scadenze e aggiornamenti restano collegati all'attività a cui appartengono." },
+  { number: "03", title: "Chiudi il cerchio", text: "Il lavoro non finisce quando cambia stato. Gli aggiornamenti e la cronologia aiutano il team a capire cosa è stato deciso e cosa può partire dopo." },
+];
+
+export default function MethodPage() {
+  return (
+    <MarketingChrome>
+      <section className="border-b border-white/10" aria-labelledby="method-hero-title"><div className="mx-auto max-w-6xl px-5 pb-24 pt-24 sm:px-8 sm:pb-32 sm:pt-32 lg:px-10 lg:pt-40"><p className="text-sm text-zinc-500">Il metodo</p><h1 id="method-hero-title" className="mt-8 max-w-5xl text-6xl font-semibold leading-[0.92] tracking-[-0.075em] text-white sm:text-8xl">Meno coordinamento. Più lavoro comprensibile.</h1><p className="mt-10 max-w-3xl text-xl leading-8 text-zinc-400 sm:text-2xl sm:leading-9">Chrono non impone una metodologia e non sostituisce il giudizio del team. Fornisce una struttura comune per capire dove si trova il lavoro, chi lo sta portando avanti e quale informazione manca per farlo avanzare.</p></div></section>
+
+      <section className="border-b border-white/10" aria-labelledby="principles-title"><div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32 lg:px-10"><div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]"><div><p className="text-sm text-zinc-500">Tre principi operativi</p><h2 id="principles-title" className="mt-6 max-w-md text-4xl font-semibold leading-tight tracking-[-0.06em] text-white sm:text-5xl">La chiarezza è una pratica quotidiana.</h2></div><div className="border-t border-white/10">{principles.map((principle) => <article key={principle.number} className="grid gap-5 border-b border-white/10 py-8 sm:grid-cols-[64px_1fr]"><span className="text-sm text-zinc-600">{principle.number}</span><div><h3 className="text-2xl tracking-tight text-white">{principle.title}</h3><p className="mt-4 max-w-xl text-base leading-7 text-zinc-500">{principle.text}</p></div></article>)}</div></div></div></section>
+
+      <section className="border-b border-white/10" aria-labelledby="method-tools-title"><div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32 lg:px-10"><h2 id="method-tools-title" className="max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.06em] text-white sm:text-6xl">Ogni vista risponde a una domanda.</h2><div className="mt-16 grid gap-0 border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/10"><div className="p-7 md:p-9"><Compass className="h-5 w-5 text-zinc-300" /><h3 className="mt-9 text-xl text-white">Dove stiamo andando?</h3><p className="mt-4 text-sm leading-6 text-zinc-500">Progetti e timeline collegano l&apos;obiettivo al lavoro necessario per raggiungerlo.</p></div><div className="p-7 md:p-9"><Eye className="h-5 w-5 text-zinc-300" /><h3 className="mt-9 text-xl text-white">Cosa richiede attenzione?</h3><p className="mt-4 text-sm leading-6 text-zinc-500">Inbox, viste personali e priorità aiutano ogni persona a iniziare dalla cosa giusta.</p></div><div className="p-7 md:p-9"><Route className="h-5 w-5 text-zinc-300" /><h3 className="mt-9 text-xl text-white">Qual è il prossimo passo?</h3><p className="mt-4 text-sm leading-6 text-zinc-500">Stati, assegnatari e aggiornamenti rendono esplicito ciò che può succedere dopo.</p></div></div></div></section>
+
+      <section><div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32 lg:px-10"><h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.06em] text-white sm:text-6xl">Un sistema utile quando il lavoro accelera.</h2><div className="mt-8 flex flex-wrap gap-6 text-sm text-zinc-400"><span className="flex items-center gap-2"><Check className="h-4 w-4 text-zinc-500" /> Per team piccoli e distribuiti</span><span className="flex items-center gap-2"><Check className="h-4 w-4 text-zinc-500" /> Per cicli di lavoro complessi</span></div><Link href="/login" className="mt-10 inline-flex min-h-12 items-center gap-2 rounded-md bg-white px-5 text-sm font-semibold text-black hover:bg-zinc-200">Prova Chrono <ArrowUpRight className="h-4 w-4" /></Link></div></section>
+    </MarketingChrome>
+  );
+}

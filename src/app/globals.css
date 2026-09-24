@@ -1,0 +1,425 @@
+/* ==========================================================================
+   Authentic Klim Type Foundry - Söhne & Söhne Breit Webfont Engine
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Söhne';
+  src: url('/fonts/TestSöhne-Buch.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne';
+  src: url('/fonts/TestSöhne-Kräftig.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne';
+  src: url('/fonts/TestSöhne-Halbfett.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne';
+  src: url('/fonts/TestSöhne-Dreiviertelfett.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne';
+  src: url('/fonts/TestSöhne-Fett.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('/fonts/TestSöhneBreit-Buch.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('/fonts/TestSöhneBreit-Halbfett.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('/fonts/TestSöhneBreit-Dreiviertelfett.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('/fonts/TestSöhneBreit-Fett.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import url("https://fonts.cristianobleve.com/aeonik/stylesheet.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-brand: "Archiv Grotesk", "Söhne", "Geist", sans-serif;
+  --font-aeonik: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --canvas: #09090b;
+  --surface-1: #121215;
+  --surface-2: #18181b;
+  --surface-3: #202024;
+  --surface-4: #27272a;
+  --hairline: rgba(255, 255, 255, 0.06);
+  --hairline-strong: rgba(255, 255, 255, 0.12);
+  --hairline-tertiary: rgba(255, 255, 255, 0.20);
+  --primary: #ffffff;
+  --primary-hover: #e4e4e7;
+  --primary-focus: #d4d4d8;
+  --ink: #f4f4f5;
+  --ink-muted: #d4d4d8;
+  --ink-subtle: #a1a1aa;
+  --ink-tertiary: #71717a;
+  --squircle-k: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #09090b;
+  color: #f4f4f5;
+  font-family: var(--font-sans), "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.011em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading,
+.chrono-heading {
+  font-family: var(--font-heading), "Geist", sans-serif;
+  letter-spacing: -0.022em;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
+}
+
+.chrono-app,
+.chrono-app * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.chrono-app button,
+.chrono-app [role="button"],
+.chrono-app a,
+.chrono-app svg,
+.chrono-app img,
+.chrono-app video,
+.chrono-app [aria-hidden="true"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.chrono-app input,
+.chrono-app textarea,
+.chrono-app [contenteditable="true"],
+.chrono-app code,
+.chrono-app pre,
+.chrono-app .select-text {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.32);
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(125, 211, 252, 0.25);
+}
+
+/* Micro-bordi sottili stile 21st.dev / il-carrubo-edit */
+.border-subtle {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.border-subtle-strong {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #23252a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #34343a;
+}
+
+/* ==========================================================================
+   Modern Squircle & Superellipse (Lamé Curve) Engine
+   Supports standard corner-shape: squircle / superellipse(var(--k))
+   with progressive enhancement across modern Chromium / Edge & WebKit
+   ========================================================================== */
+
+.superquadrato,
+.squircle {
+  border-radius: 22px;
+  corner-shape: squircle;
+  corner-shape: superellipse(var(--squircle-k));
+  -webkit-corner-shape: squircle;
+}
+
+.squircle-card,
+.superquadrato-card {
+  border-radius: 22px;
+  corner-shape: squircle;
+  corner-shape: superellipse(1.6);
+  -webkit-corner-shape: squircle;
+  background-color: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.superquadrato-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background-color: #18181b;
+}
+
+.superquadrato-badge {
+  border-radius: 18px;
+  corner-shape: squircle;
+  corner-shape: superellipse(1.8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.superquadrato-btn {
+  border-radius: 12px;
+  corner-shape: squircle;
+  corner-shape: superellipse(1.4);
+  transition: all 0.15s ease-in-out;
+}
+
+.superquadrato-pill {
+  border-radius: 9999px;
+  corner-shape: squircle;
+}
+
+/* Keyboard badge style */
+.kbd-shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 5px;
+  min-width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  color: #8a8f98;
+  background-color: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  corner-shape: squircle;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Chrono subtle focus ring */
+.chrono-focus:focus-visible,
+.linear-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Vercel Dark Theme Code Scheme Color */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #666666 !important;
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #888888 !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #79ffe1 !important;
+  /* Vercel cyan/mint */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #50e3c2 !important;
+  /* Vercel bright teal */
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: #ff5c57 !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #f81ce5 !important;
+  /* Vercel hot magenta */
+  font-weight: 500;
+}
+
+.token.function,
+.token.class-name {
+  color: #79ffe1 !important;
+  /* Vercel cyan */
+  font-weight: 500;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #f5a623 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes aurora {
+  0% {
+    background-position: 50% 50%, 50% 50%;
+  }
+
+  50% {
+    background-position: 350% 50%, 350% 50%;
+  }
+
+  100% {
+    background-position: 50% 50%, 50% 50%;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-shimmer {
+  animation: shimmer 4s linear infinite;
+}
+
+.animate-aurora {
+  animation: aurora 60s linear infinite;
+}
+
+/* Custom fine scrollbar */
+.scrollbar-fine {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.scrollbar-fine::-webkit-scrollbar {
+  height: 3px;
+  width: 3px;
+}
+
+.scrollbar-fine::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+}
+
+.scrollbar-fine::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+
+.scrollbar-fine::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}

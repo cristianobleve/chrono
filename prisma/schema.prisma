@@ -1,0 +1,162 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  icon      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  teams     Team[]
+  users     User[]
+}
+
+model Team {
+  id          String    @id @default(cuid())
+  name        String
+  key         String    @unique
+  icon        String?
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projects    Project[]
+  issues      Issue[]
+  labels      Label[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  username       String          @unique
+  email          String          @unique
+  avatar         String?
+  role           String          @default("member")
+  workspaceId    String
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  leadProjects   Project[]       @relation("ProjectLead")
+  assignedIssues Issue[]         @relation("IssueAssignee")
+  createdIssues  Issue[]         @relation("IssueCreator")
+  updates        ProjectUpdate[]
+  activities     ActivityLog[]
+  preference     UserPreference?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String
+  summary     String?
+  description String?
+  status      String          @default("Backlog") // Backlog, Planned, In Progress, Completed, Canceled
+  priority    String          @default("none") // urgent, high, medium, low, none
+  icon        String?         @default("cube")
+  teamId      String
+  team        Team            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  leadId      String?
+  lead        User?           @relation("ProjectLead", fields: [leadId], references: [id])
+  startDate   DateTime?
+  targetDate  DateTime?
+  issues      Issue[]
+  milestones  Milestone[]
+  updates     ProjectUpdate[]
+  activities  ActivityLog[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([teamId, slug])
+}
+
+model Issue {
+  id          String        @id @default(cuid())
+  identifier  String        @unique // e.g. "FIR-1"
+  title       String
+  description String?
+  status      String        @default("backlog") // backlog, todo, in_progress, done, canceled
+  priority    String        @default("none") // urgent, high, medium, low, none
+  estimate    Int?
+  sortOrder   Float         @default(0)
+  teamId      String
+  team        Team          @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  assigneeId  String?
+  assignee    User?         @relation("IssueAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  creatorId   String?
+  creator     User?         @relation("IssueCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  dueDate     DateTime?
+  activities  ActivityLog[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  name        String
+  targetDate  DateTime?
+  description String?
+  completed   Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ProjectUpdate {
+  id        String   @id @default(cuid())
+  body      String
+  status    String   @default("on_track") // on_track, at_risk, off_track
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Label {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#8a8f98")
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issueId   String?
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model UserPreference {
+  id                String  @id @default(cuid())
+  userId            String  @unique
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultHomeView   String  @default("agent") // agent, inbox, my_issues
+  displayNames      String  @default("username") // full_name, username, first_name
+  firstDayOfWeek    String  @default("sunday") // sunday, monday
+  convertEmoticons  Boolean @default(true)
+  sendCommentsOn    String  @default("ctrl_enter") // enter, ctrl_enter
+  fontSize          String  @default("default") // small, default, large
+  usePointerCursors Boolean @default(false)
+  underlineLinks    Boolean @default(false)
+  theme             String  @default("dark")
+}
