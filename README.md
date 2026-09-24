@@ -12,78 +12,58 @@
   <img src="https://img.shields.io/badge/License-MIT-gray?style=flat" alt="MIT License" />
 </p>
 
-Chrono is an open source issue tracking and project management platform built for software engineering teams. The application integrates high performance client side interactions with real time data synchronization, offline resilience, and strict workspace level data isolation.
+Chrono is a self-hostable workspace for software engineering teams that unifies issue tracking, milestone roadmaps, and personal focus tools in one cohesive interface. Built with Next.js 15, TypeScript, and Supabase, Chrono delivers a keyboard-first workflow with real time state replication, offline resilience, and strict database level isolation across organizations.
 
 <p align="left">
   <img src="assets/app-preview.svg" alt="Chrono Interface Preview" width="100%" />
 </p>
 
-## <img src="assets/icons/shield.svg" width="20" height="20" align="absmiddle" /> Engineering Origin and Security Verification
+## The Platform
 
-Portions of this codebase were generated with generative artificial intelligence assistance during rapid prototyping phases. Every module, database schema, API route, and client state machine was subsequently reviewed, refactored, and audited by human engineers. All PostgreSQL tables are guarded by strict Row Level Security policies, inputs are validated with Zod schemas, and TypeScript runs in strict mode across the entire codebase to prevent regressions and unauthorized data access.
+At its core, Chrono handles daily task planning through interactive Kanban boards and dense backlog views. Issues receive sequential alphanumeric identifiers, priority weights, point estimates, target deadlines, and full Markdown descriptions. An immutable activity log records property changes with author timestamps, while a slide out drawer lets developers modify tasks without losing their place on the board. Everything is navigable through a global command palette available via Cmd+K or Ctrl+K.
 
-## Core Capabilities
+Beyond basic task management, the platform bridges high-level roadmaps with day-to-day execution. Engineering initiatives are broken down into milestones with automatic progress tracking calculated from resolved issues. For personal time management, Chrono incorporates a four quadrant Eisenhower matrix to separate urgent firefighting from long term goals, a weekly habit tracker to sustain routine engineering practices, and an integrated Pomodoro timer tied directly to active tickets.
 
-### <img src="assets/icons/layers.svg" width="18" height="18" align="absmiddle" /> Issue Tracking and Workflow Management
-Chrono provides structured task tracking with sequential alphanumeric identifiers for every recorded item. Each issue supports explicit priority rankings, numeric estimates, planned due dates, recurring schedules, and Markdown formatting for descriptions and comments. A persistent activity log records every modification, status shift, and property update with author timestamps.
+For external tooling, Chrono ships with an embedded Model Context Protocol server that exposes issues and workspace state to local AI agents such as Claude Desktop or Cursor. Teams can interact with conversational models like Google Gemini, OpenAI, or Groq for automated backlog triage, import complete multi-project roadmaps directly from structured Markdown documents, and switch between five built in languages covering English, Italian, German, French, and Russian.
 
-### <img src="assets/icons/kanban.svg" width="18" height="18" align="absmiddle" /> Kanban Board and Workspace Views
-The interactive Kanban surface organizes work into explicit lifecycle columns covering backlog, todo, in progress, done, and canceled states. Teams can reorder items by priority or manual position, filter by project, assignee, or label, and inspect full task details in a slide out drawer without navigating away from the active board.
+## AI-Assisted Codebase and Security Audit
 
-### <img src="assets/icons/milestone.svg" width="18" height="18" align="absmiddle" /> Project Milestones and Roadmaps
-Long term initiatives are structured through projects and associated milestones with target dates. Chrono automatically computes completion rates based on resolved issues, displays project progression across both timeline and tabular formats, and allows teams to review historical delivery logs.
+During early prototyping phases, parts of the codebase were generated with artificial intelligence assistance to explore component compositions and data structures quickly. Before releasing Chrono as open source, every schema definition, API endpoint, and state machine was manually reviewed, refactored, and audited by human engineers. All PostgreSQL tables are strictly guarded by Row Level Security policies, runtime inputs pass through Zod validation, and TypeScript runs in strict mode across the entire repository to prevent data leakage and logic defects.
 
-### <img src="assets/icons/target.svg" width="18" height="18" align="absmiddle" /> Priority Matrix and Focus Queues
-To manage daily work queues, Chrono implements a four quadrant Eisenhower matrix that separates urgent tasks from important objectives. Dedicated focus views aggregate overdue deadlines, high priority assignments, and items linked to the current signed in member.
+## Architecture and Tenant Isolation
 
-### <img src="assets/icons/clock.svg" width="18" height="18" align="absmiddle" /> Personal Productivity Routines
-A built in habit tracker allows developers to maintain recurring weekly development routines and track completion streaks over time. In addition, an integrated Pomodoro timer enables timed focus blocks linked directly to active issues, keeping track of completed sessions throughout the workday.
-
-### <img src="assets/icons/command.svg" width="18" height="18" align="absmiddle" /> Global Command Palette and Design System
-Navigation across the entire application is keyboard driven via a global command palette triggered by the Cmd+K or Ctrl+K shortcut. The user interface adheres to a high contrast dark aesthetic, featuring responsive layout structures, zero layout shift, and network status monitoring with automatic reconnection handling.
-
-### <img src="assets/icons/globe.svg" width="18" height="18" align="absmiddle" /> Multilingual Support
-Chrono includes full localization across five languages including English, Italian, German, French, and Russian. Interface labels, date formatting, and system messages adjust according to user preferences stored per account.
-
-### <img src="assets/icons/bot.svg" width="18" height="18" align="absmiddle" /> Conversational Agent and Markdown Exchange
-An embedded assistant connects to Google Gemini, OpenAI, or Groq models to analyze backlogs, draft implementation plans, and extract project structures. Teams can also import or export entire projects using structured Markdown files containing metadata, milestones, and issues.
-
-## <img src="assets/icons/database.svg" width="20" height="20" align="absmiddle" /> Multi-Tenant Data Architecture
-
-Data security relies on PostgreSQL Row Level Security on Supabase. Each workspace functions as an isolated tenancy boundary. Workspace memberships, projects, issues, comments, notifications, and uploaded files are verified directly inside the database query engine. No user can read, create, or alter records outside their assigned workspace memberships.
+Chrono implements a strict multi-tenant model directly inside PostgreSQL on Supabase. Each workspace represents an isolated boundary. Memberships, projects, issue records, labels, notifications, and storage objects are verified at the database layer on every query. Users can never view or modify data outside their active workspace memberships.
 
 <p align="left">
   <img src="assets/architecture.svg" alt="Chrono System Architecture" width="100%" />
 </p>
 
-## <img src="assets/icons/cpu.svg" width="20" height="20" align="absmiddle" /> System Requirements
+## Getting Started
 
-Running Chrono requires Node.js version 18.18 or higher, npm or pnpm package manager, and an active Supabase project instance either on Supabase Cloud or locally through the Supabase CLI.
+Running Chrono requires Node.js version 18.18 or higher, npm or pnpm, and an active Supabase project instance either on Supabase Cloud or through the local Supabase CLI.
 
-## <img src="assets/icons/terminal.svg" width="20" height="20" align="absmiddle" /> Installation and Local Setup
-
-First clone the git repository to your local workstation and change into the directory.
+First clone the repository and navigate into the project directory.
 
 ```bash
 git clone https://github.com/cristianobleve/chrono.git
 cd chrono
 ```
 
-Install the project dependencies using npm.
+Install the dependencies.
 
 ```bash
 npm install
 ```
 
-Create a local environment file by copying the provided example template.
+Create your local environment file by copying the example configuration.
 
 ```bash
 cp .env.example .env.local
 ```
 
-## <img src="assets/icons/sliders.svg" width="20" height="20" align="absmiddle" /> Environment Variables
+## Environment Configuration
 
-The application reads external connection parameters and API credentials from the `.env.local` file.
+Configure your credentials and database connection details inside the `.env.local` file.
 
 | Variable | Required | Description |
 | --- | --- | --- |
@@ -98,33 +78,29 @@ The application reads external connection parameters and API credentials from th
 | `R2_BUCKET_NAME` | Optional | S3 or Cloudflare R2 bucket name for file attachments |
 | `R2_PUBLIC_DOMAIN` | Optional | Public CDN domain for uploaded media assets |
 
-## <img src="assets/icons/server.svg" width="20" height="20" align="absmiddle" /> Supabase Configuration
+## Supabase Database Setup
 
-### Database Schema and Migrations
-Database tables, indexes, and security functions are located in the `supabase/migrations/` directory.
+All database tables, performance indexes, and access control policies live in the `supabase/migrations/` directory.
 
-To apply all migrations automatically using the Supabase CLI, run the database push command.
+To apply all migrations with the Supabase CLI, run the database push command.
 
 ```bash
 npx supabase db push
 ```
 
-If you prefer applying migrations manually through the Supabase web dashboard SQL Editor, execute the migration files in ascending chronological order starting with the base schema, followed by performance indexes, Row Level Security rules, workspace invitation tables, and notification schemas.
+Alternatively you can paste the migration files into the Supabase SQL Editor in numerical order, beginning with the base schema and proceeding through indexes, security policies, invitations, and notifications.
 
-### Authentication Setup
-Open the Supabase dashboard and navigate to the Authentication provider settings. Enable the Email provider according to your team requirements. Under Authentication URL Configuration, define your primary application URL in the Site URL field, such as `http://localhost:3000` for local development. Add valid wildcards to the Redirect URLs list, including `http://localhost:3000/**` and your custom production domain. If third party OAuth login through GitHub or Google is desired, provide the corresponding Client ID and Client Secret in their respective provider tabs.
+In the Supabase Authentication dashboard, enable the Email provider. Under URL Configuration, configure your primary domain in the Site URL field, such as `http://localhost:3000` during local development. Add appropriate wildcards to the Redirect URLs list, including `http://localhost:3000/**` and your production URL. If you want GitHub or Google login, configure the OAuth keys in the respective provider settings.
 
-## <img src="assets/icons/code.svg" width="20" height="20" align="absmiddle" /> Development and Build Scripts
-
-The repository provides standard npm scripts for development, testing, and production builds.
+## Available Scripts
 
 | Script | Purpose |
 | --- | --- |
-| `npm run dev` | Starts the Next.js local development server with fast refresh |
-| `npm run build` | Compiles the production application and runs TypeScript type checking |
-| `npm run start` | Boots the compiled Next.js production server |
-| `npm run lint` | Runs static analysis checks using ESLint |
+| `npm run dev` | Starts the local development server with fast refresh |
+| `npm run build` | Compiles the production application with strict type checking |
+| `npm run start` | Boots the compiled Next.js production build |
+| `npm run lint` | Executes static code analysis with ESLint |
 
-## <img src="assets/icons/book.svg" width="20" height="20" align="absmiddle" /> License
+## License
 
-Chrono is released under the MIT License.
+Chrono is open source software released under the MIT License.
