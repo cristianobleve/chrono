@@ -1,0 +1,54 @@
+<svg width="880" height="240" viewBox="0 0 880 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .arch-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .arch-title { font-size: 13px; font-weight: 600; fill: #fafafa; }
+      .arch-body { font-size: 11px; fill: #a1a1aa; line-height: 1.5; }
+      .arch-badge { font-size: 9px; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- Frame -->
+  <rect x="0.5" y="0.5" width="879" height="239" rx="10" fill="#09090b" stroke="#27272a"/>
+
+  <!-- Left: Client Layer -->
+  <rect x="24" y="24" width="245" height="192" rx="8" fill="#121419" stroke="#3b82f6"/>
+  <rect x="36" y="36" width="70" height="18" rx="4" fill="#1e293b"/>
+  <text x="44" y="49" class="arch-text arch-badge" fill="#60a5fa">CLIENT LAYER</text>
+  <text x="36" y="78" class="arch-text arch-title">Next.js 15 &amp; React 19</text>
+  <text x="36" y="100" class="arch-text arch-body">• App Router with Turbopack</text>
+  <text x="36" y="120" class="arch-text arch-body">• Zustand Client Cache &amp; Sync</text>
+  <text x="36" y="140" class="arch-text arch-body">• Tailwind CSS &amp; Radix UI Primitives</text>
+  <text x="36" y="160" class="arch-text arch-body">• Keyboard Shortcuts &amp; Cmd+K</text>
+  <text x="36" y="180" class="arch-text arch-body">• Offline State &amp; Connection Mesh</text>
+
+  <!-- Connector 1 -->
+  <line x1="270" y1="120" x2="316" y2="120" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4 4"/>
+  <polygon points="316,116 324,120 316,124" fill="#60a5fa"/>
+
+  <!-- Center: API & Protocol Layer -->
+  <rect x="325" y="24" width="230" height="192" rx="8" fill="#121419" stroke="#8b5cf6"/>
+  <rect x="337" y="36" width="94" height="18" rx="4" fill="#2e1065"/>
+  <text x="345" y="49" class="arch-text arch-badge" fill="#c084fc">API &amp; PROTOCOL</text>
+  <text x="337" y="78" class="arch-text arch-title">Edge Actions &amp; MCP</text>
+  <text x="337" y="100" class="arch-text arch-body">• Server Actions with Zod schemas</text>
+  <text x="337" y="120" class="arch-text arch-body">• Model Context Protocol stdio</text>
+  <text x="337" y="140" class="arch-text arch-body">• Gemini, OpenAI &amp; Groq gateway</text>
+  <text x="337" y="160" class="arch-text arch-body">• Markdown project batch parser</text>
+  <text x="337" y="180" class="arch-text arch-body">• Notification broadcast engine</text>
+
+  <!-- Connector 2 -->
+  <line x1="556" y1="120" x2="602" y2="120" stroke="#34d399" stroke-width="2" stroke-dasharray="4 4"/>
+  <polygon points="602,116 610,120 602,124" fill="#34d399"/>
+
+  <!-- Right: Storage & Security Layer -->
+  <rect x="611" y="24" width="245" height="192" rx="8" fill="#121419" stroke="#10b981"/>
+  <rect x="623" y="36" width="86" height="18" rx="4" fill="#064e3b"/>
+  <text x="631" y="49" class="arch-text arch-badge" fill="#34d399">DATABASE &amp; RLS</text>
+  <text x="623" y="78" class="arch-text arch-title">PostgreSQL &amp; Supabase</text>
+  <text x="623" y="100" class="arch-text arch-body">• Multi-tenant Row Level Security</text>
+  <text x="623" y="120" class="arch-text arch-body">• Realtime WebSocket replication</text>
+  <text x="623" y="140" class="arch-text arch-body">• Email &amp; OAuth authentication</text>
+  <text x="623" y="160" class="arch-text arch-body">• Workspace tenant isolation</text>
+  <text x="623" y="180" class="arch-text arch-body">• Cloudflare R2 / S3 file buckets</text>
+</svg>
