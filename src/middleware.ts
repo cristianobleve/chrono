@@ -22,11 +22,41 @@ function isPublicRequest(request: NextRequest) {
   return publicPaths.some((path) => path !== "/" && (pathname === path || pathname.startsWith(`${path}/`)));
 }
 
+function isStaticAsset(pathname: string) {
+  return (
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/fonts/") ||
+    pathname.startsWith("/video/") ||
+    pathname.startsWith("/assets/") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/icon.png" ||
+    pathname === "/chrono_icon.png" ||
+    pathname === "/chrono-wordmark.svg" ||
+    pathname === "/name.svg" ||
+    pathname === "/favicon.svg" ||
+    /\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|otf|mp4|webm)$/i.test(pathname)
+  );
+}
+
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  if (isStaticAsset(pathname)) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({ request });
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -42,7 +72,6 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const pathname = request.nextUrl.pathname;
   const authHeader = request.headers.get("authorization");
   const isApi = pathname.startsWith("/api/");
 
@@ -71,6 +100,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|fonts|video|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|otf)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|fonts|video|assets|[^?]*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|otf)).*)",
   ],
 };
