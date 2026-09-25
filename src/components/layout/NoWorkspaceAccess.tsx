@@ -1,16 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { LogOut, Check, Mail, Loader2, ChevronDown, Sparkles } from "lucide-react";
+import { LogOut, Check, Mail, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { useLinearStore } from "@/store/useLinearStore";
 import { supabase } from "@/lib/supabase";
 import { useTranslation } from "@/i18n";
-import { LinearSelect } from "@/components/ui/LinearSelect";
-
-const REGION_OPTIONS = [
-  { value: "European Union", label: "European Union (Frankfurt)" },
-  { value: "United States", label: "United States (N. Virginia)" },
-];
 
 type PendingInvite = {
   id: string;
@@ -21,24 +15,15 @@ type PendingInvite = {
 
 export const NoWorkspaceAccess: React.FC = () => {
   const { t } = useTranslation();
-  const { currentUser, createWorkspace, pullFromSupabase, addToast } = useLinearStore();
-
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [region, setRegion] = useState("European Union");
-  const [includeDemoData, setIncludeDemoData] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { currentUser, pullFromSupabase, addToast } = useLinearStore();
 
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
-
-  const handleNameChange = (val: string) => {
-    setName(val);
-    setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
-  };
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const checkPendingInvites = async () => {
     try {
+      setIsRefreshing(true);
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) return;
 
@@ -65,6 +50,8 @@ export const NoWorkspaceAccess: React.FC = () => {
       setPendingInvites(mapped);
     } catch (err) {
       console.error("[NoWorkspaceAccess] Error checking invites:", err);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -86,38 +73,6 @@ export const NoWorkspaceAccess: React.FC = () => {
       window.removeEventListener("chrono:notifications-changed", handleRealtimeUpdate);
     };
   }, [pullFromSupabase]);
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || isSubmitting) return;
-
-    setIsSubmitting(true);
-    try {
-      const created = createWorkspace(
-        {
-          name: name.trim(),
-          slug: slug.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          region,
-          plan: "Pro",
-        },
-        includeDemoData
-      );
-
-      addToast({
-        title: "Workspace pronto",
-        description: `Benvenuto in ${created.name}.`,
-        type: "success",
-      });
-    } catch (err: any) {
-      addToast({
-        title: "Errore creazione",
-        description: err?.message || "Impossibile creare il workspace.",
-        type: "error",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleAcceptInvite = async (invitationId: string) => {
     setAcceptingId(invitationId);
@@ -164,7 +119,44 @@ export const NoWorkspaceAccess: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (_) {}
+
+    useLinearStore.setState({
+      workspaces: [],
+      workspace: {
+        id: "",
+        identifier: "",
+        internalId: "",
+        name: "",
+        slug: "",
+        icon: "chrono",
+        iconBg: "#121419",
+        iconColor: "#5e6ad2",
+        plan: "Free",
+        createdAt: "",
+        updatedAt: "",
+      },
+      currentWorkspaceId: "",
+      projects: [],
+      issues: [],
+      habits: [],
+      tags: [],
+      projectFolders: [],
+      trash: [],
+      timelineEvents: [],
+      accounts: [],
+      currentAccountId: "",
+    });
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("chrono_app_store_v8");
+        localStorage.removeItem("linear-clone-storage");
+      } catch (_) {}
+    }
+
     window.location.assign("/login");
   };
 
@@ -184,150 +176,129 @@ export const NoWorkspaceAccess: React.FC = () => {
         </button>
 
         <div className="text-zinc-500 text-[11px] font-mono">
-          Logged in as <span className="text-zinc-300 font-medium">{userEmail}</span>
+          Autenticato come <span className="text-zinc-300 font-medium">{userEmail}</span>
         </div>
       </header>
 
-      {/* Main Content Form (Linear-like centered layout) */}
-      <main className="flex-1 w-full max-w-[460px] mx-auto px-6 py-12 flex flex-col justify-center animate-fade-in">
-        <div className="flex flex-col gap-1 mb-8 text-left">
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-white">
-            Create a workspace
-          </h1>
-          <p className="text-xs md:text-sm text-zinc-400">
-            Move work forward across teams and agents
-          </p>
-        </div>
-
-        <form onSubmit={handleCreate} className="flex flex-col gap-5">
-          {/* Name Field */}
-          <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-medium text-zinc-400">
-              Name
-            </label>
-            <input
-              type="text"
-              autoFocus
-              value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="e.g. Acme Corp"
-              className="h-10 px-3.5 rounded-lg bg-[#141518] border border-white/10 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
-            />
-          </div>
-
-          {/* URL Field */}
-          <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-medium text-zinc-400">
-              URL
-            </label>
-            <div className="h-10 px-3.5 rounded-lg bg-[#141518] border border-white/10 flex items-center text-sm text-zinc-500 focus-within:border-white/30 transition-colors">
-              <span className="shrink-0 select-none text-zinc-500 font-mono text-xs">
-                chrono.engineering/
-              </span>
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                placeholder="acme"
-                className="flex-1 bg-transparent text-white text-sm focus:outline-none pl-1"
-              />
+      {/* Main Content */}
+      <main className="flex-1 w-full max-w-[480px] mx-auto px-6 py-12 flex flex-col justify-center animate-fade-in">
+        {pendingInvites.length > 0 ? (
+          <div className="flex flex-col gap-6 text-left">
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-white">
+                Inviti disponibili
+              </h1>
+              <p className="mt-1 text-xs text-zinc-400">
+                Sei stato invitato a collaborare nei seguenti workspace.
+              </p>
             </div>
-          </div>
 
-          {/* Region Field */}
-          <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-medium text-zinc-400">
-              Region
-            </label>
-            <LinearSelect
-              size="lg"
-              fullWidth
-              value={region}
-              onChange={setRegion}
-              options={REGION_OPTIONS}
-            />
-          </div>
-
-          {/* Starter Showcase Demo Data Option */}
-          <label className="flex items-start gap-3 p-3.5 rounded-lg border border-white/5 bg-[#121316]/50 hover:bg-[#121316] transition-colors cursor-pointer select-none text-left">
-            <input
-              type="checkbox"
-              checked={includeDemoData}
-              onChange={(e) => setIncludeDemoData(e.target.checked)}
-              className="mt-0.5 rounded border-white/20 bg-zinc-900 text-white focus:ring-0 cursor-pointer accent-white"
-            />
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-medium text-zinc-200 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                Includi dati dimostrativi (Nebula Core)
-              </span>
-              <span className="text-[11px] text-zinc-400 leading-normal">
-                Carica il progetto showcase con milestone, roadmap e issue per iniziare subito.
-              </span>
-            </div>
-          </label>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={!name.trim() || isSubmitting}
-            className="w-full h-10 rounded-lg bg-white hover:bg-zinc-200 disabled:opacity-40 text-black font-semibold text-xs transition-all shadow-md active:scale-[0.99] cursor-pointer mt-1 flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <Loader2 className="w-4 h-4 animate-spin text-black" />
-            ) : (
-              <span>Create workspace</span>
-            )}
-          </button>
-        </form>
-
-        {/* Pending Invites Section */}
-        {pendingInvites.length > 0 && (
-          <div className="mt-8 pt-6 border-t border-white/10 flex flex-col gap-3">
-            <span className="text-[11px] font-semibold text-zinc-400 text-left uppercase tracking-wider">
-              Inviti ricevuti per il tuo account
-            </span>
-            {pendingInvites.map((inv) => (
-              <div
-                key={inv.id}
-                className="w-full rounded-lg border border-white/10 bg-[#121316] p-3 flex items-center justify-between gap-3 text-left"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/10 text-white">
-                    <Mail className="h-3.5 w-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-white truncate leading-tight">
-                      {inv.workspace_name}
-                    </p>
-                    <p className="text-[10px] text-zinc-400 font-mono capitalize">
-                      Ruolo: {inv.role}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  disabled={acceptingId === inv.id}
-                  onClick={() => handleAcceptInvite(inv.id)}
-                  className="shrink-0 inline-flex items-center gap-1 rounded-md bg-white hover:bg-zinc-200 text-black px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+            <div className="flex flex-col gap-3">
+              {pendingInvites.map((inv) => (
+                <div
+                  key={inv.id}
+                  className="w-full rounded-lg border border-white/10 bg-[#121316] p-4 flex items-center justify-between gap-3"
                 >
-                  {acceptingId === inv.id ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <Check className="h-3 w-3" />
-                  )}
-                  Accetta
-                </button>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-white">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white truncate leading-tight">
+                        {inv.workspace_name}
+                      </p>
+                      <p className="text-[11px] text-zinc-400 font-mono capitalize mt-0.5">
+                        Ruolo: {inv.role}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={acceptingId === inv.id}
+                    onClick={() => handleAcceptInvite(inv.id)}
+                    className="shrink-0 inline-flex items-center gap-1.5 rounded-md bg-white hover:bg-zinc-200 text-black px-3.5 py-2 text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {acceptingId === inv.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Check className="h-3.5 w-3.5" />
+                    )}
+                    <span>Accetta invito</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2 flex items-center justify-between border-t border-white/5">
+              <button
+                type="button"
+                onClick={checkPendingInvites}
+                disabled={isRefreshing}
+                className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                <span>Aggiorna</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6 text-left">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-[#121316] text-zinc-300">
+                <ShieldAlert className="h-5 w-5" />
               </div>
-            ))}
+              <div>
+                <h1 className="text-xl font-semibold tracking-tight text-white">
+                  In attesa di un invito
+                </h1>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  Accesso riservato su invito
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-white/10 bg-[#121316] p-4 flex flex-col gap-3">
+              <p className="text-xs text-zinc-300 leading-relaxed">
+                Questo account non è associato ad alcun workspace attivo. Chrono richiede un invito esplicito da parte di un amministratore per accedere ai progetti e alle issue.
+              </p>
+
+              <div className="rounded-md border border-white/5 bg-black/40 px-3 py-2 text-xs font-mono text-zinc-300">
+                <span className="text-zinc-500">Email: </span>
+                <span>{userEmail}</span>
+              </div>
+
+              <p className="text-[11px] text-zinc-400 leading-normal">
+                Quando un amministratore invierà un invito al tuo indirizzo email, la richiesta comparirà automaticamente in questa schermata per essere accettata.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={checkPendingInvites}
+                disabled={isRefreshing}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-xs font-semibold text-black hover:bg-zinc-200 transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                <span>{isRefreshing ? "Verifica in corso..." : "Verifica inviti"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-transparent px-4 py-2.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <span>Accedi con altro account</span>
+              </button>
+            </div>
           </div>
         )}
       </main>
 
-      {/* Footer minimal info */}
-      <footer className="w-full h-12 flex items-center justify-center text-[11px] text-zinc-600">
-        Chrono Platform &middot; Fast, keyboard-first issue tracking
+      {/* Footer */}
+      <footer className="w-full h-12 flex items-center justify-center text-[11px] text-zinc-600 border-t border-white/5">
+        Chrono Platform. Issue tracking e sincronizzazione su invito.
       </footer>
     </div>
   );

@@ -49,7 +49,7 @@ export const IssuesHubView: React.FC = () => {
   ];
 
   const workspaceProjects = projects.filter(
-    (p) => (p.workspaceId || "ws-1") === currentWorkspaceId
+    (p) => currentWorkspaceId && p.workspaceId === currentWorkspaceId
   );
 
   const projectOptions: SelectOption[] = [
@@ -72,8 +72,7 @@ export const IssuesHubView: React.FC = () => {
 
   const filteredIssues = issues.filter((issue) => {
     // Strict Workspace Isolation
-    const issueWs = issue.workspaceId || "ws-1";
-    if (issueWs !== currentWorkspaceId) return false;
+    if (!currentWorkspaceId || issue.workspaceId !== currentWorkspaceId) return false;
     if (filterPriority !== "all" && issue.priority !== filterPriority) return false;
     if (filterProject !== "all" && issue.projectId !== filterProject) return false;
     return true;

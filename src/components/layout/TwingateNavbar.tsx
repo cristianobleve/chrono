@@ -64,6 +64,41 @@ export const TwingateNavbar: React.FC = () => {
     try {
       await supabase.auth.signOut();
     } catch (e) {}
+
+    useLinearStore.setState({
+      workspaces: [],
+      workspace: {
+        id: "",
+        identifier: "",
+        internalId: "",
+        name: "",
+        slug: "",
+        icon: "chrono",
+        iconBg: "#121419",
+        iconColor: "#5e6ad2",
+        plan: "Free",
+        createdAt: "",
+        updatedAt: "",
+      },
+      currentWorkspaceId: "",
+      projects: [],
+      issues: [],
+      habits: [],
+      tags: [],
+      projectFolders: [],
+      trash: [],
+      timelineEvents: [],
+      accounts: [],
+      currentAccountId: "",
+    });
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("chrono_app_store_v8");
+        localStorage.removeItem("linear-clone-storage");
+      } catch (_) {}
+    }
+
     addToast({
       title: "Disconnessione",
       description: "Sei uscito dal tuo account con successo.",

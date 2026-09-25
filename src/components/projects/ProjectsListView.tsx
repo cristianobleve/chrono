@@ -63,8 +63,7 @@ export const ProjectsListView: React.FC = () => {
 
   // Filter projects by current workspace, status, folder and search query
   const filteredProjects = projects.filter((p) => {
-    const projectWsId = p.workspaceId || "ws-1";
-    if (projectWsId !== currentWorkspaceId) {
+    if (!currentWorkspaceId || p.workspaceId !== currentWorkspaceId) {
       return false;
     }
     if (filterStatus !== "all" && p.status.toLowerCase() !== filterStatus.toLowerCase()) {
@@ -88,10 +87,10 @@ export const ProjectsListView: React.FC = () => {
   });
 
   // Workspace stats for the Bento strip
-  const workspaceProjects = projects.filter((p) => (p.workspaceId || "ws-1") === currentWorkspaceId);
+  const workspaceProjects = projects.filter((p) => currentWorkspaceId && p.workspaceId === currentWorkspaceId);
   const workspaceProjectIds = new Set(workspaceProjects.map((p) => p.id));
   const workspaceIssues = issues.filter(
-    (i) => (i.workspaceId || "ws-1") === currentWorkspaceId || (i.projectId && workspaceProjectIds.has(i.projectId))
+    (i) => (currentWorkspaceId && i.workspaceId === currentWorkspaceId) || (i.projectId && workspaceProjectIds.has(i.projectId))
   );
   const doneWorkspaceIssues = workspaceIssues.filter((i) => i.status === "done");
   const workspaceCompletionPct =

@@ -36,10 +36,12 @@ import { formatUserDisplayName } from "@/lib/userUtils";
 import { sortMilestones } from "@/lib/utils";
 
 const initialAccounts: Account[] = [];
-
 const initialWorkspaces: Workspace[] = [];
+const initialMilestones: Milestone[] = [];
+const initialProjects: Project[] = [];
+const initialIssues: Issue[] = [];
 
-const initialMilestones: Milestone[] = [
+const DEMO_MILESTONES_TEMPLATE: Milestone[] = [
   {
     id: "ms-nebula-1",
     projectId: "a0000000-0000-4000-8000-000000000001",
@@ -74,7 +76,7 @@ const initialMilestones: Milestone[] = [
   },
 ];
 
-const initialProjects: Project[] = [
+const DEMO_PROJECTS_TEMPLATE: Project[] = [
   {
     id: "a0000000-0000-4000-8000-000000000001",
     identifier: "PRJ-101",
@@ -90,9 +92,9 @@ const initialProjects: Project[] = [
     icon: "N",
     iconBg: "#181a20",
     iconColor: "#6366f1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     teamId: "team-1",
-    milestones: initialMilestones,
+    milestones: DEMO_MILESTONES_TEMPLATE,
     createdAt: "2026-09-01T00:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
     issuesCount: {
@@ -105,7 +107,7 @@ const initialProjects: Project[] = [
   },
 ];
 
-const initialIssues: Issue[] = [
+const DEMO_ISSUES_TEMPLATE: Issue[] = [
   // Backlog
   {
     id: "iss-fir-240",
@@ -121,7 +123,7 @@ const initialIssues: Issue[] = [
     labels: ["AI", "Database"],
     tags: ["pgvector", "ricerca"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-18T10:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -139,7 +141,7 @@ const initialIssues: Issue[] = [
     labels: ["Compliance", "Audit"],
     tags: ["export", "sicurezza"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-18T11:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -157,7 +159,7 @@ const initialIssues: Issue[] = [
     labels: ["Integrazioni"],
     tags: ["github", "webhook"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-19T09:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -175,7 +177,7 @@ const initialIssues: Issue[] = [
     labels: ["PWA", "Offline"],
     tags: ["storage", "cache"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-19T14:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -195,7 +197,7 @@ const initialIssues: Issue[] = [
     labels: ["Performance", "Network"],
     tags: ["websocket", "realtime"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-20T10:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -213,7 +215,7 @@ const initialIssues: Issue[] = [
     labels: ["Security", "Auth"],
     tags: ["ruoli", "permessi"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-20T11:30:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -231,7 +233,7 @@ const initialIssues: Issue[] = [
     labels: ["DevOps"],
     tags: ["changelog", "release"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-21T09:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -249,7 +251,7 @@ const initialIssues: Issue[] = [
     labels: ["Frontend", "Performance"],
     tags: ["webpack", "nextjs"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-21T14:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -269,7 +271,7 @@ const initialIssues: Issue[] = [
     labels: ["Backend", "QA"],
     tags: ["stress-test", "postgres"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-22T08:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -287,7 +289,7 @@ const initialIssues: Issue[] = [
     labels: ["MCP", "AI"],
     tags: ["protocol", "agent"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-22T11:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -305,7 +307,7 @@ const initialIssues: Issue[] = [
     labels: ["Design", "Frontend"],
     tags: ["animazioni", "ux"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     createdAt: "2026-09-22T15:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
   },
@@ -325,7 +327,7 @@ const initialIssues: Issue[] = [
     labels: ["MCP", "Core"],
     tags: ["mcp", "stdio"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     completedAt: "2026-09-23T12:00:00.000Z",
     createdAt: "2026-09-15T09:00:00.000Z",
     updatedAt: "2026-09-23T12:00:00.000Z",
@@ -344,7 +346,7 @@ const initialIssues: Issue[] = [
     labels: ["Auth", "Security"],
     tags: ["pkce", "supabase"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     completedAt: "2026-09-23T16:00:00.000Z",
     createdAt: "2026-09-16T10:00:00.000Z",
     updatedAt: "2026-09-23T16:00:00.000Z",
@@ -363,7 +365,7 @@ const initialIssues: Issue[] = [
     labels: ["Design System"],
     tags: ["a11y", "dark-mode"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     completedAt: "2026-09-23T18:00:00.000Z",
     createdAt: "2026-09-17T11:00:00.000Z",
     updatedAt: "2026-09-23T18:00:00.000Z",
@@ -382,7 +384,7 @@ const initialIssues: Issue[] = [
     labels: ["Frontend", "UX"],
     tags: ["kanban", "board"],
     teamId: "team-1",
-    workspaceId: "ws-1",
+    workspaceId: "",
     completedAt: "2026-09-24T00:00:00.000Z",
     createdAt: "2026-09-17T15:00:00.000Z",
     updatedAt: "2026-09-24T00:00:00.000Z",
@@ -406,28 +408,30 @@ const initialUser: User = {
   avatar: null,
 };
 
-const initialWorkspace: Workspace = {
-  id: "ws-1",
-  identifier: "WS-1",
-  internalId: "wrk_chrono_core",
-  name: "Chrono Workspace",
-  slug: "chrono-workspace",
+export const emptyWorkspace: Workspace = {
+  id: "",
+  identifier: "",
+  internalId: "",
+  name: "",
+  slug: "",
   icon: "chrono",
   iconBg: "#121419",
   iconColor: "#5e6ad2",
-  plan: "Pro",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  plan: "Free",
+  createdAt: "",
+  updatedAt: "",
 };
 
+const initialWorkspace: Workspace = emptyWorkspace;
+
 const initialTeam: Team = {
-  id: "team-1",
+  id: "",
   identifier: "TEM-1",
   internalId: "team_core",
   name: "Core",
   key: "COR",
   icon: "zap",
-  workspaceId: "ws-1",
+  workspaceId: "",
   members: [],
 };
 
@@ -681,10 +685,10 @@ export const useLinearStore = create<LinearState>()(
       currentUser: initialUser,
       workspace: initialWorkspace,
       workspaces: initialWorkspaces,
-      currentWorkspaceId: "ws-1",
+      currentWorkspaceId: "",
       isWorkspaceLoading: false,
       accounts: initialAccounts,
-      currentAccountId: "user-1",
+      currentAccountId: "",
       supabaseStatus: "connected",
       team: initialTeam,
       projects: initialProjects,
@@ -716,7 +720,7 @@ export const useLinearStore = create<LinearState>()(
       addTimelineEvent: (eventData) => {
         const state = get();
         const author = state.currentUser;
-        const targetWorkspaceId = eventData.workspaceId || state.currentWorkspaceId || state.workspace.id || "ws-1";
+        const targetWorkspaceId = eventData.workspaceId || state.currentWorkspaceId || state.workspace?.id || "";
 
         const newEvent: TimelineEvent = {
           id: "evt-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6),
@@ -956,22 +960,22 @@ export const useLinearStore = create<LinearState>()(
         let updatedProjects = [...state.projects];
         let updatedIssues = [...state.issues];
 
-        if (includeDemoData && initialProjects.length > 0) {
+        if (includeDemoData && DEMO_PROJECTS_TEMPLATE.length > 0) {
           const demoProjectId = "prj-" + Date.now();
-          const demoMilestones: Milestone[] = initialMilestones.map((m, idx) => ({
+          const demoMilestones: Milestone[] = DEMO_MILESTONES_TEMPLATE.map((m, idx) => ({
             ...m,
             id: `ms-${id}-${idx + 1}`,
             projectId: demoProjectId,
           }));
 
           const demoProject: Project = {
-            ...initialProjects[0],
+            ...DEMO_PROJECTS_TEMPLATE[0],
             id: demoProjectId,
             workspaceId: id,
             milestones: demoMilestones,
           };
 
-          const demoIssues: Issue[] = initialIssues.map((iss, idx) => ({
+          const demoIssues: Issue[] = DEMO_ISSUES_TEMPLATE.map((iss, idx) => ({
             ...iss,
             id: `iss-${id}-${idx + 1}`,
             projectId: demoProjectId,
@@ -1287,8 +1291,11 @@ export const useLinearStore = create<LinearState>()(
       },
 
       pushToSupabase: async () => {
-        set({ supabaseStatus: "syncing" });
         const state = get();
+        if (state.workspaces.length === 0 || !state.currentWorkspaceId) {
+          return { success: true };
+        }
+        set({ supabaseStatus: "syncing" });
         const res = await supabaseSync.pushAllToSupabase({
           workspaces: state.workspaces,
           accounts: state.accounts,
@@ -1321,7 +1328,7 @@ export const useLinearStore = create<LinearState>()(
 
       pullFromSupabase: async () => {
         set({ supabaseStatus: "syncing" });
-        const data = await supabaseSync.pullAllFromSupabase(get().currentWorkspaceId);
+        const data = await supabaseSync.pullAllFromSupabase(get().currentWorkspaceId || undefined);
         if (data) {
           const accounts = data.accounts && data.accounts.length > 0 ? data.accounts : get().accounts;
           const currentEmail = get().currentUser.email?.toLowerCase();
@@ -1330,38 +1337,64 @@ export const useLinearStore = create<LinearState>()(
             : null;
 
           const remoteWorkspaces = data.workspaces || [];
-          const localWorkspaces = get().workspaces || [];
-          const wsMap = new Map<string, Workspace>();
-          for (const rw of remoteWorkspaces) {
-            wsMap.set(rw.id, rw);
+
+          // STRICT ISOLATION GUARD: If the authenticated user is not a member of any workspace,
+          // purge all workspaces, projects, issues, and associated data immediately.
+          if (remoteWorkspaces.length === 0) {
+            set({
+              supabaseStatus: "connected",
+              workspaces: [],
+              workspace: emptyWorkspace,
+              currentWorkspaceId: "",
+              projects: [],
+              issues: [],
+              habits: [],
+              tags: [],
+              projectFolders: [],
+              trash: [],
+              timelineEvents: [],
+              accounts: matchingAccount ? [matchingAccount] : [],
+              ...(matchingAccount
+                ? {
+                    currentAccountId: matchingAccount.id,
+                    currentUser: {
+                      id: matchingAccount.id,
+                      identifier: matchingAccount.identifier,
+                      internalId: matchingAccount.internalId,
+                      name: matchingAccount.name,
+                      username: matchingAccount.username,
+                      email: matchingAccount.email,
+                      role: matchingAccount.role,
+                      avatarUrl: matchingAccount.avatarUrl || get().currentUser.avatarUrl || get().currentUser.avatar || undefined,
+                    },
+                  }
+                : {}),
+            });
+            return true;
           }
-          for (const lw of localWorkspaces) {
-            if (!wsMap.has(lw.id)) {
-              wsMap.set(lw.id, lw);
-            }
-          }
-          const workspaces = Array.from(wsMap.values());
-          const currentWorkspaceId = workspaces.some((w) => w.id === get().currentWorkspaceId)
+
+          // User is verified member of one or more workspaces.
+          // Only accept workspaces verified by Supabase membership.
+          const workspaces = remoteWorkspaces;
+          const allowedWsIds = new Set(workspaces.map((w) => w.id));
+
+          const currentWorkspaceId = allowedWsIds.has(get().currentWorkspaceId)
             ? get().currentWorkspaceId
-            : (workspaces[0]?.id || "");
+            : workspaces[0].id;
           const activeWorkspace = workspaces.find((w) => w.id === currentWorkspaceId) || workspaces[0];
 
-          const currentWsId = get().currentWorkspaceId;
-          const otherProjects = (get().projects || []).filter((p) => p.workspaceId && p.workspaceId !== currentWsId);
-          const projectsMap = new Map<string, Project>();
-          for (const p of otherProjects) projectsMap.set(p.id, p);
-          for (const p of data.projects || []) projectsMap.set(p.id, p);
-
-          const otherIssues = (get().issues || []).filter((i) => i.workspaceId && i.workspaceId !== currentWsId);
-          const issuesMap = new Map<string, Issue>();
-          for (const i of otherIssues) issuesMap.set(i.id, i);
-          for (const i of data.issues || []) issuesMap.set(i.id, i);
+          // Filter collections strictly to allowed workspaces only
+          const projects = (data.projects || []).filter((p) => p.workspaceId && allowedWsIds.has(p.workspaceId));
+          const issues = (data.issues || []).filter((i) => i.workspaceId && allowedWsIds.has(i.workspaceId));
+          const habits = (data.habits || []).filter((h) => !h.workspaceId || allowedWsIds.has(h.workspaceId));
+          const tags = (data.tags || []).filter((t) => !t.workspaceId || allowedWsIds.has(t.workspaceId));
+          const projectFolders = (data.folders || []).filter((f) => !f.workspaceId || allowedWsIds.has(f.workspaceId));
 
           set({
             supabaseStatus: "connected",
             workspaces,
             currentWorkspaceId,
-            ...(activeWorkspace ? { workspace: activeWorkspace } : {}),
+            workspace: activeWorkspace,
             accounts: accounts.map((a) => {
               const currentAv = get().currentUser.avatarUrl || get().currentUser.avatar;
               if (matchingAccount && a.id === matchingAccount.id && !a.avatarUrl && currentAv) {
@@ -1384,11 +1417,11 @@ export const useLinearStore = create<LinearState>()(
                   },
                 }
               : {}),
-            projects: Array.from(projectsMap.values()),
-            issues: Array.from(issuesMap.values()),
-            habits: data.habits,
-            tags: data.tags,
-            projectFolders: data.folders,
+            projects,
+            issues,
+            habits,
+            tags,
+            projectFolders,
           });
 
           return true;
@@ -1443,7 +1476,7 @@ export const useLinearStore = create<LinearState>()(
           .replace(/[^a-z0-9]+/g, "-") + "-" + Math.random().toString(36).substring(2, 8);
 
         const projectIndex = state.projects.length + 1;
-        const targetWorkspaceId = projectData.workspaceId || state.currentWorkspaceId || state.workspace.id || "ws-1";
+        const targetWorkspaceId = projectData.workspaceId || state.currentWorkspaceId || state.workspace?.id || "";
 
         const newProject: Project = {
           id,
@@ -1514,7 +1547,7 @@ export const useLinearStore = create<LinearState>()(
       importProjectFromMarkdown: (parsedData) => {
         const state = get();
         const projectId = "proj-" + Date.now();
-        const targetWorkspaceId = state.currentWorkspaceId || state.workspace.id || "ws-1";
+        const targetWorkspaceId = state.currentWorkspaceId || state.workspace?.id || "";
         const slug = parsedData.name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-") + "-" + Math.random().toString(36).substring(2, 8);
@@ -1625,7 +1658,7 @@ export const useLinearStore = create<LinearState>()(
         const createdProjects: Project[] = [];
         const allNewIssues: Issue[] = [];
         let issueCounter = state.issues.length;
-        const targetWorkspaceId = state.currentWorkspaceId || state.workspace.id || "ws-1";
+        const targetWorkspaceId = state.currentWorkspaceId || state.workspace?.id || "";
 
         projectsData.forEach((parsedData, pIdx) => {
           const projectId = `proj-${Date.now()}-${pIdx}`;
@@ -1915,7 +1948,7 @@ export const useLinearStore = create<LinearState>()(
         const nextNum = state.issues.length + 1;
         const identifier = `${state.team.key}-${nextNum}`;
 
-        const targetWorkspaceId = issueData.workspaceId || state.currentWorkspaceId || state.workspace.id || "ws-1";
+        const targetWorkspaceId = issueData.workspaceId || state.currentWorkspaceId || state.workspace?.id || "";
 
         const newIssue: Issue = {
           id,

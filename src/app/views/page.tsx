@@ -29,7 +29,7 @@ export default function ViewsPage() {
       ? new Date(`${date.slice(0, 10)}T12:00:00`).toLocaleDateString(dateLocale, { day: "2-digit", month: "short" })
       : t.focusViews.noDeadline;
 
-  const workspaceIssues = useMemo(() => issues.filter((issue) => (issue.workspaceId || "ws-1") === currentWorkspaceId), [issues, currentWorkspaceId]);
+  const workspaceIssues = useMemo(() => issues.filter((issue) => currentWorkspaceId && issue.workspaceId === currentWorkspaceId), [issues, currentWorkspaceId]);
   const activeIssues = workspaceIssues.filter((issue) => issue.status !== "done" && issue.status !== "canceled");
   const today = new Date().toISOString().slice(0, 10);
   const overdue = activeIssues.filter((issue) => issue.dueDate && issue.dueDate.slice(0, 10) < today);

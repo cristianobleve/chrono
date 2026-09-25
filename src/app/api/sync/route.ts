@@ -44,33 +44,12 @@ export async function POST(req: Request) {
         .maybeSingle();
       workspaceId = defaultMembership?.workspace_id || null;
     }
-    if (action === "pull_all" && !workspaceId) {
-      const { data: fallbackWs } = await supabaseServer
-        .from("workspaces")
-        .select("id")
-        .order("created_at", { ascending: true })
-        .limit(1)
-        .maybeSingle();
-
-      if (fallbackWs) {
-        workspaceId = fallbackWs.id;
-        await supabaseServer.from("workspace_members").upsert(
-          {
-            workspace_id: fallbackWs.id,
-            account_id: auth.accountId,
-            role: auth.role === "owner" ? "owner" : "member",
-            joined_at: new Date().toISOString(),
-          },
-          { onConflict: "workspace_id,account_id" }
-        );
-      }
-    }
     if (action === "pull_all" && workspaceId && payload) {
       payload.workspace_id = workspaceId;
     }
 
     const workspaceAdminActions = new Set(["upsert_account", "upsert_workspace"]);
-    if (!workspaceId && !workspaceAdminActions.has(action)) {
+    if (!workspaceId && !workspaceAdminActions.has(action) && action !== "pull_all") {
       return NextResponse.json({ error: "Workspace scope is required" }, { status: 400 });
     }
 
@@ -83,14 +62,38 @@ export async function POST(req: Request) {
 
       if (existingWorkspace) {
         const isMember = await hasWorkspaceAccess(payload.id, auth.accountId);
-        if (!isMember && auth.role !== "owner") {
+        if (!isMember) {
           return NextResponse.json({ error: "Workspace access denied" }, { status: 403 });
         }
+      } else {
+        // Prevent unauthorized/uninvited users from creating arbitrary workspaces.
+        // Allowed only if the user is already an owner or admin of an existing workspace,
+        // or if there are zero workspaces in the system (initial bootstrap).
+        const { count: totalWorkspaces } = await supabaseServer
+          .from("workspaces")
+          .select("id", { count: "exact", head: true });
+
+        if ((totalWorkspaces || 0) > 0) {
+          const { data: userMemberships } = await supabaseServer
+            .from("workspace_members")
+            .select("role")
+            .eq("account_id", auth.accountId);
+
+          const canCreate = (userMemberships || []).some(
+            (m: any) => m.role === "owner" || m.role === "admin"
+          );
+
+          if (!canCreate) {
+            return NextResponse.json(
+              { error: "Accesso su invito: creazione di nuovi workspace consentita solo agli amministratori" },
+              { status: 403 }
+            );
+          }
+        }
       }
-      // If it doesn't exist, it's a new workspace creation, which is allowed!
-    } else if (workspaceId) {
+    } else if (workspaceId && action !== "pull_all") {
       const isMember = await hasWorkspaceAccess(workspaceId, auth.accountId);
-      if (!isMember && auth.role !== "owner") {
+      if (!isMember) {
         return NextResponse.json({ error: "Workspace access denied" }, { status: 403 });
       }
     } else if (action === "upsert_account") {
@@ -111,7 +114,7 @@ export async function POST(req: Request) {
           ...payload,
           identifier: payload.identifier || `PRJ-${Math.floor(Math.random() * 9000 + 1000)}`,
           internal_id: payload.internal_id || `prj_${payload.id || Date.now()}`,
-          workspace_id: payload.workspace_id || "ws-1",
+          workspace_id: payload.workspace_id || workspaceId,
           team_id: payload.team_id || "team-1",
           updated_at: new Date().toISOString(),
         };
@@ -172,7 +175,7 @@ export async function POST(req: Request) {
           ...payload,
           identifier: payload.identifier || `ISS-${Math.floor(Math.random() * 9000 + 1000)}`,
           internal_id: payload.internal_id || `iss_${payload.id || Date.now()}`,
-          workspace_id: payload.workspace_id || "ws-1",
+          workspace_id: payload.workspace_id || workspaceId,
           team_id: payload.team_id || "team-1",
           updated_at: new Date().toISOString(),
         };
@@ -200,8 +203,8 @@ export async function POST(req: Request) {
       case "upsert_habit": {
         const habitRow = {
           id: payload.id,
-          workspace_id: payload.workspace_id || "ws-1",
-          account_id: payload.account_id || "user-1",
+          workspace_id: payload.workspace_id || workspaceId,
+          account_id: payload.account_id || auth.accountId,
           title: payload.title,
           category: payload.category || "General",
           icon: payload.icon || "flame",
@@ -236,7 +239,7 @@ export async function POST(req: Request) {
       case "upsert_tag": {
         const tagRow = {
           id: payload.id,
-          workspace_id: payload.workspace_id || "ws-1",
+          workspace_id: payload.workspace_id || workspaceId,
           name: payload.name,
           color: payload.color || "#5e6ad2",
           description: payload.description || null,
@@ -265,7 +268,7 @@ export async function POST(req: Request) {
       case "upsert_folder": {
         const folderRow = {
           id: payload.id,
-          workspace_id: payload.workspace_id || "ws-1",
+          workspace_id: payload.workspace_id || workspaceId,
           name: payload.name,
           icon: payload.icon || "folder",
           color: payload.color || "#5e6ad2",
@@ -601,31 +604,29 @@ export async function POST(req: Request) {
           .from("workspace_members")
           .select("workspace_id, role")
           .eq("account_id", auth.accountId);
-        let memberWsIds = (userMemberships || []).map((m) => m.workspace_id);
+        const memberWsIds = (userMemberships || []).map((m) => m.workspace_id);
         const roleByWsId = new Map((userMemberships || []).map((m) => [m.workspace_id, m.role]));
 
-        const isOwner = auth.role === "owner" || auth.role === "admin";
-        if (isOwner || memberWsIds.length === 0) {
-          const { data: allWs } = await supabaseServer
-            .from("workspaces")
-            .select("id");
-          if (allWs && allWs.length > 0) {
-            for (const ws of allWs) {
-              if (!memberWsIds.includes(ws.id)) {
-                await supabaseServer
-                  .from("workspace_members")
-                  .upsert({
-                    workspace_id: ws.id,
-                    account_id: auth.accountId,
-                    role: isOwner ? "owner" : "member",
-                    joined_at: new Date().toISOString(),
-                  }, { onConflict: "workspace_id,account_id" });
-                memberWsIds.push(ws.id);
-                roleByWsId.set(ws.id, isOwner ? "owner" : "member");
-              }
-            }
-          }
+        // CRITICAL GUARD: If user has NO memberships, return completely empty state!
+        // DO NOT auto-assign. DO NOT leak other workspaces.
+        if (memberWsIds.length === 0) {
+          return NextResponse.json({
+            success: true,
+            workspaces: [],
+            projects: [],
+            milestones: [],
+            issues: [],
+            habits: [],
+            tags: [],
+            folders: [],
+            accounts: [],
+            projectLinks: [],
+          });
         }
+
+        const effectiveWsIds = (workspaceFilter && memberWsIds.includes(workspaceFilter))
+          ? [workspaceFilter]
+          : memberWsIds;
 
         const [
           { data: workspaces },
@@ -634,43 +635,55 @@ export async function POST(req: Request) {
           { data: habits },
           { data: tags },
           { data: folders },
-          { data: accounts },
         ] = await Promise.all([
-          memberWsIds.length > 0
-            ? supabaseServer.from("workspaces").select("id, identifier, internal_id, name, slug, icon, icon_bg, icon_color, plan, created_at, updated_at").in("id", memberWsIds).order("created_at", { ascending: true })
-            : Promise.resolve({ data: [] }),
-          (() => {
-            const query = supabaseServer.from("projects").select("id, identifier, internal_id, workspace_id, team_id, name, slug, summary, description, status, priority, lead_id, start_date, target_date, icon, icon_bg, icon_color, icon_symbol, icon_shape, cover_url, cover_gradient, parent_project_id, created_at, updated_at").order("created_at", { ascending: false });
-            return workspaceFilter ? query.eq("workspace_id", workspaceFilter) : query;
-          })(),
-          (() => {
-            const query = supabaseServer.from("issues").select("id, identifier, internal_id, workspace_id, team_id, project_id, assignee_id, creator_id, title, description, status, priority, due_date, due_time, reminder_date, reminder_time, recurrence, recurrence_days, eisenhower_quadrant, labels, tags, estimate, sort_order, completed_at, created_at, updated_at").order("created_at", { ascending: false }).limit(500);
-            return workspaceFilter ? query.eq("workspace_id", workspaceFilter) : query;
-          })(),
-          (() => {
-            const query = supabaseServer.from("habits").select("id, workspace_id, account_id, title, category, icon, color, frequency, target_days, completed_dates, streak, created_at").order("created_at", { ascending: false });
-            return workspaceFilter ? query.eq("workspace_id", workspaceFilter) : query;
-          })(),
-          (() => {
-            const query = supabaseServer.from("tags").select("id, workspace_id, name, color, description").order("created_at", { ascending: true });
-            return workspaceFilter ? query.eq("workspace_id", workspaceFilter) : query;
-          })(),
-          (() => {
-            const query = supabaseServer.from("project_folders").select("id, workspace_id, name, icon, color, created_at").order("created_at", { ascending: true });
-            return workspaceFilter ? query.eq("workspace_id", workspaceFilter) : query;
-          })(),
-          supabaseServer.from("accounts").select("*"),
+          supabaseServer
+            .from("workspaces")
+            .select("id, identifier, internal_id, name, slug, icon, icon_bg, icon_color, plan, created_at, updated_at")
+            .in("id", memberWsIds)
+            .order("created_at", { ascending: true }),
+          supabaseServer
+            .from("projects")
+            .select("id, identifier, internal_id, workspace_id, team_id, name, slug, summary, description, status, priority, lead_id, start_date, target_date, icon, icon_bg, icon_color, icon_symbol, icon_shape, cover_url, cover_gradient, parent_project_id, created_at, updated_at")
+            .in("workspace_id", effectiveWsIds)
+            .order("created_at", { ascending: false }),
+          supabaseServer
+            .from("issues")
+            .select("id, identifier, internal_id, workspace_id, team_id, project_id, assignee_id, creator_id, title, description, status, priority, due_date, due_time, reminder_date, reminder_time, recurrence, recurrence_days, eisenhower_quadrant, labels, tags, estimate, sort_order, completed_at, created_at, updated_at")
+            .in("workspace_id", effectiveWsIds)
+            .order("created_at", { ascending: false })
+            .limit(500),
+          supabaseServer
+            .from("habits")
+            .select("id, workspace_id, account_id, title, category, icon, color, frequency, target_days, completed_dates, streak, created_at")
+            .in("workspace_id", effectiveWsIds)
+            .order("created_at", { ascending: false }),
+          supabaseServer
+            .from("tags")
+            .select("id, workspace_id, name, color, description")
+            .in("workspace_id", effectiveWsIds)
+            .order("created_at", { ascending: true }),
+          supabaseServer
+            .from("project_folders")
+            .select("id, workspace_id, name, icon, color, created_at")
+            .in("workspace_id", effectiveWsIds)
+            .order("created_at", { ascending: true }),
         ]);
 
         const projectIds = (projects || []).map((project) => project.id);
-        const [{ data: milestones }, { data: projectLinks }] = await Promise.all([
+        const [{ data: milestones }, { data: projectLinks }, { data: memberAccounts }] = await Promise.all([
           projectIds.length > 0
             ? supabaseServer.from("project_milestones").select("id, project_id, name, target_date, completed, sort_order").in("project_id", projectIds).order("sort_order", { ascending: true }).order("target_date", { ascending: true })
             : Promise.resolve({ data: [] }),
           projectIds.length > 0
             ? supabaseServer.from("project_links").select("id, project_id, title, url, category").in("project_id", projectIds)
             : Promise.resolve({ data: [] }),
+          supabaseServer.from("workspace_members").select("account_id").in("workspace_id", effectiveWsIds),
         ]);
+
+        const accountIds = [...new Set((memberAccounts || []).map((m: any) => m.account_id))];
+        const { data: accounts } = accountIds.length > 0
+          ? await supabaseServer.from("accounts").select("*").in("id", accountIds)
+          : { data: [] };
 
         const enrichedWorkspaces = (workspaces || []).map((ws) => ({
           ...ws,
@@ -746,7 +759,8 @@ function canManageAccounts(role: string) {
   return role === "owner" || role === "admin";
 }
 
-async function hasWorkspaceAccess(workspaceId: string, accountId: string) {
+async function hasWorkspaceAccess(workspaceId: string, accountId: string): Promise<boolean> {
+  if (!workspaceId || !accountId) return false;
   const { data, error } = await supabaseServer
     .from("workspace_members")
     .select("id")
@@ -754,39 +768,7 @@ async function hasWorkspaceAccess(workspaceId: string, accountId: string) {
     .eq("account_id", accountId)
     .maybeSingle();
 
-  if (!error && Boolean(data)) {
-    return true;
-  }
-
-  // If no membership found, check if workspace exists
-  const { data: ws } = await supabaseServer
-    .from("workspaces")
-    .select("id")
-    .eq("id", workspaceId)
-    .maybeSingle();
-
-  if (ws) {
-    // Check if workspace has any members at all
-    const { count } = await supabaseServer
-      .from("workspace_members")
-      .select("id", { count: "exact", head: true })
-      .eq("workspace_id", workspaceId);
-
-    // If workspace has no members, or for active workspace sync, auto-link account as owner/member
-    const role = (count === 0) ? "owner" : "member";
-    await supabaseServer.from("workspace_members").upsert(
-      {
-        workspace_id: workspaceId,
-        account_id: accountId,
-        role,
-        joined_at: new Date().toISOString(),
-      },
-      { onConflict: "workspace_id,account_id" }
-    );
-    return true;
-  }
-
-  return false;
+  return !error && Boolean(data);
 }
 
 

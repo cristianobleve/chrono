@@ -221,7 +221,7 @@ export const TimelineView: React.FC = () => {
   // Filter events
   const filteredEvents = useMemo(() => {
     return (timelineEvents || []).filter((evt) => {
-      const evtWs = evt.workspaceId || "ws-1";
+      const evtWs = evt.workspaceId;
       if (currentWorkspaceId && evtWs !== currentWorkspaceId) {
         return false;
       }

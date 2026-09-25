@@ -51,7 +51,7 @@ export const TimelineDrawer: React.FC<TimelineDrawerProps> = ({ projectId }) => 
   const filteredEvents = useMemo(() => {
     return (timelineEvents || []).filter((evt) => {
       // Workspace filter
-      const evtWs = evt.workspaceId || "ws-1";
+      const evtWs = evt.workspaceId;
       if (currentWorkspaceId && evtWs !== currentWorkspaceId) {
         return false;
       }

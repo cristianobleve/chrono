@@ -48,7 +48,7 @@ export const supabaseSync = {
    * Format Project to Supabase snake_case columns
    */
   formatProjectRow(p: Project, workspaceId?: string) {
-    const wsId = p.workspaceId || workspaceId || "ws-1";
+    const wsId = p.workspaceId || workspaceId || "";
     return {
       id: p.id,
       identifier: p.identifier || `PRJ-${Math.floor(Math.random() * 1000)}`,
@@ -95,7 +95,7 @@ export const supabaseSync = {
    * Format Issue to Supabase snake_case columns
    */
   formatIssueRow(i: Issue, workspaceId?: string) {
-    const wsId = i.workspaceId || workspaceId || "ws-1";
+    const wsId = i.workspaceId || workspaceId || "";
     return {
       id: i.id,
       identifier: i.identifier || `ISS-${Math.floor(Math.random() * 1000)}`,
@@ -131,7 +131,7 @@ export const supabaseSync = {
   formatHabitRow(h: Habit, workspaceId?: string, accountId?: string) {
     return {
       id: h.id,
-      workspace_id: h.workspaceId || workspaceId || "ws-1",
+      workspace_id: h.workspaceId || workspaceId || "",
       account_id: accountId || "user-1",
       title: h.title,
       category: h.category || "General",
@@ -151,7 +151,7 @@ export const supabaseSync = {
   formatTagRow(t: Tag, workspaceId?: string) {
     return {
       id: t.id,
-      workspace_id: t.workspaceId || workspaceId || "ws-1",
+      workspace_id: t.workspaceId || workspaceId || "",
       name: t.name,
       color: t.color || "#5e6ad2",
       description: t.description || null,
@@ -164,7 +164,7 @@ export const supabaseSync = {
   formatFolderRow(f: ProjectFolder, workspaceId?: string) {
     return {
       id: f.id,
-      workspace_id: f.workspaceId || workspaceId || "ws-1",
+      workspace_id: f.workspaceId || workspaceId || "",
       name: f.name,
       icon: f.icon || "folder",
       color: f.color || "#5e6ad2",
@@ -726,6 +726,41 @@ export const supabaseSync = {
 
     // Direct Supabase fallback
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!user) {
+        return {
+          workspaces: [],
+          projects: [],
+          issues: [],
+          habits: [],
+          tags: [],
+          folders: [],
+          accounts: [],
+        };
+      }
+
+      // Query only workspaces where user is an explicit member
+      const { data: memberships } = await supabase
+        .from("workspace_members")
+        .select("workspace_id, role")
+        .eq("account_id", user.id);
+
+      const userWsIds = (memberships || []).map((m: any) => m.workspace_id);
+      if (userWsIds.length === 0) {
+        return {
+          workspaces: [],
+          projects: [],
+          issues: [],
+          habits: [],
+          tags: [],
+          folders: [],
+          accounts: [],
+        };
+      }
+
+      const targetWsIds = workspaceId && userWsIds.includes(workspaceId) ? [workspaceId] : userWsIds;
+
       const [
         { data: workspaces },
         { data: projects },
@@ -737,23 +772,13 @@ export const supabaseSync = {
         { data: accounts },
         { data: projectLinks },
       ] = await Promise.all([
-        supabase.from("workspaces").select("*"),
-        workspaceId
-          ? supabase.from("projects").select("*").eq("workspace_id", workspaceId)
-          : supabase.from("projects").select("*"),
+        supabase.from("workspaces").select("*").in("id", targetWsIds),
+        supabase.from("projects").select("*").in("workspace_id", targetWsIds),
         supabase.from("project_milestones").select("*").order("sort_order", { ascending: true }).order("target_date", { ascending: true }),
-        workspaceId
-          ? supabase.from("issues").select("*").eq("workspace_id", workspaceId)
-          : supabase.from("issues").select("*"),
-        workspaceId
-          ? supabase.from("habits").select("*").eq("workspace_id", workspaceId)
-          : supabase.from("habits").select("*"),
-        workspaceId
-          ? supabase.from("tags").select("*").eq("workspace_id", workspaceId)
-          : supabase.from("tags").select("*"),
-        workspaceId
-          ? supabase.from("project_folders").select("*").eq("workspace_id", workspaceId)
-          : supabase.from("project_folders").select("*"),
+        supabase.from("issues").select("*").in("workspace_id", targetWsIds),
+        supabase.from("habits").select("*").in("workspace_id", targetWsIds),
+        supabase.from("tags").select("*").in("workspace_id", targetWsIds),
+        supabase.from("project_folders").select("*").in("workspace_id", targetWsIds),
         supabase.from("accounts").select("*"),
         supabase.from("project_links").select("*"),
       ]);

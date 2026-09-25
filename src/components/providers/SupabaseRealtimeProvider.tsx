@@ -24,33 +24,72 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
       const authenticatedEmail = session?.user?.email?.toLowerCase();
       if (authenticatedEmail) {
         const state = useLinearStore.getState();
-        const account = state.accounts.find((item) => item.email.toLowerCase() === authenticatedEmail);
-        if (account) {
+        const storedEmail = state.currentUser.email?.toLowerCase();
+
+        // If local storage has data from a different user, purge everything immediately
+        if (storedEmail && storedEmail !== authenticatedEmail) {
           useLinearStore.setState({
-            currentAccountId: account.id,
-            currentUser: {
-              id: account.id,
-              identifier: account.identifier,
-              internalId: account.internalId,
-              name: account.name,
-              username: account.username,
-              email: account.email,
-              role: account.role,
-              avatarUrl: account.avatarUrl || undefined,
+            workspaces: [],
+            workspace: {
+              id: "",
+              identifier: "",
+              internalId: "",
+              name: "",
+              slug: "",
+              icon: "chrono",
+              iconBg: "#121419",
+              iconColor: "#5e6ad2",
+              plan: "Free",
+              createdAt: "",
+              updatedAt: "",
             },
-          });
-        } else if (session?.user) {
-          const fallbackName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || authenticatedEmail.split("@")[0];
-          useLinearStore.setState({
-            currentAccountId: session.user.id,
+            currentWorkspaceId: "",
+            projects: [],
+            issues: [],
+            habits: [],
+            tags: [],
+            projectFolders: [],
+            trash: [],
+            timelineEvents: [],
+            accounts: [],
+            currentAccountId: session?.user?.id || "",
             currentUser: {
-              id: session.user.id,
-              name: fallbackName,
+              id: session?.user?.id || "",
+              name: session?.user?.user_metadata?.full_name || authenticatedEmail.split("@")[0],
               username: authenticatedEmail.split("@")[0],
-              email: session.user.email || authenticatedEmail,
+              email: authenticatedEmail,
               role: "member",
             },
           });
+        } else {
+          const account = state.accounts.find((item) => item.email.toLowerCase() === authenticatedEmail);
+          if (account) {
+            useLinearStore.setState({
+              currentAccountId: account.id,
+              currentUser: {
+                id: account.id,
+                identifier: account.identifier,
+                internalId: account.internalId,
+                name: account.name,
+                username: account.username,
+                email: account.email,
+                role: account.role,
+                avatarUrl: account.avatarUrl || undefined,
+              },
+            });
+          } else if (session?.user) {
+            const fallbackName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || authenticatedEmail.split("@")[0];
+            useLinearStore.setState({
+              currentAccountId: session.user.id,
+              currentUser: {
+                id: session.user.id,
+                name: fallbackName,
+                username: authenticatedEmail.split("@")[0],
+                email: session.user.email || authenticatedEmail,
+                role: "member",
+              },
+            });
+          }
         }
       }
 
@@ -65,6 +104,10 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
       (eventType, row) => {
         if (!row) return;
         const store = useLinearStore.getState();
+        const userWsIds = new Set(store.workspaces.map((w) => w.id));
+
+        // Strict guard: ignore project event if not in user's authorized workspaces
+        if (!row.workspace_id || !userWsIds.has(row.workspace_id)) return;
 
         if (eventType === "INSERT") {
           const exists = store.projects.some((p) => p.id === row.id || p.slug === row.slug);
@@ -73,7 +116,7 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
               id: row.id,
               identifier: row.identifier || `PRJ-${store.projects.length + 1}`,
               internalId: row.internal_id || `prj_${row.id}`,
-              workspaceId: row.workspace_id || store.currentWorkspaceId,
+              workspaceId: row.workspace_id,
               teamId: row.team_id || "team-1",
               name: row.name,
               slug: row.slug,
@@ -142,6 +185,10 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
       (eventType, row) => {
         if (!row) return;
         const store = useLinearStore.getState();
+        const userWsIds = new Set(store.workspaces.map((w) => w.id));
+
+        // Strict guard: ignore issue event if not in user's authorized workspaces
+        if (!row.workspace_id || !userWsIds.has(row.workspace_id)) return;
 
         if (eventType === "INSERT") {
           const exists = store.issues.some((i) => i.id === row.id || i.identifier === row.identifier);
@@ -150,7 +197,7 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
               id: row.id,
               identifier: row.identifier || `ISS-${store.issues.length + 1}`,
               internalId: row.internal_id || `iss_${row.id}`,
-              workspaceId: row.workspace_id || store.currentWorkspaceId,
+              workspaceId: row.workspace_id,
               teamId: row.team_id || "team-1",
               projectId: row.project_id,
               title: row.title,
@@ -215,27 +262,10 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
         const store = useLinearStore.getState();
 
         if (eventType === "INSERT") {
-          const exists = store.workspaces.some((w) => w.id === row.id || w.slug === row.slug);
-          if (!exists) {
-            const formatted = {
-              id: row.id,
-              identifier: row.identifier || `WS-${store.workspaces.length + 1}`,
-              internalId: row.internal_id || `wrk_${row.id}`,
-              name: row.name,
-              slug: row.slug,
-              icon: row.icon || "chrono",
-              iconBg: row.icon_bg || "#121419",
-              iconColor: row.icon_color || "#5e6ad2",
-              plan: row.plan || "Pro",
-              createdAt: row.created_at || new Date().toISOString(),
-              updatedAt: row.updated_at || new Date().toISOString(),
-            };
-
-            useLinearStore.setState({
-              workspaces: [...store.workspaces, formatted],
-            });
-          }
+          // Never blindly add workspaces. Refresh from server to verify explicit membership!
+          void pullFromSupabase();
         } else if (eventType === "UPDATE") {
+          if (!store.workspaces.some((w) => w.id === row.id)) return;
           useLinearStore.setState({
             workspaces: store.workspaces.map((w) => {
               if (w.id === row.id) {
@@ -254,9 +284,14 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
             }),
           });
         } else if (eventType === "DELETE") {
+          if (!store.workspaces.some((w) => w.id === row.id)) return;
+          const remaining = store.workspaces.filter((w) => w.id !== row.id);
           useLinearStore.setState({
-            workspaces: store.workspaces.filter((w) => w.id !== row.id),
+            workspaces: remaining,
           });
+          if (store.currentWorkspaceId === row.id) {
+            void pullFromSupabase();
+          }
         }
       },
 
