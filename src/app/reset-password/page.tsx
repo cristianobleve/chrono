@@ -127,7 +127,14 @@ export default function ResetPasswordPage() {
     });
 
     if (resetError) {
-      setError(resetError.message);
+      const msg = resetError.message.toLowerCase();
+      if (msg.includes("rate limit")) {
+        setError(
+          "Limite orario di invio email raggiunto sul server predefinito di Supabase (2 email/ora). Riprova tra qualche minuto o configura un server SMTP dedicato."
+        );
+      } else {
+        setError(resetError.message);
+      }
     } else {
       setMessage("Se l'indirizzo email è registrato, riceverai un link per reimpostare la password.");
     }
