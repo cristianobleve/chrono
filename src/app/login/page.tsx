@@ -18,11 +18,10 @@ import {
 import { ChronoWordmark } from "@/components/ui/ChronoLogo";
 import { Silk } from "@/components/ui/react-bits/Silk";
 // [PRESERVED]: React Bits ASCII Wave & ASCII Video Art components
-import { AsciiWaveBackground } from "@/components/ui/react-bits/AsciiWaveBackground";
-import { AsciiVideoPlayer } from "@/components/ui/react-bits/AsciiVideoPlayer";
+// import { AsciiWaveBackground } from "@/components/ui/react-bits/AsciiWaveBackground";
+// import { AsciiVideoPlayer } from "@/components/ui/react-bits/AsciiVideoPlayer";
 import { isPasskeySupported } from "@/lib/passkeyAuth";
 import { supabase } from "@/lib/supabase";
-import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,30 +37,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [passkeyAvailable, setPasskeyAvailable] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
     setPasskeyAvailable(isPasskeySupported());
   }, []);
-
-  // Synchronize play/pause commands to YouTube iframe via postMessage API without unmounting
-  useEffect(() => {
-    if (!iframeRef.current?.contentWindow) return;
-    try {
-      if (isPlaying) {
-        iframeRef.current.contentWindow.postMessage(
-          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-          "*"
-        );
-      } else {
-        iframeRef.current.contentWindow.postMessage(
-          JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
-          "*"
-        );
-      }
-    } catch (e) {}
-  }, [isPlaying]);
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
