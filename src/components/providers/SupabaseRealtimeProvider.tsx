@@ -18,8 +18,64 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
     if (initialSyncRef.current) return;
     initialSyncRef.current = true;
 
-    // 1. Recover any user projects/workspaces from previous localStorage keys
+    const { data: { subscription: authSubscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" && typeof window !== "undefined") {
+        if (window.location.pathname !== "/reset-password") {
+          window.location.replace("/reset-password?recovery=1");
+        }
+      }
+    });
+
+    // 1. Intercept hash-based or query-based auth tokens (e.g. #access_token=...&type=recovery on root URL)
     void (async () => {
+      if (typeof window !== "undefined") {
+        const hash = window.location.hash;
+        if (hash && hash.includes("access_token=")) {
+          const hashParams = new URLSearchParams(hash.substring(1));
+          const accessToken = hashParams.get("access_token");
+          const refreshToken = hashParams.get("refresh_token");
+          const hashType = hashParams.get("type");
+
+          let isJwtRecovery = false;
+          if (accessToken) {
+            try {
+              const payloadBase64 = accessToken.split(".")[1];
+              if (payloadBase64) {
+                const decoded = JSON.parse(atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/")));
+                if (Array.isArray(decoded?.amr) && decoded.amr.some((entry: any) => entry?.method === "recovery")) {
+                  isJwtRecovery = true;
+                }
+              }
+            } catch (_) {}
+          }
+
+          if (accessToken && refreshToken) {
+            await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+
+            if (hashType === "recovery" || isJwtRecovery || window.location.pathname === "/reset-password") {
+              window.location.replace("/reset-password?recovery=1");
+              return;
+            } else if (window.location.pathname === "/") {
+              window.location.replace("/projects");
+              return;
+            }
+          }
+        }
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const tokenHash = searchParams.get("token_hash");
+        const queryType = searchParams.get("type");
+        if (tokenHash && queryType === "recovery" && window.location.pathname !== "/reset-password") {
+          window.location.replace(
+            `/reset-password?recovery=1&token_hash=${encodeURIComponent(tokenHash)}&type=recovery`
+          );
+          return;
+        }
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       const authenticatedEmail = session?.user?.email?.toLowerCase();
       if (authenticatedEmail) {
@@ -336,6 +392,7 @@ export const SupabaseRealtimeProvider: React.FC<{ children: React.ReactNode }> =
     setIsSubscribed(true);
 
     return () => {
+      authSubscription.unsubscribe();
       unsubscribe();
     };
   }, [pullFromSupabase, addToast]);
