@@ -14,6 +14,7 @@ const publicPaths = [
   "/auth/callback",
   "/invite",
   "/api/workspace/invites",
+  "/api/auth/reset-password",
 ];
 
 function isPublicRequest(request: NextRequest) {

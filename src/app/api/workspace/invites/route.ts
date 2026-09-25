@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendWorkspaceInviteEmail } from "@/lib/mailer";
 
 const supabaseServer = createClient(
   process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -227,8 +228,12 @@ export async function POST(req: Request) {
     const duplicate = error.code === "23505";
     return NextResponse.json({ error: duplicate ? "A pending invitation already exists for this email" : error.message }, { status: duplicate ? 409 : 500 });
   }
-  const { data: recipient } = await supabaseServer.from("accounts").select("id").ilike("email", email).maybeSingle();
-  const { data: wsData } = await supabaseServer.from("workspaces").select("name").eq("id", workspaceId).maybeSingle();
+  const [{ data: recipient }, { data: wsData }, { data: inviterAccount }] = await Promise.all([
+    supabaseServer.from("accounts").select("id").ilike("email", email).maybeSingle(),
+    supabaseServer.from("workspaces").select("name").eq("id", workspaceId).maybeSingle(),
+    supabaseServer.from("accounts").select("name, email").eq("id", auth.accountId).maybeSingle(),
+  ]);
+
   if (recipient) {
     await createNotification({
       workspaceId,
@@ -247,17 +252,26 @@ export async function POST(req: Request) {
     });
   }
 
-  // Safe attempt to send Supabase Auth invite email if SMTP is configured
-  try {
-    const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    await supabaseServer.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${origin}/invite/${rawToken}`,
-    });
-  } catch (err: any) {
-    console.log("[Invites] Supabase admin inviteUser notice:", err?.message || err);
-  }
+  const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://chrono.cristianobleve.com";
+  const inviteUrl = `${origin}/invite/${rawToken}`;
 
-  return NextResponse.json({ invitation, token: rawToken }, { status: 201 });
+  const mailResult = await sendWorkspaceInviteEmail({
+    to: email,
+    workspaceName: wsData?.name || "Workspace Chrono",
+    inviterName: inviterAccount?.name || auth.email || "Un amministratore",
+    role,
+    inviteUrl,
+  });
+
+  return NextResponse.json(
+    {
+      invitation,
+      token: rawToken,
+      emailSent: mailResult.sent,
+      emailError: mailResult.error,
+    },
+    { status: 201 }
+  );
 }
 
 export async function DELETE(req: Request) {

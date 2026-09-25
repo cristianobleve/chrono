@@ -122,23 +122,24 @@ export default function ResetPasswordPage() {
     setError("");
     setMessage("");
 
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/reset-password?recovery=1`,
-    });
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
 
-    if (resetError) {
-      const msg = resetError.message.toLowerCase();
-      if (msg.includes("rate limit")) {
-        setError(
-          "Limite orario di invio email raggiunto sul server predefinito di Supabase (2 email/ora). Riprova tra qualche minuto o configura un server SMTP dedicato."
-        );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error || "Impossibile inviare il link di recupero.");
       } else {
-        setError(resetError.message);
+        setMessage("Se l'indirizzo email è registrato, riceverai a breve un'email per reimpostare la password.");
       }
-    } else {
-      setMessage("Se l'indirizzo email è registrato, riceverai un link per reimpostare la password.");
+    } catch (err: any) {
+      setError(err?.message || "Errore di rete durante l'invio dell'email.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const updatePassword = async (event: FormEvent) => {
