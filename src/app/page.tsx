@@ -31,18 +31,15 @@ export default function HomePage() {
           className="p-[5px] w-full"
           aria-labelledby="hero-title"
         >
-          <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] max-h-[1150px] rounded-[22px] sm:rounded-[26px] border border-white/10 bg-[#07080a] overflow-hidden flex flex-col justify-between shadow-[0_0_60px_rgba(0,0,0,0.9)]">
+          <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] max-h-[1150px] rounded-[22px] sm:rounded-[26px] border border-white/10 bg-[#07080a] overflow-hidden flex flex-col items-center justify-center shadow-[0_0_60px_rgba(0,0,0,0.9)]">
             {/* Atmospheric Volumetric Clouds WebGL Shader */}
             <AtmosphericClouds className="absolute inset-0 z-0" speed={0.7} cloudCount={5} />
 
             {/* Subtle radial vignette overlay for crisp typographic contrast */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.55)_0%,rgba(7,8,11,0.22)_45%,rgba(7,8,11,0.88)_100%)] pointer-events-none z-[1]" />
 
-            {/* Top spacer to balance the floating navbar */}
-            <div className="h-16 sm:h-20 w-full relative z-10 shrink-0" />
-
             {/* Main Hero Content Vertically Centered in Available Screen Height */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto -mt-6 sm:-mt-8">
+            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto">
               <HeroMotion className="flex flex-col items-center">
                 <h1
                   id="hero-title"
@@ -74,22 +71,6 @@ export default function HomePage() {
                   {t.home.heroSubtext}
                 </p>
               </HeroMotion>
-            </div>
-
-            {/* Bottom Status & Architectural Navigation Bar */}
-            <div className="relative z-10 w-full px-6 py-4 sm:px-8 sm:py-4 flex items-center justify-between text-xs text-zinc-400 border-t border-white/[0.06] bg-black/30 backdrop-blur-sm shrink-0">
-              <span className="font-mono text-[11px] text-zinc-400">CHRONO WORKSPACE</span>
-              <a
-                href="#features"
-                className="flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors group cursor-pointer"
-              >
-                <span>Esplora la piattaforma</span>
-                <span className="text-[10px] transition-transform group-hover:translate-y-0.5">↓</span>
-              </a>
-              <span className="flex items-center gap-2 font-mono text-[11px] text-zinc-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                PostgreSQL 16 / Active
-              </span>
             </div>
           </div>
         </section>
