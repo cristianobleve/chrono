@@ -39,35 +39,35 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.55)_0%,rgba(7,8,11,0.22)_45%,rgba(7,8,11,0.88)_100%)] pointer-events-none z-[1]" />
 
             {/* Main Hero Content Vertically Centered in Available Screen Height */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto">
+            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto">
               <HeroMotion className="flex flex-col items-center">
                 <h1
                   id="hero-title"
-                  className="text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold tracking-tight text-white leading-[1.05] max-w-4xl"
+                  className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-semibold tracking-[-0.025em] text-white leading-[1.12] max-w-3xl"
                 >
                   {t.home.heroTitle}
                 </h1>
 
-                <p className="mt-6 text-base sm:text-lg md:text-xl leading-relaxed text-zinc-300 max-w-2xl font-normal">
+                <p className="mt-5 text-sm sm:text-base leading-relaxed text-zinc-400 max-w-lg font-normal">
                   {t.home.heroSubtitle}
                 </p>
 
-                <div className="mt-8 sm:mt-9 flex flex-wrap items-center justify-center gap-3.5">
+                <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                   <Link
                     href="/login"
-                    className="flex h-11 items-center gap-2 rounded-full bg-white px-7 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_24px_rgba(255,255,255,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="flex h-10 items-center gap-2 rounded-full bg-white px-6 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
                     {t.home.heroCta}
                   </Link>
                   <Link
                     href="/product"
-                    className="flex h-11 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-6 text-xs sm:text-sm font-medium text-zinc-200 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="flex h-10 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-5 text-xs sm:text-sm font-medium text-zinc-300 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
                     {t.home.heroSecondaryCta}
                   </Link>
                 </div>
 
-                <p className="mt-5 text-xs text-zinc-400 font-normal">
+                <p className="mt-4 text-xs text-zinc-500 font-normal">
                   {t.home.heroSubtext}
                 </p>
               </HeroMotion>
@@ -78,7 +78,7 @@ export default function HomePage() {
         {/* Feature Bento Grid */}
         <section id="features" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24" aria-labelledby="features-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-16">
-            <h2 id="features-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 id="features-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
               {t.home.featuresTitle}
             </h2>
             <p className="mt-4 text-sm sm:text-base text-zinc-400">
@@ -162,7 +162,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10">
-                <h3 className="text-lg font-medium text-white">{t.home.cardBacklogFooterTitle}</h3>
+                <h3 className="font-heading text-lg font-medium text-white">{t.home.cardBacklogFooterTitle}</h3>
                 <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
                   {t.home.cardBacklogFooterDesc}
                 </p>
@@ -212,7 +212,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10">
-                <h3 className="text-lg font-medium text-white">{t.home.cardMilestoneFooterTitle}</h3>
+                <h3 className="font-heading text-lg font-medium text-white">{t.home.cardMilestoneFooterTitle}</h3>
                 <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
                   {t.home.cardMilestoneFooterDesc}
                 </p>
@@ -254,7 +254,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10">
-                <h3 className="text-lg font-medium text-white">{t.home.cardCommandFooterTitle}</h3>
+                <h3 className="font-heading text-lg font-medium text-white">{t.home.cardCommandFooterTitle}</h3>
                 <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
                   {t.home.cardCommandFooterDesc}
                 </p>
@@ -294,7 +294,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10">
-                <h3 className="text-lg font-medium text-white">{t.home.cardMcpFooterTitle}</h3>
+                <h3 className="font-heading text-lg font-medium text-white">{t.home.cardMcpFooterTitle}</h3>
                 <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
                   {t.home.cardMcpFooterDesc}
                 </p>
@@ -306,7 +306,7 @@ export default function HomePage() {
         {/* 3-Step Process */}
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="process-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-14">
-            <h2 id="process-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 id="process-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
               {t.home.workflowTitle}
             </h2>
             <p className="mt-4 text-sm sm:text-base text-zinc-400">
@@ -318,7 +318,7 @@ export default function HomePage() {
             <MotionCard delay={0.05} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
                 <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step1Num}</span>
-                <h3 className="mt-6 text-xl font-medium text-white">{t.home.step1Title}</h3>
+                <h3 className="font-heading mt-6 text-xl font-medium text-white">{t.home.step1Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step1Desc}
                 </p>
@@ -331,7 +331,7 @@ export default function HomePage() {
             <MotionCard delay={0.1} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
                 <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step2Num}</span>
-                <h3 className="mt-6 text-xl font-medium text-white">{t.home.step2Title}</h3>
+                <h3 className="font-heading mt-6 text-xl font-medium text-white">{t.home.step2Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step2Desc}
                 </p>
@@ -344,7 +344,7 @@ export default function HomePage() {
             <MotionCard delay={0.15} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
                 <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step3Num}</span>
-                <h3 className="mt-6 text-xl font-medium text-white">{t.home.step3Title}</h3>
+                <h3 className="font-heading mt-6 text-xl font-medium text-white">{t.home.step3Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step3Desc}
                 </p>
@@ -359,7 +359,7 @@ export default function HomePage() {
         {/* System Specifications Grid */}
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="specs-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-14">
-            <h2 id="specs-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 id="specs-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
               {t.home.specsTitle}
             </h2>
             <p className="mt-4 text-sm sm:text-base text-zinc-400">
@@ -370,7 +370,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <MotionCard delay={0.05} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
               <Database className="h-5 w-5 text-zinc-300" />
-              <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec1Title}</h3>
+              <h3 className="font-heading mt-5 text-lg font-medium text-white">{t.home.spec1Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec1Desc}
               </p>
@@ -378,7 +378,7 @@ export default function HomePage() {
 
             <MotionCard delay={0.1} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
               <Shield className="h-5 w-5 text-zinc-300" />
-              <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec2Title}</h3>
+              <h3 className="font-heading mt-5 text-lg font-medium text-white">{t.home.spec2Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec2Desc}
               </p>
@@ -386,7 +386,7 @@ export default function HomePage() {
 
             <MotionCard delay={0.15} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
               <Command className="h-5 w-5 text-zinc-300" />
-              <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec3Title}</h3>
+              <h3 className="font-heading mt-5 text-lg font-medium text-white">{t.home.spec3Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec3Desc}
               </p>
@@ -394,7 +394,7 @@ export default function HomePage() {
 
             <MotionCard delay={0.2} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
               <Terminal className="h-5 w-5 text-emerald-400" />
-              <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec4Title}</h3>
+              <h3 className="font-heading mt-5 text-lg font-medium text-white">{t.home.spec4Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec4Desc}
               </p>
@@ -405,7 +405,7 @@ export default function HomePage() {
         {/* Interactive FAQ Accordion */}
         <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="faq-title">
           <FadeIn className="text-center max-w-2xl mx-auto mb-14">
-            <h2 id="faq-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 id="faq-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
               {t.home.faqTitle}
             </h2>
             <p className="mt-4 text-sm sm:text-base text-zinc-400">
@@ -462,7 +462,7 @@ export default function HomePage() {
             <div className="relative rounded-3xl border border-white/15 bg-gradient-to-b from-[#11131a] to-[#08090b] p-10 sm:p-16 text-center shadow-2xl overflow-hidden">
               <h2
                 id="cta-title"
-                className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-tight max-w-2xl mx-auto"
+                className="font-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.02em] text-white leading-tight max-w-2xl mx-auto"
               >
                 {t.home.ctaTitle}
               </h2>

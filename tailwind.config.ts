@@ -68,9 +68,8 @@ const config: Config = {
       },
       fontFamily: {
         heading: [
-          '"Geist"',
           "var(--font-heading)",
-          "var(--font-aeonik)",
+          '"DM Sans"',
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
