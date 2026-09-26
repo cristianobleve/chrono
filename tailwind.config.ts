@@ -68,9 +68,10 @@ const config: Config = {
       },
       fontFamily: {
         heading: [
-          "var(--font-dm-sans)",
+          "var(--font-inter-display)",
+          '"Inter Display"',
           "var(--font-heading)",
-          '"DM Sans"',
+          '"Inter"',
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
