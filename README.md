@@ -48,7 +48,7 @@ During early prototyping phases, parts of the codebase were generated with artif
 Chrono implements a strict multi-tenant model directly inside PostgreSQL on Supabase. Each workspace represents an isolated boundary. Memberships, projects, issue records, labels, notifications, and storage objects are verified at the database layer on every query. Users can never view or modify data outside their active workspace memberships.
 
 <p align="left">
-  <img src="assets/architecture.svg" alt="Chrono System Architecture" width="100%" />
+  <img src="screenshots/architecture.png" alt="Chrono System Architecture and Multi-Tenant Isolation" width="100%" />
 </p>
 
 ## <img src="assets/icons/terminal.svg" width="18" height="18" align="absmiddle" /> Getting Started
@@ -88,6 +88,11 @@ Configure your credentials and database connection details inside the `.env.loca
 | `GEMINI_API_KEY` | Optional | Google AI Studio API key used by the workspace agent |
 | `OPENAI_API_KEY` | Optional | OpenAI API key for alternative LLM providers |
 | `GROQ_API_KEY` | Optional | Groq API key for low latency model inference |
+| `SMTP_HOST` | Optional | SMTP relay host for invite and recovery emails (e.g. `smtp.resend.com`) |
+| `SMTP_PORT` | Optional | Secure SMTP port (`465` for SSL or `587` for TLS) |
+| `SMTP_USER` | Optional | SMTP authentication username |
+| `SMTP_PASS` | Optional | SMTP authentication password or API key |
+| `SMTP_FROM` | Optional | Default sender address and display name |
 | `R2_BUCKET_NAME` | Optional | S3 or Cloudflare R2 bucket name for file attachments |
 | `R2_PUBLIC_DOMAIN` | Optional | Public CDN domain for uploaded media assets |
 
