@@ -68,11 +68,13 @@ const config: Config = {
       },
       fontFamily: {
         heading: [
+          "var(--font-dm-sans)",
           "var(--font-heading)",
           '"DM Sans"',
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
+          "Roboto",
           "sans-serif",
         ],
         sans: [
