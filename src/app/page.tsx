@@ -18,6 +18,7 @@ import {
   MotionCard,
 } from "@/components/marketing/HomeMotion";
 import { AtmosphericClouds } from "@/components/ui/AtmosphericClouds";
+import { ChronoDialBackground } from "@/components/ui/ChronoDialBackground";
 import { useTranslation } from "@/i18n";
 
 export default function HomePage() {
@@ -456,38 +457,47 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Framed Call to Action Card */}
-        <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20" aria-labelledby="cta-title">
-          <FadeIn>
-            <div className="relative rounded-3xl border border-white/15 bg-gradient-to-b from-[#11131a] to-[#08090b] p-10 sm:p-16 text-center shadow-2xl overflow-hidden">
-              <h2
-                id="cta-title"
-                className="font-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.02em] text-white leading-tight max-w-2xl mx-auto"
-              >
-                {t.home.ctaTitle}
-              </h2>
-              <p className="mt-5 text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
-                {t.home.ctaSubtitle}
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link
-                  href="/login"
-                  className="flex h-11 items-center gap-2 rounded-full bg-white px-6 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_24px_rgba(255,255,255,0.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        {/* Full-Screen Framed Call to Action Island with Chrono Dial Background */}
+        <section className="p-[5px] w-full" aria-labelledby="cta-title">
+          <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] rounded-[22px] sm:rounded-[26px] border border-white/10 overflow-hidden bg-[#07080b] flex items-center justify-center">
+            {/* Background: Chrono Precision Dial / Chronogram Engine */}
+            <ChronoDialBackground />
+
+            {/* Contrast vignette to ensure perfect text readability */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.60)_0%,rgba(7,8,11,0.25)_45%,rgba(7,8,11,0.92)_100%)] pointer-events-none z-[1]" />
+
+            {/* Content centered vertically and horizontally in the available screen */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto">
+              <FadeIn className="flex flex-col items-center">
+                <h2
+                  id="cta-title"
+                  className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-semibold tracking-[-0.025em] text-white leading-[1.12] max-w-3xl"
                 >
-                  {t.home.ctaButton} <ArrowUpRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/method"
-                  className="flex h-11 items-center gap-2 rounded-full border border-white/15 bg-white/[0.02] px-6 text-xs sm:text-sm font-medium text-zinc-300 transition-colors hover:border-white/30 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  {t.home.ctaSecondary}
-                </Link>
-              </div>
-              <p className="mt-5 text-xs text-zinc-500">
-                {t.home.ctaFootnote}
-              </p>
+                  {t.home.ctaTitle}
+                </h2>
+                <p className="mt-5 text-sm sm:text-base text-zinc-400 max-w-lg mx-auto leading-relaxed font-normal">
+                  {t.home.ctaSubtitle}
+                </p>
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                  <Link
+                    href="/login"
+                    className="flex h-10 items-center gap-2 rounded-full bg-white px-6 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {t.home.ctaButton} <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="/method"
+                    className="flex h-10 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-5 text-xs sm:text-sm font-medium text-zinc-300 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {t.home.ctaSecondary}
+                  </Link>
+                </div>
+                <p className="mt-5 text-xs text-zinc-500 font-normal">
+                  {t.home.ctaFootnote}
+                </p>
+              </FadeIn>
             </div>
-          </FadeIn>
+          </div>
         </section>
       </div>
     </MarketingChrome>
