@@ -638,7 +638,7 @@ export const en: TranslationDictionary = {
     heroSubtitle: "Projects, milestones, and backlogs unified in real time. Native MCP protocol to coordinate workflows directly with your AI agents.",
     heroCta: "Start with Chrono",
     heroSecondaryCta: "Explore capabilities",
-    heroSubtext: "No credit card required · Live PostgreSQL engine · Active MCP server",
+    heroSubtext: "No credit card required. Live PostgreSQL engine and active MCP server.",
     featuresTitle: "Tools built for operational precision.",
     featuresSubtitle: "From high-speed backlog management to milestone tracking, engineered to eliminate daily friction.",
 

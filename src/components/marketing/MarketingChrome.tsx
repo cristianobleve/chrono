@@ -8,9 +8,10 @@ import { LinearSelect, SelectOption } from "@/components/ui/LinearSelect";
 
 interface MarketingChromeProps {
   children: React.ReactNode;
+  floatingHeader?: boolean;
 }
 
-export function MarketingChrome({ children }: MarketingChromeProps) {
+export function MarketingChrome({ children, floatingHeader = false }: MarketingChromeProps) {
   const { t, lang, setLanguage, languages } = useTranslation();
 
   const productLinks = [
@@ -28,8 +29,18 @@ export function MarketingChrome({ children }: MarketingChromeProps) {
   return (
     <main className="min-h-screen bg-[#08090b] text-zinc-100 flex flex-col justify-between">
       {/* Salix-inspired floating pill header */}
-      <div className="sticky top-4 z-40 mx-auto w-full max-w-5xl px-4 sm:px-6">
-        <header className="flex h-14 items-center justify-between rounded-full border border-white/10 bg-[#101216]/85 backdrop-blur-md px-5 shadow-2xl">
+      <div
+        className={
+          floatingHeader
+            ? "fixed top-5 left-1/2 -translate-x-1/2 z-50 mx-auto w-full max-w-5xl px-4 sm:px-6 pointer-events-none"
+            : "sticky top-4 z-40 mx-auto w-full max-w-5xl px-4 sm:px-6"
+        }
+      >
+        <header
+          className={`flex h-14 items-center justify-between rounded-full border border-white/10 bg-[#101216]/85 backdrop-blur-md px-5 shadow-2xl ${
+            floatingHeader ? "pointer-events-auto" : ""
+          }`}
+        >
           <Link href="/" aria-label="Chrono home" className="flex items-center gap-2.5">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04]">
               <ChronoLogo size={16} />

@@ -638,7 +638,7 @@ export const es: TranslationDictionary = {
     heroSubtitle: "Proyectos, hitos y backlogs unificados en tiempo real. Con protocolo nativo MCP para coordinar flujos de trabajo directamente con tus agentes de IA.",
     heroCta: "Comenzar con Chrono",
     heroSecondaryCta: "Explorar funciones",
-    heroSubtext: "Sin tarjeta de crédito · Motor PostgreSQL en tiempo real · Servidor MCP activo",
+    heroSubtext: "Sin tarjeta de crédito. Motor PostgreSQL en tiempo real y servidor MCP activo.",
     featuresTitle: "Herramientas diseñadas para máxima precisión operativa.",
     featuresSubtitle: "Desde la gestión ágil del backlog hasta el control de hitos, optimizado para eliminar la fricción cotidiana.",
 

@@ -16,59 +16,87 @@ import {
   HeroMotion,
   FadeIn,
   MotionCard,
-  AmbientColorGradients,
 } from "@/components/marketing/HomeMotion";
+import { AtmosphericClouds } from "@/components/ui/AtmosphericClouds";
 import { useTranslation } from "@/i18n";
 
 export default function HomePage() {
   const { t } = useTranslation();
 
   return (
-    <MarketingChrome>
-      {/* Ambient Color Gradients across the page */}
-      <div className="relative">
-        <AmbientColorGradients />
+    <MarketingChrome floatingHeader>
+      <div className="relative w-full">
+        {/* Enormous Framed Rectangular Block with 5px padding from each side */}
+        <section
+          className="p-[5px] w-full"
+          aria-labelledby="hero-title"
+        >
+          <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] max-h-[1150px] rounded-[22px] sm:rounded-[26px] border border-white/10 bg-[#07080a] overflow-hidden flex flex-col justify-between shadow-[0_0_60px_rgba(0,0,0,0.9)]">
+            {/* Atmospheric Volumetric Clouds WebGL Shader */}
+            <AtmosphericClouds className="absolute inset-0 z-0" speed={0.7} cloudCount={5} />
 
-        {/* Hero Section */}
-        <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28" aria-labelledby="hero-title">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 text-center">
-            <HeroMotion>
-              <h1
-                id="hero-title"
-                className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] max-w-4xl mx-auto"
+            {/* Subtle radial vignette overlay for crisp typographic contrast */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.55)_0%,rgba(7,8,11,0.22)_45%,rgba(7,8,11,0.88)_100%)] pointer-events-none z-[1]" />
+
+            {/* Top spacer to balance the floating navbar */}
+            <div className="h-16 sm:h-20 w-full relative z-10 shrink-0" />
+
+            {/* Main Hero Content Vertically Centered in Available Screen Height */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto -mt-6 sm:-mt-8">
+              <HeroMotion className="flex flex-col items-center">
+                <h1
+                  id="hero-title"
+                  className="text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold tracking-tight text-white leading-[1.05] max-w-4xl"
+                >
+                  {t.home.heroTitle}
+                </h1>
+
+                <p className="mt-6 text-base sm:text-lg md:text-xl leading-relaxed text-zinc-300 max-w-2xl font-normal">
+                  {t.home.heroSubtitle}
+                </p>
+
+                <div className="mt-8 sm:mt-9 flex flex-wrap items-center justify-center gap-3.5">
+                  <Link
+                    href="/login"
+                    className="flex h-11 items-center gap-2 rounded-full bg-white px-7 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_24px_rgba(255,255,255,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {t.home.heroCta}
+                  </Link>
+                  <Link
+                    href="/product"
+                    className="flex h-11 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-6 text-xs sm:text-sm font-medium text-zinc-200 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {t.home.heroSecondaryCta}
+                  </Link>
+                </div>
+
+                <p className="mt-5 text-xs text-zinc-400 font-normal">
+                  {t.home.heroSubtext}
+                </p>
+              </HeroMotion>
+            </div>
+
+            {/* Bottom Status & Architectural Navigation Bar */}
+            <div className="relative z-10 w-full px-6 py-4 sm:px-8 sm:py-4 flex items-center justify-between text-xs text-zinc-400 border-t border-white/[0.06] bg-black/30 backdrop-blur-sm shrink-0">
+              <span className="font-mono text-[11px] text-zinc-400">CHRONO WORKSPACE</span>
+              <a
+                href="#features"
+                className="flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors group cursor-pointer"
               >
-                {t.home.heroTitle}
-              </h1>
-
-              <p className="mt-6 text-base sm:text-lg leading-relaxed text-zinc-400 max-w-2xl mx-auto">
-                {t.home.heroSubtitle}
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link
-                  href="/login"
-                  className="flex h-11 items-center gap-2 rounded-full bg-white px-6 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_24px_rgba(255,255,255,0.15)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  {t.home.heroCta} <ArrowUpRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/product"
-                  className="flex h-11 items-center gap-2 rounded-full border border-white/15 bg-white/[0.02] px-6 text-xs sm:text-sm font-medium text-zinc-300 transition-colors hover:border-white/30 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  {t.home.heroSecondaryCta}
-                </Link>
-              </div>
-
-              <p className="mt-5 text-xs text-zinc-500">
-                {t.home.heroSubtext}
-              </p>
-            </HeroMotion>
+                <span>Esplora la piattaforma</span>
+                <span className="text-[10px] transition-transform group-hover:translate-y-0.5">↓</span>
+              </a>
+              <span className="flex items-center gap-2 font-mono text-[11px] text-zinc-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                PostgreSQL 16 / Active
+              </span>
+            </div>
           </div>
         </section>
 
-        {/* Feature Bento Grid (Rich UI Cards) */}
-        <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="features-title">
-          <FadeIn className="text-center max-w-3xl mx-auto mb-14">
+        {/* Feature Bento Grid */}
+        <section id="features" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24" aria-labelledby="features-title">
+          <FadeIn className="text-center max-w-3xl mx-auto mb-16">
             <h2 id="features-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
               {t.home.featuresTitle}
             </h2>
@@ -78,25 +106,22 @@ export default function HomePage() {
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1: Issue & Backlog (Spans 2 cols on lg) */}
+            {/* Card 1: Issue & Backlog */}
             <MotionCard delay={0.05} className="lg:col-span-2 relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
-              {/* Top hairline gradient highlight */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500/60 via-purple-500/50 to-pink-500/30" />
-
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
-                    <CheckSquare className="h-4 w-4 text-indigo-400" />
+                    <CheckSquare className="h-4 w-4 text-zinc-300" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">{t.home.cardBacklogTitle}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-zinc-500">
-                    <span className="rounded-full bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 text-indigo-300">{t.home.cardBacklogAll}</span>
-                    <span className="rounded-full bg-white/[0.03] px-2 py-0.5 text-zinc-500">{t.home.cardBacklogInProgress}</span>
-                    <span className="rounded-full bg-white/[0.03] px-2 py-0.5 text-zinc-500">{t.home.cardBacklogDone}</span>
+                  <div className="flex items-center gap-1.5 text-[11px] text-zinc-400">
+                    <span className="rounded-full bg-white/[0.08] border border-white/10 px-2 py-0.5 text-zinc-200">{t.home.cardBacklogAll}</span>
+                    <span className="rounded-full bg-white/[0.03] px-2 py-0.5 text-zinc-400">{t.home.cardBacklogInProgress}</span>
+                    <span className="rounded-full bg-white/[0.03] px-2 py-0.5 text-zinc-400">{t.home.cardBacklogDone}</span>
                   </div>
                 </div>
 
-                {/* Realistic Issue UI Rows */}
+                {/* Issue UI Rows */}
                 <div className="mt-5 space-y-2.5">
                   <div className="flex items-center justify-between rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs transition-colors hover:border-white/20">
                     <div className="flex items-center gap-3 min-w-0">
@@ -105,14 +130,14 @@ export default function HomePage() {
                       </span>
                       <span className="font-mono text-zinc-400 shrink-0">FIR-248</span>
                       <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow1Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 text-[10px] text-indigo-300">{t.home.cardBacklogRow1Tag}</span>
+                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow1Tag}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                       <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/20 px-2 py-0.5 text-[10px] text-red-400">
                         <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
                         {t.home.cardBacklogRow1Priority}
                       </span>
-                      <span className="h-6 w-6 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
+                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
                         CB
                       </span>
                     </div>
@@ -123,14 +148,14 @@ export default function HomePage() {
                       <span className="h-4 w-4 rounded border border-white/20" />
                       <span className="font-mono text-zinc-400 shrink-0">FIR-249</span>
                       <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow2Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-purple-500/10 border border-purple-500/20 px-1.5 py-0.5 text-[10px] text-purple-300">{t.home.cardBacklogRow2Tag}</span>
+                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow2Tag}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] text-amber-400">
                         <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                         {t.home.cardBacklogRow2Priority}
                       </span>
-                      <span className="h-6 w-6 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
+                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
                         AI
                       </span>
                     </div>
@@ -141,13 +166,13 @@ export default function HomePage() {
                       <span className="h-4 w-4 rounded border border-white/20" />
                       <span className="font-mono text-zinc-400 shrink-0">FIR-251</span>
                       <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow3Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 text-[10px] text-cyan-300">{t.home.cardBacklogRow3Tag}</span>
+                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow3Tag}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                       <span className="inline-flex items-center gap-1 rounded-full bg-zinc-500/10 border border-zinc-500/20 px-2 py-0.5 text-[10px] text-zinc-400">
                         {t.home.cardBacklogRow3Priority}
                       </span>
-                      <span className="h-6 w-6 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 border border-white/10 flex items-center justify-center text-[10px] text-zinc-300 font-medium">
+                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-zinc-300 font-medium">
                         MR
                       </span>
                     </div>
@@ -165,16 +190,13 @@ export default function HomePage() {
 
             {/* Card 2: Milestone & Timeline */}
             <MotionCard delay={0.1} className="relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
-              {/* Top hairline gradient */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500/50 via-indigo-500/40 to-teal-500/30" />
-
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
-                    <FolderKanban className="h-4 w-4 text-blue-400" />
+                    <FolderKanban className="h-4 w-4 text-zinc-300" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">{t.home.cardMilestoneTitle}</span>
                   </div>
-                  <span className="rounded-full bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 text-[10px] text-blue-300">{t.home.cardMilestoneBadge}</span>
+                  <span className="rounded-full bg-white/[0.08] border border-white/10 px-2 py-0.5 text-[10px] text-zinc-200">{t.home.cardMilestoneBadge}</span>
                 </div>
 
                 {/* Progress UI */}
@@ -184,9 +206,9 @@ export default function HomePage() {
                     <span className="font-mono text-white font-semibold">82%</span>
                   </div>
                   <div className="mt-3 h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 rounded-full" style={{ width: "82%" }} />
+                    <div className="h-full bg-white rounded-full" style={{ width: "82%" }} />
                   </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-zinc-500">
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-zinc-400">
                     <span>{t.home.cardMilestoneClosed}</span>
                     <span>{t.home.cardMilestoneDue}</span>
                   </div>
@@ -201,7 +223,7 @@ export default function HomePage() {
                       <span>{t.home.cardMilestoneItem2}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-400">
-                      <span className="text-blue-400">○</span>
+                      <span className="text-zinc-500">○</span>
                       <span>{t.home.cardMilestoneItem3}</span>
                     </div>
                   </div>
@@ -218,16 +240,13 @@ export default function HomePage() {
 
             {/* Card 3: Keyboard Command Bar */}
             <MotionCard delay={0.15} className="relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
-              {/* Top hairline gradient */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-teal-500/50 via-cyan-500/40 to-blue-500/30" />
-
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
-                    <Command className="h-4 w-4 text-cyan-400" />
+                    <Command className="h-4 w-4 text-zinc-300" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">{t.home.cardCommandTitle}</span>
                   </div>
-                  <kbd className="rounded border border-cyan-500/30 bg-cyan-500/10 px-1.5 py-0.5 text-[10px] font-mono text-cyan-300">⌘K</kbd>
+                  <kbd className="rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-mono text-zinc-200">⌘K</kbd>
                 </div>
 
                 {/* Command bar input mockup */}
@@ -261,11 +280,8 @@ export default function HomePage() {
               </div>
             </MotionCard>
 
-            {/* Card 4: Agent & MCP Protocol (Spans 2 cols on lg) */}
+            {/* Card 4: Agent & MCP Protocol */}
             <MotionCard delay={0.2} className="lg:col-span-2 relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
-              {/* Top hairline gradient */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/60 via-teal-500/40 to-cyan-500/30" />
-
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
@@ -273,7 +289,7 @@ export default function HomePage() {
                     <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">{t.home.cardMcpTitle}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                     <span className="text-[10px] text-emerald-400 font-mono">{t.home.cardMcpBadge}</span>
                   </div>
                 </div>
@@ -306,7 +322,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 3-Step Process (Salix Numbered Step Cards) */}
+        {/* 3-Step Process */}
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="process-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-14">
             <h2 id="process-title" className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
@@ -320,7 +336,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <MotionCard delay={0.05} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
-                <span className="font-mono text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{t.home.step1Num}</span>
+                <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step1Num}</span>
                 <h3 className="mt-6 text-xl font-medium text-white">{t.home.step1Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step1Desc}
@@ -333,7 +349,7 @@ export default function HomePage() {
 
             <MotionCard delay={0.1} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
-                <span className="font-mono text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t.home.step2Num}</span>
+                <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step2Num}</span>
                 <h3 className="mt-6 text-xl font-medium text-white">{t.home.step2Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step2Desc}
@@ -346,7 +362,7 @@ export default function HomePage() {
 
             <MotionCard delay={0.15} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-7 flex flex-col justify-between shadow-xl">
               <div>
-                <span className="font-mono text-2xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">{t.home.step3Num}</span>
+                <span className="font-mono text-2xl font-bold text-zinc-400">{t.home.step3Num}</span>
                 <h3 className="mt-6 text-xl font-medium text-white">{t.home.step3Title}</h3>
                 <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                   {t.home.step3Desc}
@@ -372,7 +388,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <MotionCard delay={0.05} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
-              <Database className="h-5 w-5 text-indigo-400" />
+              <Database className="h-5 w-5 text-zinc-300" />
               <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec1Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec1Desc}
@@ -380,7 +396,7 @@ export default function HomePage() {
             </MotionCard>
 
             <MotionCard delay={0.1} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
-              <Shield className="h-5 w-5 text-purple-400" />
+              <Shield className="h-5 w-5 text-zinc-300" />
               <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec2Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec2Desc}
@@ -388,7 +404,7 @@ export default function HomePage() {
             </MotionCard>
 
             <MotionCard delay={0.15} className="rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-8 shadow-xl">
-              <Command className="h-5 w-5 text-cyan-400" />
+              <Command className="h-5 w-5 text-zinc-300" />
               <h3 className="mt-5 text-lg font-medium text-white">{t.home.spec3Title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {t.home.spec3Desc}
@@ -459,18 +475,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Salix-inspired Framed Call to Action Card with Gradient Depth */}
+        {/* Framed Call to Action Card */}
         <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20" aria-labelledby="cta-title">
           <FadeIn>
-            <div className="relative rounded-3xl border border-indigo-500/20 bg-gradient-to-b from-[#11131a] via-[#0e1014] to-[#08090b] p-10 sm:p-16 text-center shadow-[0_0_50px_rgba(99,102,241,0.12)] overflow-hidden">
-              {/* Subtle accent radial glow inside the card */}
-              <div
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-64 w-96 opacity-40 blur-3xl"
-                style={{
-                  background: "radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, transparent 70%)",
-                }}
-              />
-
+            <div className="relative rounded-3xl border border-white/15 bg-gradient-to-b from-[#11131a] to-[#08090b] p-10 sm:p-16 text-center shadow-2xl overflow-hidden">
               <h2
                 id="cta-title"
                 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-tight max-w-2xl mx-auto"

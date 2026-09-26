@@ -638,7 +638,7 @@ export const fr: TranslationDictionary = {
     heroSubtitle: "Projets, jalons et backlogs synchronisés en temps réel. Avec protocole MCP natif pour coordonner directement vos agents IA.",
     heroCta: "Démarrer avec Chrono",
     heroSecondaryCta: "Explorer les fonctionnalités",
-    heroSubtext: "Sans carte bancaire · Moteur PostgreSQL temps réel · Serveur MCP actif",
+    heroSubtext: "Sans carte bancaire. Moteur PostgreSQL temps réel et serveur MCP actif.",
     featuresTitle: "Des outils conçus pour une précision opérationnelle absolue.",
     featuresSubtitle: "De la gestion rapide du backlog au contrôle des jalons, chaque détail est pensé pour éliminer la friction quotidienne.",
 

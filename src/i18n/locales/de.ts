@@ -638,7 +638,7 @@ export const de: TranslationDictionary = {
     heroSubtitle: "Projekte, Meilensteine und Backlogs in Echtzeit vereint. Mit nativem MCP-Protokoll zur direkten Koordination mit Ihren KI-Agenten.",
     heroCta: "Mit Chrono starten",
     heroSecondaryCta: "Funktionen entdecken",
-    heroSubtext: "Keine Kreditkarte erforderlich · PostgreSQL-Echtzeitmodul · Aktiver MCP-Server",
+    heroSubtext: "Keine Kreditkarte erforderlich. PostgreSQL-Echtzeitmodul und aktiver MCP-Server.",
     featuresTitle: "Werkzeuge für höchste operative Genauigkeit.",
     featuresSubtitle: "Von schneller Backlog-Verwaltung bis zur Meilensteinkontrolle darauf ausgelegt, tägliche Reibungsverluste zu minimieren.",
 
