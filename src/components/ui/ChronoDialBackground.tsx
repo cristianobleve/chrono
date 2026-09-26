@@ -267,18 +267,18 @@ export function ChronoDialBackground({ className }: ChronoDialBackgroundProps) {
       ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
-      // Peripheral technical coordinate telemetry
-      ctx.font = "9px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
-      ctx.fillText("CHRONO // CHRONOGRAM ENGINE", 24, 32);
-      ctx.fillText("SYNC_STATE: REALTIME_OK", 24, 46);
-      ctx.fillText("CLOCK_DRIFT: <0.02ms", 24, 60);
+      // Peripheral technical coordinate telemetry (only shown if container is wide and high enough)
+      if (w >= 768 && h >= 260) {
+        ctx.font = "9px ui-monospace, SFMono-Regular, Menlo, monospace";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.fillText("CHRONO // CHRONOGRAM ENGINE", 28, 30);
+        ctx.fillText("SYNC_STATE: REALTIME_OK", 28, 44);
 
-      ctx.textAlign = "right";
-      ctx.fillText("MCP_SOCKET: 127.0.0.1:9092", w - 24, 32);
-      ctx.fillText("RLS_POLICY: STRICT", w - 24, 46);
-      ctx.fillText("POSTGRES_WAL: LSN_0x1A", w - 24, 60);
-      ctx.textAlign = "left";
+        ctx.textAlign = "right";
+        ctx.fillText("MCP_SOCKET: 127.0.0.1:9092", w - 28, 30);
+        ctx.fillText("POSTGRES_WAL: LSN_0x1A", w - 28, 44);
+        ctx.textAlign = "left";
+      }
 
       ctx.restore();
     };

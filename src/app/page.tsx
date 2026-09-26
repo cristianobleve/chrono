@@ -457,28 +457,28 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Full-Screen Framed Call to Action Island with Chrono Dial Background */}
+        {/* Full-Width Compact Framed Call to Action Island with Chrono Dial Background */}
         <section className="p-[5px] w-full" aria-labelledby="cta-title">
-          <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] rounded-[22px] sm:rounded-[26px] border border-white/10 overflow-hidden bg-[#07080b] flex items-center justify-center">
+          <div className="relative w-full rounded-[22px] sm:rounded-[26px] border border-white/10 overflow-hidden bg-[#07080b] py-16 sm:py-20 md:py-24 px-4 sm:px-8 flex items-center justify-center">
             {/* Background: Chrono Precision Dial / Chronogram Engine */}
             <ChronoDialBackground />
 
             {/* Contrast vignette to ensure perfect text readability */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.60)_0%,rgba(7,8,11,0.25)_45%,rgba(7,8,11,0.92)_100%)] pointer-events-none z-[1]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(7,8,11,0.60)_0%,rgba(7,8,11,0.30)_50%,rgba(7,8,11,0.92)_100%)] pointer-events-none z-[1]" />
 
-            {/* Content centered vertically and horizontally in the available screen */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto">
+            {/* Content centered in the wide banner */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-3xl mx-auto">
               <FadeIn className="flex flex-col items-center">
                 <h2
                   id="cta-title"
-                  className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-semibold tracking-[-0.025em] text-white leading-[1.12] max-w-3xl"
+                  className="font-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.025em] text-white leading-tight max-w-2xl"
                 >
                   {t.home.ctaTitle}
                 </h2>
-                <p className="mt-5 text-sm sm:text-base text-zinc-400 max-w-lg mx-auto leading-relaxed font-normal">
+                <p className="mt-4 text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed font-normal">
                   {t.home.ctaSubtitle}
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                   <Link
                     href="/login"
                     className="flex h-10 items-center gap-2 rounded-full bg-white px-6 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
@@ -492,7 +492,7 @@ export default function HomePage() {
                     {t.home.ctaSecondary}
                   </Link>
                 </div>
-                <p className="mt-5 text-xs text-zinc-500 font-normal">
+                <p className="mt-4 text-xs text-zinc-500 font-normal">
                   {t.home.ctaFootnote}
                 </p>
               </FadeIn>
