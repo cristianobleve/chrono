@@ -65,14 +65,14 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative shrink-0" ref={dropdownRef}>
       {variant === "navbar" ? (
         /* NAVBAR VARIANT: Sleek Single Workspace Button (Workspace Name ▾) */
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex items-center gap-2 h-8 px-2 rounded-[6px] hover:bg-white/[0.06] transition-colors cursor-pointer group select-none shrink-0",
+            "flex items-center gap-1.5 sm:gap-2 h-8 px-2 rounded-[6px] hover:bg-white/[0.06] transition-colors cursor-pointer group select-none shrink-0",
             isOpen && "bg-white/[0.08]"
           )}
         >
@@ -84,7 +84,7 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
             name={workspace.name}
             size="xs"
           />
-          <span className="hidden sm:inline font-sans font-medium text-[13px] text-white truncate max-w-[170px] tracking-tight">
+          <span className="hidden sm:inline font-sans font-medium text-[13px] text-white truncate max-w-[100px] md:max-w-[130px] xl:max-w-[170px] tracking-tight">
             {workspace.name}
           </span>
           <ChevronDown

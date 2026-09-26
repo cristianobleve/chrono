@@ -45,6 +45,22 @@ export const TwingateNavbar: React.FC = () => {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setMobileMenuOpen(false);
+    setUserMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false);
+        setUserMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
@@ -116,16 +132,16 @@ export const TwingateNavbar: React.FC = () => {
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 w-full px-4 md:px-8 pt-3 select-none pointer-events-none">
+    <header className="fixed top-0 inset-x-0 z-40 w-full px-2.5 sm:px-4 md:px-8 pt-2.5 sm:pt-3 select-none pointer-events-none">
       {/* Clean Floating Bar: Zero nested background boxes */}
-      <div className="w-full max-w-7xl mx-auto px-2.5 sm:px-4 h-[54px] rounded-[10px] bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex items-center justify-between pointer-events-auto transition-all">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-3.5 h-[50px] sm:h-[54px] rounded-[10px] bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex items-center justify-between pointer-events-auto transition-all gap-2">
         {/* Left: Workspace Selector (Clean ghost) */}
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
           <WorkspaceSwitcherDropdown variant="navbar" />
         </div>
 
-        {/* Center: Flat Navigation Links (Zero shifting, constant font-weight, zero nested container) */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Center: Flat Navigation Links (Visible on large screens >= 1024px to guarantee no overlap with workspace or tools) */}
+        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
           {mainNavItems.map((item) => {
             const isActive = item.match(pathname);
             const Icon = item.icon;
@@ -134,35 +150,35 @@ export const TwingateNavbar: React.FC = () => {
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "h-8 px-3 rounded-[6px] text-xs font-medium tracking-tight transition-colors inline-flex items-center gap-2 select-none",
+                  "h-8 px-2.5 xl:px-3 rounded-[6px] text-xs font-medium tracking-tight transition-colors inline-flex items-center gap-1.5 xl:gap-2 select-none shrink-0",
                   isActive
                     ? "text-white bg-white/[0.08]"
                     : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                 )}
               >
-                <Icon className={cn("w-3.5 h-3.5", isActive ? "text-white" : "text-zinc-400")} />
-                <span>{item.label}</span>
+                <Icon className={cn("w-3.5 h-3.5 shrink-0", isActive ? "text-white" : "text-zinc-400")} />
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* Right Tools: Clean Ghost Search -> + Nuovo Primary -> Avatar */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right Tools: Clean Ghost Search -> + Nuovo Primary -> Avatar -> Mobile Menu */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Ghost Search Trigger */}
           <button
             type="button"
             onClick={() => setActiveModal("command_menu")}
-            className="flex items-center justify-center sm:justify-between w-8 sm:w-44 md:w-52 h-8 px-2.5 rounded-[6px] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors text-xs cursor-pointer group"
+            className="flex items-center justify-center lg:justify-between w-8 h-8 lg:w-36 xl:w-48 px-2 lg:px-2.5 rounded-[6px] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors text-xs cursor-pointer group shrink-0"
             title="Cerca nel workspace o digita un comando (⌘K)"
           >
             <div className="flex items-center gap-2 min-w-0">
               <Search className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
-              <span className="hidden sm:inline text-[11px] text-zinc-400 group-hover:text-zinc-300 truncate select-none">
+              <span className="hidden lg:inline text-[11px] text-zinc-400 group-hover:text-zinc-300 truncate select-none">
                 {t.common.search}
               </span>
             </div>
-            <kbd className="hidden sm:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono text-zinc-400 bg-white/[0.06] rounded-[4px]">
+            <kbd className="hidden lg:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono text-zinc-400 bg-white/[0.06] rounded-[4px] shrink-0">
               ⌘K
             </kbd>
           </button>
@@ -171,11 +187,11 @@ export const TwingateNavbar: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveModal("new_issue")}
-            className="h-8 px-3 rounded-[6px] bg-white hover:bg-zinc-200 text-zinc-950 flex items-center gap-1.5 text-xs font-semibold transition-colors cursor-pointer shadow-sm shrink-0"
+            className="h-8 px-2 sm:px-3 rounded-[6px] bg-white hover:bg-zinc-200 text-zinc-950 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors cursor-pointer shadow-sm shrink-0"
             title="Nuova Issue (C)"
             aria-label="Nuova Issue"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+            <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
             <span className="hidden sm:inline">Nuovo</span>
           </button>
 
@@ -288,10 +304,11 @@ export const TwingateNavbar: React.FC = () => {
             )}
           </div>
 
+          {/* Mobile/Tablet Navigation Drawer Toggle Button */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-8 w-8 items-center justify-center rounded-[6px] border border-white/10 text-zinc-400 hover:text-white md:hidden"
+            className="flex h-8 w-8 items-center justify-center rounded-[6px] border border-white/10 text-zinc-400 hover:text-white lg:hidden shrink-0 transition-colors cursor-pointer"
             aria-label={mobileMenuOpen ? t.common.close : t.nav.settings}
             aria-expanded={mobileMenuOpen}
           >
@@ -300,16 +317,49 @@ export const TwingateNavbar: React.FC = () => {
         </div>
       </div>
 
+      {/* Mobile & Tablet Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="mx-auto mt-2 w-full max-w-7xl rounded-[10px] border border-white/10 bg-[#0c0d0e] p-2 shadow-[0_24px_50px_rgba(0,0,0,0.95)] pointer-events-auto md:hidden">
-          <nav className="grid grid-cols-2 gap-1" aria-label="Navigazione mobile">
+        <div className="mx-auto mt-2 w-full max-w-7xl rounded-[10px] border border-white/10 bg-[#0c0d0e] p-2.5 shadow-[0_24px_50px_rgba(0,0,0,0.95)] pointer-events-auto lg:hidden animate-slide-up select-none">
+          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-1.5" aria-label="Navigazione mobile e tablet">
             {mainNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = item.match(pathname);
-              return <Link key={item.label} href={item.href} onClick={() => setMobileMenuOpen(false)} className={cn("flex min-h-11 items-center gap-2 rounded-[7px] px-3 text-xs font-medium", isActive ? "bg-white/[0.1] text-white" : "text-zinc-400 hover:bg-white/[0.05] hover:text-white")}><Icon className="h-4 w-4" />{item.label}</Link>;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex min-h-[44px] items-center gap-2.5 rounded-[7px] px-3 text-xs font-medium transition-colors",
+                    isActive
+                      ? "bg-white/[0.1] text-white"
+                      : "text-zinc-400 hover:bg-white/[0.05] hover:text-white"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
             })}
-            <button type="button" onClick={() => { setMobileMenuOpen(false); setActiveModal("new_issue"); }} className="flex min-h-11 items-center gap-2 rounded-[7px] px-3 text-xs font-medium text-zinc-300 hover:bg-white/[0.05] hover:text-white"><Plus className="h-4 w-4" />{t.issues.newIssue}</button>
-            <Link href="/settings/general" onClick={() => setMobileMenuOpen(false)} className="flex min-h-11 items-center gap-2 rounded-[7px] px-3 text-xs font-medium text-zinc-400 hover:bg-white/[0.05] hover:text-white"><Settings className="h-4 w-4" />{t.nav.settings}</Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setActiveModal("new_issue");
+              }}
+              className="flex min-h-[44px] items-center gap-2.5 rounded-[7px] px-3 text-xs font-medium text-zinc-300 hover:bg-white/[0.05] hover:text-white transition-colors cursor-pointer"
+            >
+              <Plus className="h-4 w-4 shrink-0" />
+              <span className="truncate">{t.issues.newIssue}</span>
+            </button>
+            <Link
+              href="/settings/general"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex min-h-[44px] items-center gap-2.5 rounded-[7px] px-3 text-xs font-medium text-zinc-400 hover:bg-white/[0.05] hover:text-white transition-colors"
+            >
+              <Settings className="h-4 w-4 shrink-0" />
+              <span className="truncate">{t.nav.settings}</span>
+            </Link>
           </nav>
         </div>
       )}
