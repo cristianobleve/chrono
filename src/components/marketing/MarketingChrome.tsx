@@ -129,60 +129,64 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
         {children}
       </div>
 
-      <footer className="border-t border-white/10 bg-[#0b0d10] mt-24">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10">
-          <div className="grid gap-12 border-b border-white/10 pb-16 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
-            <div>
-              <Link href="/" aria-label="Chrono home">
-                <ChronoWordmark logoSize={18} />
-              </Link>
-              <p className="mt-6 max-w-xs text-sm leading-6 text-zinc-500">
-                {t.footer.tagline}
-              </p>
-            </div>
-            <div>
-              <h2 className="text-sm font-medium text-white">{t.footer.productHeading}</h2>
-              <div className="mt-5 grid gap-3 text-sm text-zinc-500">
-                <Link href="/product#projects" className="hover:text-white transition-colors">{t.projects.title}</Link>
-                <Link href="/product#issues" className="hover:text-white transition-colors">{t.issues.title}</Link>
-                <Link href="/product#timeline" className="hover:text-white transition-colors">{t.nav.timeline}</Link>
-                <Link href="/product#agent" className="hover:text-white transition-colors">{t.nav.agent}</Link>
+      {/* Floating Island Footer matching the hero section framing */}
+      <div className="w-full px-[5px] pb-[5px] pt-12 sm:pt-16">
+        <footer className="relative w-full rounded-[22px] sm:rounded-[26px] border border-white/10 bg-[#08090c] overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.03)_0%,transparent_70%)] pointer-events-none" />
+          <div className="relative z-10 mx-auto max-w-7xl px-6 py-12 sm:px-10 sm:py-16">
+            <div className="grid gap-10 border-b border-white/10 pb-12 sm:gap-12 sm:pb-14 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+              <div>
+                <Link href="/" aria-label="Chrono home">
+                  <ChronoWordmark logoSize={18} />
+                </Link>
+                <p className="mt-5 max-w-xs text-xs sm:text-sm leading-relaxed text-zinc-400 font-normal">
+                  {t.footer.tagline}
+                </p>
+              </div>
+              <div>
+                <h3 className="font-heading text-sm font-medium text-white">{t.footer.productHeading}</h3>
+                <div className="mt-4 grid gap-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
+                  <Link href="/product#projects" className="hover:text-white transition-colors">{t.projects.title}</Link>
+                  <Link href="/product#issues" className="hover:text-white transition-colors">{t.issues.title}</Link>
+                  <Link href="/product#timeline" className="hover:text-white transition-colors">{t.nav.timeline}</Link>
+                  <Link href="/product#agent" className="hover:text-white transition-colors">{t.nav.agent}</Link>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-heading text-sm font-medium text-white">{t.footer.companyHeading}</h3>
+                <div className="mt-4 grid gap-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
+                  <Link href="/method" className="hover:text-white transition-colors">{t.nav.method}</Link>
+                  <Link href="/security" className="hover:text-white transition-colors">{t.nav.security}</Link>
+                  <Link href="/login" className="hover:text-white transition-colors">{t.nav.login}</Link>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-heading text-sm font-medium text-white">{t.footer.resourcesHeading}</h3>
+                <div className="mt-4 grid gap-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
+                  <Link href="/resources" className="hover:text-white transition-colors">{t.nav.resources}</Link>
+                  <Link href="/projects" className="hover:text-white transition-colors">{t.footer.openApp}</Link>
+                  <Link href="/settings/database" className="hover:text-white transition-colors">{t.footer.systemStatus}</Link>
+                </div>
               </div>
             </div>
-            <div>
-              <h2 className="text-sm font-medium text-white">{t.footer.companyHeading}</h2>
-              <div className="mt-5 grid gap-3 text-sm text-zinc-500">
-                <Link href="/method" className="hover:text-white transition-colors">{t.nav.method}</Link>
-                <Link href="/security" className="hover:text-white transition-colors">{t.nav.security}</Link>
-                <Link href="/login" className="hover:text-white transition-colors">{t.nav.login}</Link>
-              </div>
-            </div>
-            <div>
-              <h2 className="text-sm font-medium text-white">{t.footer.resourcesHeading}</h2>
-              <div className="mt-5 grid gap-3 text-sm text-zinc-500">
-                <Link href="/resources" className="hover:text-white transition-colors">{t.nav.resources}</Link>
-                <Link href="/projects" className="hover:text-white transition-colors">{t.footer.openApp}</Link>
-                <Link href="/settings/database" className="hover:text-white transition-colors">{t.footer.systemStatus}</Link>
+            <div className="flex flex-col gap-4 pt-6 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+              <span>{t.footer.copyright}</span>
+              <div className="flex items-center gap-5">
+                <span className="hover:text-zinc-300 cursor-pointer transition-colors">{t.footer.privacy}</span>
+                <span className="hover:text-zinc-300 cursor-pointer transition-colors">{t.footer.terms}</span>
+                <LinearSelect
+                  options={languageOptions}
+                  value={lang}
+                  onChange={(val) => setLanguage(val as SupportedLanguage)}
+                  searchable={false}
+                  align="right"
+                  triggerClassName="bg-transparent border border-white/10 hover:border-white/20 text-zinc-400 hover:text-white px-2.5 py-1 text-[11px] rounded-[6px]"
+                />
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 pt-7 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
-            <span>{t.footer.copyright}</span>
-            <div className="flex items-center gap-5">
-              <span>{t.footer.privacy}</span>
-              <span>{t.footer.terms}</span>
-              <LinearSelect
-                options={languageOptions}
-                value={lang}
-                onChange={(val) => setLanguage(val as SupportedLanguage)}
-                searchable={false}
-                align="right"
-                triggerClassName="bg-transparent border border-white/10 hover:border-white/20 text-zinc-400 hover:text-white px-2.5 py-1 text-[11px] rounded-[6px]"
-              />
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </main>
   );
 }
