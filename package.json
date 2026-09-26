@@ -41,6 +41,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
+    "reicon": "^1.2.4",
+    "reicon-react": "^1.2.5",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.0.1",
     "zod": "^4.6.5",

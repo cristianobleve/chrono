@@ -8,23 +8,36 @@
   <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Reicon-1.2.4-8E75FF?style=flat" alt="Reicon" />
   <img src="https://img.shields.io/badge/Gemini_AI-8E75FF?style=flat&logo=googlegemini&logoColor=white" alt="Gemini AI" />
   <img src="https://img.shields.io/badge/License-MIT-gray?style=flat" alt="MIT License" />
 </p>
 
-Chrono is a self-hostable workspace for software engineering teams that unifies issue tracking, milestone roadmaps, and personal focus tools in one cohesive interface. Built with Next.js 15, TypeScript, and Supabase, Chrono delivers a keyboard-first workflow with real time state replication, offline resilience, and strict database level isolation across organizations.
+Chrono is a self-hostable workspace for software engineering teams that unifies issue tracking, milestone roadmaps, and personal focus tools in one cohesive interface. Built with Next.js 15, TypeScript, Tailwind CSS, Reicon vector icons, and Supabase, Chrono delivers a keyboard-first workflow with real time state replication, offline resilience, and strict database level isolation across organizations.
 
 <p align="left">
-  <img src="assets/app-preview.svg" alt="Chrono Interface Preview" width="100%" />
+  <img src="screenshots/kanban_view.png" alt="Chrono Kanban Board" width="100%" />
 </p>
 
 ## <img src="assets/icons/layers.svg" width="18" height="18" align="absmiddle" /> The Platform
 
 At its core, Chrono handles daily task planning through interactive Kanban boards and dense backlog views. Issues receive sequential alphanumeric identifiers, priority weights, point estimates, target deadlines, and full Markdown descriptions. An immutable activity log records property changes with author timestamps, while a slide out drawer lets developers modify tasks without losing their place on the board. Everything is navigable through a global command palette available via Cmd+K or Ctrl+K.
 
+<p align="left">
+  <img src="screenshots/home.png" alt="Chrono Workspace Overview" width="100%" />
+</p>
+
 Beyond basic task management, the platform bridges high-level roadmaps with day-to-day execution. Engineering initiatives are broken down into milestones with automatic progress tracking calculated from resolved issues. For personal time management, Chrono incorporates a four quadrant Eisenhower matrix to separate urgent firefighting from long term goals, a weekly habit tracker to sustain routine engineering practices, and an integrated Pomodoro timer tied directly to active tickets.
 
-For external tooling, Chrono ships with an embedded Model Context Protocol server that exposes issues and workspace state to local AI agents such as Claude Desktop or Cursor. Teams can interact with conversational models like Google Gemini, OpenAI, or Groq for automated backlog triage, import complete multi-project roadmaps directly from structured Markdown documents, and switch between five built in languages covering English, Italian, German, French, and Russian.
+<p align="left">
+  <img src="screenshots/project_detail.png" alt="Chrono Milestone and Roadmap Timeline" width="100%" />
+</p>
+
+For external tooling, Chrono ships with an embedded Model Context Protocol server that exposes issues and workspace state to local AI agents such as Claude Desktop or Cursor. Teams can interact with conversational models like Google Gemini, OpenAI, or Groq for automated backlog triage, import complete multi-project roadmaps directly from structured Markdown documents, and switch between five built in languages covering English, Italian, German, French, and Russian. Profiles, banners, and member signatures can be customized directly to match team identity across shared workspaces.
+
+<p align="left">
+  <img src="screenshots/profile_page.png" alt="Chrono Profile and Workspace Settings" width="100%" />
+</p>
 
 ## <img src="assets/icons/shield.svg" width="18" height="18" align="absmiddle" /> AI-Assisted Codebase and Security Audit
 
