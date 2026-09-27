@@ -445,7 +445,7 @@ export default function ImportProjectsPage() {
             {currentProject ? (
               <div className="w-full flex flex-col">
                 {/* 1. Hero Cover Banner */}
-                <div className="w-full h-44 md:h-52 relative overflow-hidden bg-zinc-950 border-b border-white/5 shrink-0">
+                <div className="w-full h-44 md:h-52 relative overflow-hidden bg-zinc-950 shrink-0">
                   {currentProject.coverUrl ? (
                     <img
                       src={currentProject.coverUrl}
