@@ -24,13 +24,10 @@ export interface WelcomeEmailParams {
 export interface EmailRenderOptions {
   isWebPreview?: boolean;
   logoUrl?: string;
+  footerLogoUrl?: string;
+  shieldIconUrl?: string;
+  badgeIconUrl?: string;
 }
-
-const SHIELD_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block;"><path d="M10.49 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L9.44003 21.2001C10.85 22.2601 13.17 22.2601 14.58 21.2001L18.88 17.9901C19.83 17.2801 20.61 15.7301 20.61 14.5501V7.12006C20.61 5.89006 19.67 4.53006 18.52 4.10006L13.53 2.23006C12.68 1.92006 11.32 1.92006 10.49 2.23006Z" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.05005 11.8701L10.66 13.4801L14.96 9.18005" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-const MAIL_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;"><rect width="20" height="16" x="2" y="4" rx="2" stroke="#6b7280" stroke-width="1.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/></svg>`;
-
-const COMPASS_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;"><circle cx="12" cy="12" r="10" stroke="#6b7280" stroke-width="1.5"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
 
 function getTransporter() {
   const host = process.env.SMTP_HOST || "smtp.resend.com";
@@ -91,19 +88,63 @@ function formatRole(role: string): string {
   }
 }
 
-function getLogoAttachment(): SendMailOptions["attachments"] {
-  const logoPath = path.join(process.cwd(), "public", "chrono-logo-black.png");
-  if (fs.existsSync(logoPath)) {
-    return [
-      {
-        filename: "chrono-logo.png",
-        content: fs.readFileSync(logoPath),
-        cid: "chrono-logo",
-        contentType: "image/png",
-      },
-    ];
+function getEmailAttachments(type: "invite" | "recovery" | "welcome"): SendMailOptions["attachments"] {
+  const publicDir = path.join(process.cwd(), "public");
+  const attachments: NonNullable<SendMailOptions["attachments"]> = [];
+
+  // Main Chrono Logo
+  const mainLogo = path.join(publicDir, "chrono-logo-black.png");
+  if (fs.existsSync(mainLogo)) {
+    attachments.push({
+      filename: "chrono-logo.png",
+      content: fs.readFileSync(mainLogo),
+      cid: "chrono-logo",
+      contentType: "image/png",
+    });
   }
-  return [];
+
+  // Footer Logo (square)
+  const footerLogo = path.join(publicDir, "email-footer-logo.png");
+  if (fs.existsSync(footerLogo)) {
+    attachments.push({
+      filename: "chrono-footer-logo.png",
+      content: fs.readFileSync(footerLogo),
+      cid: "chrono-footer-logo",
+      contentType: "image/png",
+    });
+  }
+
+  // Shield Icon
+  const shieldIcon = path.join(publicDir, "email-shield.png");
+  if (fs.existsSync(shieldIcon)) {
+    attachments.push({
+      filename: "email-shield.png",
+      content: fs.readFileSync(shieldIcon),
+      cid: "email-shield",
+      contentType: "image/png",
+    });
+  }
+
+  // Type specific badge
+  const badgeMap: Record<string, string> = {
+    invite: "email-rocket.png",
+    welcome: "email-sparkles.png",
+    recovery: "email-key.png",
+  };
+  const badgeFile = badgeMap[type];
+  if (badgeFile) {
+    const badgePath = path.join(publicDir, badgeFile);
+    if (fs.existsSync(badgePath)) {
+      attachments.push({
+        filename: badgeFile,
+        content: fs.readFileSync(badgePath),
+        cid: "email-badge",
+        contentType: "image/png",
+      });
+    }
+  }
+
+  return attachments;
 }
 
 function getBaseStyles(): string {
@@ -147,10 +188,12 @@ function getBaseStyles(): string {
       margin: 0;
       padding: 0;
       width: 100% !important;
-      background-color: #f3f4f6;
-      color: #1f2937;
+      background-color: #e5e5e9;
+      color: #202124;
     }
-    table, td {
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
       mso-table-lspace: 0pt;
       mso-table-rspace: 0pt;
     }
@@ -159,119 +202,252 @@ function getBaseStyles(): string {
       border: 0;
       outline: none;
       text-decoration: none;
+      display: block;
+      max-width: 100%;
+    }
+    a {
+      color: inherit;
     }
     .mono {
       font-family: 'Geist Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
     }
 
-    @media only screen and (max-width: 600px) {
-      .email-wrapper {
-        padding: 24px 12px !important;
-      }
-      .email-card {
-        padding: 32px 20px !important;
-        border-radius: 10px !important;
-      }
-      .email-title {
-        font-size: 20px !important;
-      }
+    .email-wrapper {
+      width: 100%;
+      background-color: #e5e5e9;
+      padding: 46px 20px;
     }
 
-    @media (prefers-color-scheme: dark) {
-      body, .email-wrapper {
-        background-color: #09090b !important;
+    .email-container {
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #dcdce2;
+    }
+
+    .content {
+      padding: 44px 36px 36px 36px;
+    }
+
+    .brand {
+      text-align: center;
+      padding-bottom: 26px;
+    }
+
+    .brand-logo {
+      width: 135px;
+      height: 23px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .title {
+      margin: 0;
+      font-family: 'Söhne', 'Inter Display', sans-serif;
+      text-align: center;
+      font-size: 23px;
+      line-height: 30px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 14px;
+      line-height: 22px;
+      color: #4b5563;
+    }
+
+    .body-copy {
+      padding-top: 28px;
+    }
+
+    .body-copy p {
+      margin: 0 0 16px;
+      font-size: 15px;
+      line-height: 24px;
+      color: #303640;
+    }
+
+    .verify-button-wrapper {
+      text-align: center;
+      padding: 8px 0 24px;
+    }
+
+    .verify-button {
+      display: inline-block;
+      background-color: #2563eb;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      padding: 13px 32px;
+      border-radius: 7px;
+      letter-spacing: -0.01em;
+    }
+
+    .copy-link {
+      text-align: center;
+      padding: 0 20px 28px;
+    }
+
+    .copy-link p {
+      margin: 0 0 6px;
+      font-size: 13px;
+      line-height: 20px;
+      color: #4b5563;
+    }
+
+    .verification-url {
+      font-size: 12px;
+      line-height: 18px;
+      color: #2563eb;
+      word-break: break-all;
+    }
+
+    .verification-url a {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .security-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin-top: 0;
+    }
+
+    .security-table {
+      width: 100%;
+    }
+
+    .security-icon {
+      width: 24px;
+      vertical-align: top;
+      padding-right: 12px;
+    }
+
+    .security-title {
+      margin: 0 0 4px;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .security-text {
+      margin: 0;
+      font-size: 12px;
+      line-height: 18px;
+      color: #4b5563;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 32px 0 26px;
+    }
+
+    /* Google Docs sharing style footer */
+
+    .gmail-section {
+      width: 100%;
+      border-top: 0 solid #e5e7eb;
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .gmail-left {
+      width: 78%;
+      vertical-align: top;
+      padding-right: 20px;
+    }
+
+    .gmail-right {
+      width: 22%;
+      vertical-align: middle;
+      text-align: right;
+    }
+
+    .gmail-address {
+      margin: 0;
+      font-size: 11px;
+      line-height: 17px;
+      color: #6b7280;
+    }
+
+    .chrono-footer-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      margin-left: auto;
+      display: inline-block;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .email-wrapper {
+        padding: 20px 10px !important;
       }
-      .email-card {
-        background-color: #121316 !important;
-        border-color: #27272a !important;
+      .content {
+        padding: 32px 20px 24px 20px !important;
       }
-      .email-title, .email-heading {
-        color: #ffffff !important;
+      .title {
+        font-size: 21px !important;
       }
-      .email-subtitle, .email-help-sub {
-        color: #a1a1aa !important;
+      .gmail-left,
+      .gmail-right {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
       }
-      .email-greeting, .email-desc, .email-meta {
-        color: #d4d4d8 !important;
+      .gmail-right {
+        padding-top: 18px !important;
+        text-align: left !important;
       }
-      .email-strong {
-        color: #ffffff !important;
-      }
-      .email-direct-link {
-        color: #ffffff !important;
-      }
-      .email-notice {
-        background-color: #18181b !important;
-        border-color: #27272a !important;
-      }
-      .email-notice-title {
-        color: #ffffff !important;
-      }
-      .email-notice-text {
-        color: #a1a1aa !important;
-      }
-      .email-hr {
-        border-top-color: #27272a !important;
-      }
-      .email-help-title {
-        color: #ffffff !important;
-      }
-      .email-help-link {
-        color: #ffffff !important;
-      }
-      .email-btn {
-        background-color: #ffffff !important;
-        color: #09090b !important;
-      }
-      .email-logo-img {
-        filter: invert(1) brightness(1.2) !important;
+      .chrono-footer-logo {
+        margin-left: 0 !important;
       }
     }
   `;
 }
 
-function renderNeedHelpAndFooter(): string {
+function renderGoogleDocsStyleFooter(userEmail: string, footerLogoSrc: string): string {
   const currentYear = new Date().getFullYear();
+  const emailEscaped = escapeHtml(userEmail || "your-email@example.com");
 
   return `
-    <!-- Need Help Section -->
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+    <table role="presentation" class="gmail-section" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td align="left">
-          <h2 class="email-help-title" style="margin:0 0 6px 0;font-size:14px;font-weight:700;color:#111827;letter-spacing:-0.01em;">Need Help?</h2>
-          <p class="email-help-sub" style="margin:0 0 14px 0;font-size:12px;line-height:1.5;color:#6b7280;">Our team is available to assist you:</p>
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-            <tr>
-              <td style="vertical-align:middle;padding-right:10px;line-height:0;">${MAIL_ICON_SVG}</td>
-              <td style="vertical-align:middle;font-size:12px;color:#374151;">
-                <a href="mailto:support@cristianobleve.com" class="email-help-link" style="color:#111827;text-decoration:none;font-weight:500;">support@cristianobleve.com</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="vertical-align:middle;padding-right:10px;line-height:0;padding-top:8px;">${COMPASS_ICON_SVG}</td>
-              <td style="vertical-align:middle;font-size:12px;color:#374151;padding-top:8px;">
-                <a href="https://chrono.cristianobleve.com/resources" target="_blank" class="email-help-link" style="color:#111827;text-decoration:none;font-weight:500;">Chrono Documentation &amp; Help Center</a>
-              </td>
-            </tr>
-          </table>
+        <td class="gmail-left">
+          <p class="gmail-address" style="margin:0 0 8px;font-size:11px;line-height:17px;color:#6b7280;">
+            This email was sent to <span style="color:#111827;font-weight:500;">${emailEscaped}</span> because you have an account on Chrono.
+            If you didn't request this, you can safely ignore this email - no changes have been made to your account.
+          </p>
+          <p class="gmail-address" style="margin:0 0 10px;font-size:11px;line-height:17px;color:#6b7280;">
+            &copy; ${currentYear} Chrono, part of <a href="https://cristianobleve.com" target="_blank" style="color:#4b5563;text-decoration:none;font-weight:500;">cristianobleve.com</a>. All rights reserved.
+          </p>
+          <p style="margin:0;font-size:11px;line-height:17px;">
+            <a href="https://chrono.cristianobleve.com/resources" target="_blank" style="color:#2563eb;text-decoration:underline;margin-right:12px;">Help Center</a>
+            <a href="https://chrono.cristianobleve.com/security" target="_blank" style="color:#2563eb;text-decoration:underline;margin-right:12px;">Privacy Policy</a>
+            <a href="https://chrono.cristianobleve.com/settings/preferences" target="_blank" style="color:#2563eb;text-decoration:underline;">Notification Preferences</a>
+          </p>
         </td>
-      </tr>
-    </table>
-
-    <!-- Footer -->
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:36px;text-align:center;">
-      <tr>
-        <td align="center">
-          <p style="margin:0 0 8px 0;font-size:11px;line-height:1.5;color:#9ca3af;">
-            &copy; ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.
-          </p>
-          <p style="margin:0;font-size:11px;line-height:1.5;color:#9ca3af;">
-            <a href="https://chrono.cristianobleve.com/settings/preferences" target="_blank" style="color:#6b7280;text-decoration:underline;margin:0 6px;">Unsubscribe</a>
-            <span style="color:#d1d5db;">|</span>
-            <a href="https://chrono.cristianobleve.com/privacy" target="_blank" style="color:#6b7280;text-decoration:underline;margin:0 6px;">Privacy Policy</a>
-            <span style="color:#d1d5db;">|</span>
-            <a href="https://chrono.cristianobleve.com/terms" target="_blank" style="color:#6b7280;text-decoration:underline;margin:0 6px;">Terms of Service</a>
-          </p>
+        <td class="gmail-right">
+          <img
+            src="${escapeHtml(footerLogoSrc)}"
+            alt="Chrono"
+            class="chrono-footer-logo"
+            width="48"
+            height="48"
+            style="width:48px;height:48px;border-radius:10px;display:inline-block;"
+          />
         </td>
       </tr>
     </table>
@@ -295,6 +471,9 @@ export function renderWorkspaceInviteEmailHtml(
   const preheader = `${params.inviterName} wants you on the team.`;
 
   const logoSrc = options?.logoUrl || (options?.isWebPreview ? "/chrono-logo-black.png" : "cid:chrono-logo");
+  const footerLogoSrc = options?.footerLogoUrl || (options?.isWebPreview ? "/email-footer-logo.png" : "cid:chrono-footer-logo");
+  const shieldIconSrc = options?.shieldIconUrl || (options?.isWebPreview ? "/email-shield.png" : "cid:email-shield");
+  const badgeIconSrc = options?.badgeIconUrl || (options?.isWebPreview ? "/email-rocket.png" : "cid:email-badge");
   const currentYear = new Date().getFullYear();
 
   const text = [
@@ -311,7 +490,8 @@ export function renderWorkspaceInviteEmailHtml(
     ``,
     `This invitation link is intended for ${params.to} and will expire in 7 days. For your security, please do not share this email with anyone.`,
     ``,
-    `Need Help? Contact support@cristianobleve.com or visit https://chrono.cristianobleve.com/resources`,
+    `This email was sent to ${params.to} because you have an account on Chrono.`,
+    `If you didn't request this, you can safely ignore this email - no changes have been made to your account.`,
     ``,
     `© ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.`,
   ].join("\n");
@@ -319,9 +499,9 @@ export function renderWorkspaceInviteEmailHtml(
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${escapeHtml(subject)}</title>
   <!--[if mso]>
   <noscript>
@@ -332,93 +512,143 @@ export function renderWorkspaceInviteEmailHtml(
     </xml>
   </noscript>
   <![endif]-->
-  <style type="text/css">
+  <style>
     ${getBaseStyles()}
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#f3f4f6;color:#1f2937;">
-  <div style="display:none;font-size:1px;color:#f3f4f6;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+<body>
+  <div style="display:none;font-size:1px;color:#e5e5e9;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
     ${escapeHtml(preheader)}
   </div>
 
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-wrapper" style="background-color:#f3f4f6;padding:48px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-card" style="max-width:560px;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:48px 40px;text-align:left;">
-          <tr>
-            <td>
+      <td class="email-wrapper">
 
-              <!-- Logo Centered -->
-              <div style="text-align:center;margin-bottom:28px;">
-                <img src="${escapeHtml(logoSrc)}" alt="CHRONO" width="135" height="23" class="email-logo-img" style="display:block;margin:0 auto;border:0;outline:none;font-family:'Söhne','Inter Display',sans-serif;font-size:18px;font-weight:800;letter-spacing:0.08em;color:#000000;" />
+        <table
+          role="presentation"
+          class="email-container"
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          align="center"
+        >
+          <!-- CONTENT -->
+          <tr>
+            <td class="content">
+
+              <!-- BRAND LOGO -->
+              <div class="brand">
+                <img
+                  src="${escapeHtml(logoSrc)}"
+                  alt="Chrono"
+                  class="brand-logo"
+                  width="135"
+                  height="23"
+                >
               </div>
 
-              <!-- Header Centered -->
-              <h1 class="email-title" style="margin:0 0 8px 0;font-size:22px;font-weight:700;color:#111827;line-height:1.3;text-align:center;letter-spacing:-0.02em;">
+              <!-- FESTIVE BADGE -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 16px auto;">
+                <tr>
+                  <td style="background-color:#eff6ff;border:1px solid #dbeafe;border-radius:100px;padding:4px 14px 4px 10px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="vertical-align:middle;padding-right:6px;line-height:0;">
+                          <img src="${escapeHtml(badgeIconSrc)}" alt="" width="16" height="16" style="display:block;border:0;" />
+                        </td>
+                        <td style="vertical-align:middle;font-size:12px;font-weight:600;color:#2563eb;letter-spacing:0.01em;">
+                          Hooray! You're invited
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- TITLE & SUBTITLE -->
+              <h1 class="title">
                 Join ${workspaceName}
               </h1>
-              <p class="email-subtitle" style="margin:0 0 32px 0;font-size:13px;line-height:1.5;color:#6b7280;text-align:center;">
+
+              <p class="subtitle">
                 Workspace invitation
               </p>
 
-              <!-- Body Left-aligned -->
-              <p class="email-greeting" style="margin:0 0 16px 0;font-size:14px;line-height:1.6;color:#374151;">
-                Hello,
-              </p>
-              <p class="email-desc" style="margin:0 0 20px 0;font-size:14px;line-height:1.6;color:#374151;">
-                ${inviterName} invited you to join and collaborate in the ${workspaceName} workspace as <strong class="email-strong" style="color:#111827;">${roleLabel}</strong> - full visibility into projects, issues, and the roadmap.
-              </p>
+              <!-- BODY COPY -->
+              <div class="body-copy">
+                <p>
+                  Hello,
+                </p>
 
-              <!-- Clean Metadata (No nested box) -->
-              <div class="email-meta" style="margin:0 0 28px 0;font-size:13px;line-height:1.8;color:#4b5563;">
-                <span style="color:#6b7280;">Workspace:</span> <strong class="email-strong" style="color:#111827;">${workspaceName}</strong><br>
-                <span style="color:#6b7280;">Assigned role:</span> <strong class="email-strong" style="color:#111827;">${roleLabel}</strong><br>
-                <span style="color:#6b7280;">Expires in:</span> <span class="email-strong" style="color:#111827;">7 days</span>
+                <p>
+                  ${inviterName} invited you to join and collaborate in the ${workspaceName} workspace as <strong style="color:#111827;">${roleLabel}</strong> - full visibility into projects, issues, and the roadmap.
+                </p>
+
+                <p style="margin:0 0 24px;font-size:14px;line-height:22px;color:#4b5563;">
+                  <span style="color:#6b7280;">Workspace:</span> <strong style="color:#111827;">${workspaceName}</strong><br>
+                  <span style="color:#6b7280;">Assigned role:</span> <strong style="color:#111827;">${roleLabel}</strong><br>
+                  <span style="color:#6b7280;">Expires in:</span> <span style="color:#111827;">7 days</span>
+                </p>
               </div>
 
-              <!-- Action Button Centered -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 24px auto;">
-                <tr>
-                  <td align="center" style="border-radius:8px;background-color:#000000;">
-                    <a href="${escapeHtml(inviteUrl)}" target="_blank" class="email-btn" style="display:inline-block;padding:12px 32px;font-family:'Söhne','Inter Display',sans-serif;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;letter-spacing:-0.01em;">
-                      Accept invitation
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <!-- BUTTON -->
+              <div class="verify-button-wrapper">
+                <a
+                  href="${escapeHtml(inviteUrl)}"
+                  target="_blank"
+                  class="verify-button"
+                >
+                  Accept invitation
+                </a>
+              </div>
 
-              <!-- Fallback Direct URL Centered -->
-              <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6b7280;text-align:center;">
-                Or copy and paste this link into your browser:
-              </p>
-              <p style="margin:0 0 28px 0;font-size:11px;line-height:1.5;text-align:center;word-break:break-all;">
-                <a href="${escapeHtml(inviteUrl)}" target="_blank" class="email-direct-link" style="color:#111827;text-decoration:underline;">${escapeHtml(inviteUrl)}</a>
-              </p>
+              <!-- COPY LINK -->
+              <div class="copy-link">
+                <p>
+                  Or copy and paste this link into your browser:
+                </p>
+                <div class="verification-url">
+                  <a href="${escapeHtml(inviteUrl)}" target="_blank">${escapeHtml(inviteUrl)}</a>
+                </div>
+              </div>
 
-              <!-- Single Security Notice Box -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-notice" style="background-color:#f9fafb;border:1px solid #f3f4f6;border-radius:8px;padding:14px 16px;margin:0 0 32px 0;">
-                <tr>
-                  <td style="vertical-align:top;width:20px;padding-right:12px;line-height:0;">
-                    ${SHIELD_ICON_SVG}
-                  </td>
-                  <td style="vertical-align:top;">
-                    <strong class="email-notice-title" style="display:block;font-size:12px;font-weight:600;color:#111827;margin-bottom:3px;">Security Notice</strong>
-                    <span class="email-notice-text" style="font-size:12px;line-height:1.5;color:#6b7280;">
-                      This invitation link is intended for ${escapeHtml(params.to)} and will expire in 7 days. For your security, please do not share this email with anyone.
-                    </span>
-                  </td>
-                </tr>
-              </table>
+              <!-- SECURITY BOX -->
+              <div class="security-box">
+                <table
+                  role="presentation"
+                  class="security-table"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                >
+                  <tr>
+                    <td class="security-icon">
+                      <img src="${escapeHtml(shieldIconSrc)}" alt="Security" width="20" height="20" style="display:block;border:0;" />
+                    </td>
+                    <td>
+                      <p class="security-title">
+                        Security Notice
+                      </p>
+                      <p class="security-text">
+                        This invitation link is intended for ${escapeHtml(params.to)} and will expire in 7 days. For your security, please do not share this email with anyone.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
-              <!-- Divider -->
-              <hr class="email-hr" style="border:none;border-top:1px solid #e5e7eb;margin:0 0 28px 0;" />
+              <!-- DIVIDER -->
+              <div class="divider"></div>
 
-              <!-- Support & Footer -->
-              ${renderNeedHelpAndFooter()}
+              <!-- FOOTER (GOOGLE DOCS SHARING STYLE) -->
+              ${renderGoogleDocsStyleFooter(params.to, footerLogoSrc)}
 
             </td>
           </tr>
         </table>
+
       </td>
     </tr>
   </table>
@@ -441,6 +671,9 @@ export function renderPasswordRecoveryEmailHtml(
   const preheader = "This link expires in 24 hours.";
 
   const logoSrc = options?.logoUrl || (options?.isWebPreview ? "/chrono-logo-black.png" : "cid:chrono-logo");
+  const footerLogoSrc = options?.footerLogoUrl || (options?.isWebPreview ? "/email-footer-logo.png" : "cid:chrono-footer-logo");
+  const shieldIconSrc = options?.shieldIconUrl || (options?.isWebPreview ? "/email-shield.png" : "cid:email-shield");
+  const badgeIconSrc = options?.badgeIconUrl || (options?.isWebPreview ? "/email-key.png" : "cid:email-badge");
   const currentYear = new Date().getFullYear();
 
   const text = [
@@ -456,7 +689,8 @@ export function renderPasswordRecoveryEmailHtml(
     ``,
     `This verification link will expire in 24 hours. For your security, please do not share this email with anyone.`,
     ``,
-    `Need Help? Contact support@cristianobleve.com or visit https://chrono.cristianobleve.com/resources`,
+    `This email was sent to ${params.to} because you have an account on Chrono.`,
+    `If you didn't request this, you can safely ignore this email - no changes have been made to your account.`,
     ``,
     `© ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.`,
   ].join("\n");
@@ -464,9 +698,9 @@ export function renderPasswordRecoveryEmailHtml(
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${escapeHtml(subject)}</title>
   <!--[if mso]>
   <noscript>
@@ -477,92 +711,142 @@ export function renderPasswordRecoveryEmailHtml(
     </xml>
   </noscript>
   <![endif]-->
-  <style type="text/css">
+  <style>
     ${getBaseStyles()}
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#f3f4f6;color:#1f2937;">
-  <div style="display:none;font-size:1px;color:#f3f4f6;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+<body>
+  <div style="display:none;font-size:1px;color:#e5e5e9;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
     ${escapeHtml(preheader)}
   </div>
 
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-wrapper" style="background-color:#f3f4f6;padding:48px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-card" style="max-width:560px;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:48px 40px;text-align:left;">
-          <tr>
-            <td>
+      <td class="email-wrapper">
 
-              <!-- Logo Centered -->
-              <div style="text-align:center;margin-bottom:28px;">
-                <img src="${escapeHtml(logoSrc)}" alt="CHRONO" width="135" height="23" class="email-logo-img" style="display:block;margin:0 auto;border:0;outline:none;font-family:'Söhne','Inter Display',sans-serif;font-size:18px;font-weight:800;letter-spacing:0.08em;color:#000000;" />
+        <table
+          role="presentation"
+          class="email-container"
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          align="center"
+        >
+          <!-- CONTENT -->
+          <tr>
+            <td class="content">
+
+              <!-- BRAND LOGO -->
+              <div class="brand">
+                <img
+                  src="${escapeHtml(logoSrc)}"
+                  alt="Chrono"
+                  class="brand-logo"
+                  width="135"
+                  height="23"
+                >
               </div>
 
-              <!-- Header Centered -->
-              <h1 class="email-title" style="margin:0 0 8px 0;font-size:22px;font-weight:700;color:#111827;line-height:1.3;text-align:center;letter-spacing:-0.02em;">
+              <!-- SECURITY BADGE -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 16px auto;">
+                <tr>
+                  <td style="background-color:#eff6ff;border:1px solid #dbeafe;border-radius:100px;padding:4px 14px 4px 10px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="vertical-align:middle;padding-right:6px;line-height:0;">
+                          <img src="${escapeHtml(badgeIconSrc)}" alt="" width="16" height="16" style="display:block;border:0;" />
+                        </td>
+                        <td style="vertical-align:middle;font-size:12px;font-weight:600;color:#2563eb;letter-spacing:0.01em;">
+                          Security Verification
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- TITLE & SUBTITLE -->
+              <h1 class="title">
                 Let's get you back in
               </h1>
-              <p class="email-subtitle" style="margin:0 0 32px 0;font-size:13px;line-height:1.5;color:#6b7280;text-align:center;">
+
+              <p class="subtitle">
                 Password reset request
               </p>
 
-              <!-- Body Left-aligned -->
-              <p class="email-greeting" style="margin:0 0 16px 0;font-size:14px;line-height:1.6;color:#374151;">
-                Hello,
-              </p>
-              <p class="email-desc" style="margin:0 0 20px 0;font-size:14px;line-height:1.6;color:#374151;">
-                We received a request to reset the password for your Chrono account. Click the button below to choose a new one and return to your workspace.
-              </p>
+              <!-- BODY COPY -->
+              <div class="body-copy">
+                <p>
+                  Hello,
+                </p>
 
-              <!-- Clean Metadata (No nested box) -->
-              <div class="email-meta" style="margin:0 0 28px 0;font-size:13px;line-height:1.8;color:#4b5563;">
-                <span style="color:#6b7280;">Request:</span> <strong class="email-strong" style="color:#111827;">Password reset</strong><br>
-                <span style="color:#6b7280;">Valid for:</span> <span class="email-strong" style="color:#111827;">24 hours</span>
+                <p>
+                  We received a request to reset the password for your Chrono account. Click the button below to choose a new one and return to your workspace.
+                </p>
+
+                <p style="margin:0 0 24px;font-size:14px;line-height:22px;color:#4b5563;">
+                  <span style="color:#6b7280;">Request:</span> <strong style="color:#111827;">Password reset</strong><br>
+                  <span style="color:#6b7280;">Valid for:</span> <span style="color:#111827;">24 hours</span>
+                </p>
               </div>
 
-              <!-- Action Button Centered -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 24px auto;">
-                <tr>
-                  <td align="center" style="border-radius:8px;background-color:#000000;">
-                    <a href="${escapeHtml(resetUrl)}" target="_blank" class="email-btn" style="display:inline-block;padding:12px 32px;font-family:'Söhne','Inter Display',sans-serif;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;letter-spacing:-0.01em;">
-                      Reset password
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <!-- BUTTON -->
+              <div class="verify-button-wrapper">
+                <a
+                  href="${escapeHtml(resetUrl)}"
+                  target="_blank"
+                  class="verify-button"
+                >
+                  Reset password
+                </a>
+              </div>
 
-              <!-- Fallback Direct URL Centered -->
-              <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6b7280;text-align:center;">
-                Or copy and paste this link into your browser:
-              </p>
-              <p style="margin:0 0 28px 0;font-size:11px;line-height:1.5;text-align:center;word-break:break-all;">
-                <a href="${escapeHtml(resetUrl)}" target="_blank" class="email-direct-link" style="color:#111827;text-decoration:underline;">${escapeHtml(resetUrl)}</a>
-              </p>
+              <!-- COPY LINK -->
+              <div class="copy-link">
+                <p>
+                  Or copy and paste this link into your browser:
+                </p>
+                <div class="verification-url">
+                  <a href="${escapeHtml(resetUrl)}" target="_blank">${escapeHtml(resetUrl)}</a>
+                </div>
+              </div>
 
-              <!-- Single Security Notice Box -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-notice" style="background-color:#f9fafb;border:1px solid #f3f4f6;border-radius:8px;padding:14px 16px;margin:0 0 32px 0;">
-                <tr>
-                  <td style="vertical-align:top;width:20px;padding-right:12px;line-height:0;">
-                    ${SHIELD_ICON_SVG}
-                  </td>
-                  <td style="vertical-align:top;">
-                    <strong class="email-notice-title" style="display:block;font-size:12px;font-weight:600;color:#111827;margin-bottom:3px;">Security Notice</strong>
-                    <span class="email-notice-text" style="font-size:12px;line-height:1.5;color:#6b7280;">
-                      This verification link will expire in 24 hours. For your security, please do not share this email with anyone.
-                    </span>
-                  </td>
-                </tr>
-              </table>
+              <!-- SECURITY BOX -->
+              <div class="security-box">
+                <table
+                  role="presentation"
+                  class="security-table"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                >
+                  <tr>
+                    <td class="security-icon">
+                      <img src="${escapeHtml(shieldIconSrc)}" alt="Security" width="20" height="20" style="display:block;border:0;" />
+                    </td>
+                    <td>
+                      <p class="security-title">
+                        Security Notice
+                      </p>
+                      <p class="security-text">
+                        This verification link will expire in 24 hours. For your security, please do not share this email with anyone.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
-              <!-- Divider -->
-              <hr class="email-hr" style="border:none;border-top:1px solid #e5e7eb;margin:0 0 28px 0;" />
+              <!-- DIVIDER -->
+              <div class="divider"></div>
 
-              <!-- Support & Footer -->
-              ${renderNeedHelpAndFooter()}
+              <!-- FOOTER (GOOGLE DOCS SHARING STYLE) -->
+              ${renderGoogleDocsStyleFooter(params.to, footerLogoSrc)}
 
             </td>
           </tr>
         </table>
+
       </td>
     </tr>
   </table>
@@ -586,6 +870,9 @@ export function renderWelcomeEmailHtml(
   const preheader = "Your workspace is live and ready to go.";
 
   const logoSrc = options?.logoUrl || (options?.isWebPreview ? "/chrono-logo-black.png" : "cid:chrono-logo");
+  const footerLogoSrc = options?.footerLogoUrl || (options?.isWebPreview ? "/email-footer-logo.png" : "cid:chrono-footer-logo");
+  const shieldIconSrc = options?.shieldIconUrl || (options?.isWebPreview ? "/email-shield.png" : "cid:email-shield");
+  const badgeIconSrc = options?.badgeIconUrl || (options?.isWebPreview ? "/email-sparkles.png" : "cid:email-badge");
   const currentYear = new Date().getFullYear();
 
   const text = [
@@ -601,7 +888,8 @@ export function renderWelcomeEmailHtml(
     ``,
     `Your account is protected by standard authentication protocols. If you did not create this account, please contact our support team immediately.`,
     ``,
-    `Need Help? Contact support@cristianobleve.com or visit https://chrono.cristianobleve.com/resources`,
+    `This email was sent to ${params.to} because you have an account on Chrono.`,
+    `If you didn't request this, you can safely ignore this email - no changes have been made to your account.`,
     ``,
     `© ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.`,
   ].join("\n");
@@ -609,9 +897,9 @@ export function renderWelcomeEmailHtml(
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${escapeHtml(subject)}</title>
   <!--[if mso]>
   <noscript>
@@ -622,92 +910,142 @@ export function renderWelcomeEmailHtml(
     </xml>
   </noscript>
   <![endif]-->
-  <style type="text/css">
+  <style>
     ${getBaseStyles()}
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#f3f4f6;color:#1f2937;">
-  <div style="display:none;font-size:1px;color:#f3f4f6;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+<body>
+  <div style="display:none;font-size:1px;color:#e5e5e9;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
     ${escapeHtml(preheader)}
   </div>
 
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-wrapper" style="background-color:#f3f4f6;padding:48px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-card" style="max-width:560px;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:48px 40px;text-align:left;">
-          <tr>
-            <td>
+      <td class="email-wrapper">
 
-              <!-- Logo Centered -->
-              <div style="text-align:center;margin-bottom:28px;">
-                <img src="${escapeHtml(logoSrc)}" alt="CHRONO" width="135" height="23" class="email-logo-img" style="display:block;margin:0 auto;border:0;outline:none;font-family:'Söhne','Inter Display',sans-serif;font-size:18px;font-weight:800;letter-spacing:0.08em;color:#000000;" />
+        <table
+          role="presentation"
+          class="email-container"
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          align="center"
+        >
+          <!-- CONTENT -->
+          <tr>
+            <td class="content">
+
+              <!-- BRAND LOGO -->
+              <div class="brand">
+                <img
+                  src="${escapeHtml(logoSrc)}"
+                  alt="Chrono"
+                  class="brand-logo"
+                  width="135"
+                  height="23"
+                >
               </div>
 
-              <!-- Header Centered -->
-              <h1 class="email-title" style="margin:0 0 8px 0;font-size:22px;font-weight:700;color:#111827;line-height:1.3;text-align:center;letter-spacing:-0.02em;">
+              <!-- FESTIVE BADGE -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 16px auto;">
+                <tr>
+                  <td style="background-color:#eff6ff;border:1px solid #dbeafe;border-radius:100px;padding:4px 14px 4px 10px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="vertical-align:middle;padding-right:6px;line-height:0;">
+                          <img src="${escapeHtml(badgeIconSrc)}" alt="" width="16" height="16" style="display:block;border:0;" />
+                        </td>
+                        <td style="vertical-align:middle;font-size:12px;font-weight:600;color:#2563eb;letter-spacing:0.01em;">
+                          Hooray! You're in
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- TITLE & SUBTITLE -->
+              <h1 class="title">
                 Ready to ship with direction
               </h1>
-              <p class="email-subtitle" style="margin:0 0 32px 0;font-size:13px;line-height:1.5;color:#6b7280;text-align:center;">
+
+              <p class="subtitle">
                 Welcome to Chrono
               </p>
 
-              <!-- Body Left-aligned -->
-              <p class="email-greeting" style="margin:0 0 16px 0;font-size:14px;line-height:1.6;color:#374151;">
-                Hi ${name},
-              </p>
-              <p class="email-desc" style="margin:0 0 20px 0;font-size:14px;line-height:1.6;color:#374151;">
-                Your Chrono account is all set. You now have a unified system to manage projects, resolve issues, and coordinate your roadmap.
-              </p>
+              <!-- BODY COPY -->
+              <div class="body-copy">
+                <p>
+                  Hi ${name},
+                </p>
 
-              <!-- Clean Metadata (No nested box) -->
-              <div class="email-meta" style="margin:0 0 28px 0;font-size:13px;line-height:1.8;color:#4b5563;">
-                <span style="color:#6b7280;">Status:</span> <strong class="email-strong" style="color:#111827;">Active</strong><br>
-                <span style="color:#6b7280;">Capabilities:</span> <strong class="email-strong" style="color:#111827;">Projects, Issues, Timeline &amp; AI Agent</strong>
+                <p>
+                  Your Chrono account is all set. You now have a unified system to manage projects, resolve issues, and coordinate your roadmap.
+                </p>
+
+                <p style="margin:0 0 24px;font-size:14px;line-height:22px;color:#4b5563;">
+                  <span style="color:#6b7280;">Status:</span> <strong style="color:#111827;">Active</strong><br>
+                  <span style="color:#6b7280;">Capabilities:</span> <strong style="color:#111827;">Projects, Issues, Timeline &amp; AI Agent</strong>
+                </p>
               </div>
 
-              <!-- Action Button Centered -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 24px auto;">
-                <tr>
-                  <td align="center" style="border-radius:8px;background-color:#000000;">
-                    <a href="${escapeHtml(siteUrl)}" target="_blank" class="email-btn" style="display:inline-block;padding:12px 32px;font-family:'Söhne','Inter Display',sans-serif;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;letter-spacing:-0.01em;">
-                      Launch Chrono Workspace
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <!-- BUTTON -->
+              <div class="verify-button-wrapper">
+                <a
+                  href="${escapeHtml(siteUrl)}"
+                  target="_blank"
+                  class="verify-button"
+                >
+                  Launch Chrono Workspace
+                </a>
+              </div>
 
-              <!-- Fallback Direct URL Centered -->
-              <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6b7280;text-align:center;">
-                Or copy and paste this link into your browser:
-              </p>
-              <p style="margin:0 0 28px 0;font-size:11px;line-height:1.5;text-align:center;word-break:break-all;">
-                <a href="${escapeHtml(siteUrl)}" target="_blank" class="email-direct-link" style="color:#111827;text-decoration:underline;">${escapeHtml(siteUrl)}</a>
-              </p>
+              <!-- COPY LINK -->
+              <div class="copy-link">
+                <p>
+                  Or copy and paste this link into your browser:
+                </p>
+                <div class="verification-url">
+                  <a href="${escapeHtml(siteUrl)}" target="_blank">${escapeHtml(siteUrl)}</a>
+                </div>
+              </div>
 
-              <!-- Single Security Notice Box -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="email-notice" style="background-color:#f9fafb;border:1px solid #f3f4f6;border-radius:8px;padding:14px 16px;margin:0 0 32px 0;">
-                <tr>
-                  <td style="vertical-align:top;width:20px;padding-right:12px;line-height:0;">
-                    ${SHIELD_ICON_SVG}
-                  </td>
-                  <td style="vertical-align:top;">
-                    <strong class="email-notice-title" style="display:block;font-size:12px;font-weight:600;color:#111827;margin-bottom:3px;">Security Notice</strong>
-                    <span class="email-notice-text" style="font-size:12px;line-height:1.5;color:#6b7280;">
-                      Your account is protected by standard authentication protocols. If you did not create this account, please contact our support team immediately.
-                    </span>
-                  </td>
-                </tr>
-              </table>
+              <!-- SECURITY BOX -->
+              <div class="security-box">
+                <table
+                  role="presentation"
+                  class="security-table"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                >
+                  <tr>
+                    <td class="security-icon">
+                      <img src="${escapeHtml(shieldIconSrc)}" alt="Security" width="20" height="20" style="display:block;border:0;" />
+                    </td>
+                    <td>
+                      <p class="security-title">
+                        Security Notice
+                      </p>
+                      <p class="security-text">
+                        Your account is protected by standard authentication protocols. If you did not create this account, please contact our support team immediately.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
-              <!-- Divider -->
-              <hr class="email-hr" style="border:none;border-top:1px solid #e5e7eb;margin:0 0 28px 0;" />
+              <!-- DIVIDER -->
+              <div class="divider"></div>
 
-              <!-- Support & Footer -->
-              ${renderNeedHelpAndFooter()}
+              <!-- FOOTER (GOOGLE DOCS SHARING STYLE) -->
+              ${renderGoogleDocsStyleFooter(params.to, footerLogoSrc)}
 
             </td>
           </tr>
         </table>
+
       </td>
     </tr>
   </table>
@@ -734,7 +1072,7 @@ export async function sendWorkspaceInviteEmail(
       subject,
       text,
       html,
-      attachments: getLogoAttachment(),
+      attachments: getEmailAttachments("invite"),
     });
     return { sent: true };
   } catch (err: any) {
@@ -760,7 +1098,7 @@ export async function sendPasswordRecoveryEmail(
       subject,
       text,
       html,
-      attachments: getLogoAttachment(),
+      attachments: getEmailAttachments("recovery"),
     });
     return { sent: true };
   } catch (err: any) {
@@ -786,7 +1124,7 @@ export async function sendWelcomeEmail(
       subject,
       text,
       html,
-      attachments: getLogoAttachment(),
+      attachments: getEmailAttachments("welcome"),
     });
     return { sent: true };
   } catch (err: any) {
