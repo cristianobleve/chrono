@@ -88,13 +88,40 @@ Configure your credentials and database connection details inside the `.env.loca
 | `GEMINI_API_KEY` | Optional | Google AI Studio API key used by the workspace agent |
 | `OPENAI_API_KEY` | Optional | OpenAI API key for alternative LLM providers |
 | `GROQ_API_KEY` | Optional | Groq API key for low latency model inference |
-| `SMTP_HOST` | Optional | SMTP relay host for invite and recovery emails (e.g. `smtp.resend.com`) |
-| `SMTP_PORT` | Optional | Secure SMTP port (`465` for SSL or `587` for TLS) |
-| `SMTP_USER` | Optional | SMTP authentication username |
-| `SMTP_PASS` | Optional | SMTP authentication password or API key |
-| `SMTP_FROM` | Optional | Default sender address and display name |
+| `SMTP_HOST` | Optional | SMTP server hostname for transactional email delivery |
+| `SMTP_PORT` | Optional | Secure SMTP port (465 for SSL or 587 for TLS) |
+| `SMTP_USER` | Optional | SMTP authentication username or API identifier |
+| `SMTP_PASS` | Optional | SMTP authentication password or secret API token |
+| `SMTP_FROM` | Optional | Sender identity in standard format: Name &lt;email@domain.com&gt; |
 | `R2_BUCKET_NAME` | Optional | S3 or Cloudflare R2 bucket name for file attachments |
 | `R2_PUBLIC_DOMAIN` | Optional | Public CDN domain for uploaded media assets |
+
+## <img src="assets/icons/mail.svg" width="18" height="18" align="absmiddle" /> Email Delivery Setup
+
+Chrono includes built in support for transactional emails using Nodemailer with secure SMTP transport. Transactional emails are used for workspace team invitations, account password resets, and welcome onboarding notices.
+
+To enable email delivery, define the following variables inside your `.env.local` file using the credentials provided by your email service provider:
+
+```env
+# Hostname of your SMTP relay provider (e.g. Resend, SendGrid, Amazon SES, Postmark, or private relay)
+SMTP_HOST=""
+
+# Secure port (port 465 for SSL or port 587 for TLS)
+SMTP_PORT=""
+
+# Authentication username or API key identifier specified by your provider
+SMTP_USER=""
+
+# Authentication password or secret API key
+SMTP_PASS=""
+
+# Sender name and verified domain address shown in recipient inboxes (e.g. Team Name <noreply@yourdomain.com>)
+SMTP_FROM=""
+```
+
+When `SMTP_PASS` is omitted, the application runs without attempting outbound email dispatch, and invitation links can be copied manually from the workspace settings panel.
+
+Chrono also provides an interactive email preview route during development. Visit `/email-preview` to inspect visual layouts, switch between desktop and mobile viewports, inspect raw HTML output, or dispatch live test messages to verify your SMTP relay setup.
 
 ## <img src="assets/icons/server.svg" width="18" height="18" align="absmiddle" /> Supabase Database Setup
 
