@@ -17,29 +17,40 @@ export async function GET(req: Request) {
 
   let rendered: { subject: string; text: string; html: string };
 
+  const previewOptions = { isWebPreview: true };
+
   switch (type) {
     case "recovery":
-      rendered = renderPasswordRecoveryEmailHtml({
-        to: "alex.turner@example.com",
-        resetUrl: `${origin}/reset-password?token=mock_recovery_token_123456`,
-      });
+      rendered = renderPasswordRecoveryEmailHtml(
+        {
+          to: "alex.turner@example.com",
+          resetUrl: `${origin}/reset-password?token=mock_recovery_token_123456`,
+        },
+        previewOptions
+      );
       break;
     case "welcome":
-      rendered = renderWelcomeEmailHtml({
-        to: "alex.turner@example.com",
-        name: "Cristiano",
-        siteUrl: origin,
-      });
+      rendered = renderWelcomeEmailHtml(
+        {
+          to: "alex.turner@example.com",
+          name: "Cristiano",
+          siteUrl: origin,
+        },
+        previewOptions
+      );
       break;
     case "invite":
     default:
-      rendered = renderWorkspaceInviteEmailHtml({
-        to: "alex.turner@example.com",
-        workspaceName: "Chrono Core",
-        inviterName: "Cristiano Bleve",
-        role: "admin",
-        inviteUrl: `${origin}/invite/mock_invitation_token_abcdef123456`,
-      });
+      rendered = renderWorkspaceInviteEmailHtml(
+        {
+          to: "alex.turner@example.com",
+          workspaceName: "Chrono Core",
+          inviterName: "Cristiano Bleve",
+          role: "admin",
+          inviteUrl: `${origin}/invite/mock_invitation_token_abcdef123456`,
+        },
+        previewOptions
+      );
       break;
   }
 

@@ -100,7 +100,7 @@ export default function EmailPreviewPage() {
   };
 
   const templates: { id: EmailType; label: string; icon: React.ComponentType<{ size?: number; className?: string }> }[] = [
-    { id: "invite", label: "Workspace Invite (Hooray!)", icon: Rocket },
+    { id: "invite", label: "Workspace Invite", icon: Rocket },
     { id: "recovery", label: "Password Recovery", icon: ShieldTick },
     { id: "welcome", label: "Welcome Account", icon: Sparkles },
   ];
