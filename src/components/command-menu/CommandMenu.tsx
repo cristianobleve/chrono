@@ -107,7 +107,7 @@ export const CommandMenu: React.FC = () => {
               <Command.Item
                 onSelect={() => {
                   handleClose();
-                  setActiveModal("import_project");
+                  router.push("/projects/import");
                 }}
                 className="flex items-center justify-between px-2.5 py-2 rounded-xl text-zinc-300 hover:bg-zinc-900 hover:text-white cursor-pointer transition-colors"
               >

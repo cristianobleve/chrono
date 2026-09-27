@@ -49,16 +49,11 @@ export const ImportProjectModal: React.FC = () => {
   const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
-    try {
-      const results = parseBulkProjectsMarkdown(markdown);
-      setParsedList(results);
-      if (selectedIdx >= results.length) {
-        setSelectedIdx(0);
-      }
-    } catch (e) {
-      console.error("Failed to parse bulk markdown", e);
+    if (activeModal === "import_project") {
+      setActiveModal(null);
+      router.push("/projects/import");
     }
-  }, [markdown, selectedIdx]);
+  }, [activeModal, setActiveModal, router]);
 
   if (activeModal !== "import_project") return null;
 

@@ -28,14 +28,14 @@ export interface ParsedProjectImport {
 }
 
 /**
- * Parses a single or multi-project markdown file where projects are separated by '__sep'
+ * Parses a single or multi-project markdown file where projects can be separated by
+ * '__sep', '---', or multiple distinct '# Heading' blocks.
  */
 export function parseBulkProjectsMarkdown(markdownText: string): ParsedProjectImport[] {
   if (!markdownText || typeof markdownText !== "string") return [];
 
-  // Check if text contains the '__sep' divider
+  // 1. Check if text contains the explicit '__sep' divider
   const sepRegex = /(?:^|\n)\s*(?:---|<!--)?\s*__sep\s*(?:-->|---)?\s*(?:\n|$)/i;
-
   if (sepRegex.test(markdownText)) {
     const rawChunks = markdownText
       .split(sepRegex)
@@ -47,13 +47,42 @@ export function parseBulkProjectsMarkdown(markdownText: string): ParsedProjectIm
     }
   }
 
+  // 2. Check if text contains multiple projects divided by '---' before a '# ' heading
+  const dashSepRegex = /(?:^|\n)\s*---\s*(?:\n+)(?=#\s+[^\n]+)/g;
+  if (dashSepRegex.test(markdownText)) {
+    const chunks = markdownText
+      .split(dashSepRegex)
+      .map((c) => c.trim())
+      .filter((c) => c.length > 5);
+    if (chunks.length > 1) {
+      return chunks.map((chunk) => parseProjectMarkdown(chunk));
+    }
+  }
+
+  // 3. Check if text contains multiple '# ' headings defining multiple projects
+  const h1Matches = Array.from(markdownText.matchAll(/(?:^|\n)#\s+([^\n]+)/g));
+  if (h1Matches.length > 1) {
+    const h1Indices = h1Matches.map((m) => m.index ?? 0);
+    const projectChunks: string[] = [];
+    for (let i = 0; i < h1Indices.length; i++) {
+      const start = h1Indices[i];
+      const end = i < h1Indices.length - 1 ? h1Indices[i + 1] : markdownText.length;
+      const chunk = markdownText.slice(start, end).trim();
+      if (chunk.length > 15) {
+        projectChunks.push(chunk);
+      }
+    }
+    if (projectChunks.length > 1) {
+      return projectChunks.map((c) => parseProjectMarkdown(c));
+    }
+  }
+
   // Fallback single project
   return [parseProjectMarkdown(markdownText)];
 }
 
 export function parseProjectMarkdown(markdownText: string): ParsedProjectImport {
-  const lines = markdownText.split("\n");
-
+  let text = markdownText;
   let name = "Nuovo Progetto Importato";
   let summary = "";
   let description = "";
@@ -63,16 +92,39 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
   const milestones: ParsedMilestoneImport[] = [];
   const issues: ParsedIssueImport[] = [];
 
+  // Parse YAML Frontmatter if present
+  const frontmatterMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  if (frontmatterMatch) {
+    const fmLines = frontmatterMatch[1].split("\n");
+    for (const fml of fmLines) {
+      const parts = fml.split(":");
+      if (parts.length >= 2) {
+        const key = parts[0].trim().toLowerCase();
+        const val = parts.slice(1).join(":").trim().replace(/^["']|["']$/g, "");
+        if (key === "name" || key === "title") name = val;
+        if (key === "summary") summary = val;
+        if (key === "status") status = parseProjectStatus(val);
+        if (key === "priority") priority = parsePriority(val);
+        if (key === "targetdate" || key === "target_date" || key === "duedate" || key === "due_date") {
+          targetDate = extractDate(val);
+        }
+      }
+    }
+    text = text.replace(frontmatterMatch[0], "");
+  }
+
+  const lines = text.split("\n");
+
   let currentSection: "header" | "metadata" | "description" | "milestones" | "issues" | "other" = "header";
   let currentIssue: Partial<ParsedIssueImport> | null = null;
-  let descriptionBuffer: string[] = [];
+  const descriptionBuffer: string[] = [];
   let issueDescBuffer: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const rawLine = lines[i];
     const trimmed = rawLine.trim();
 
-    // 1. Project Title from # Heading (first level 1 heading)
+    // 1. Project Title from # Heading
     if (trimmed.startsWith("# ") && currentSection === "header") {
       name = trimmed.replace(/^#\s+/, "").trim();
       continue;
@@ -98,11 +150,21 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
 
       if (sectionName.includes("metadata") || sectionName.includes("dati") || sectionName.includes("info")) {
         currentSection = "metadata";
-      } else if (sectionName.includes("descri") || sectionName.includes("overview") || sectionName.includes("panoramica") || sectionName.includes("obiettiv")) {
+      } else if (
+        sectionName.includes("descri") ||
+        sectionName.includes("overview") ||
+        sectionName.includes("panoramica") ||
+        sectionName.includes("obiettiv")
+      ) {
         currentSection = "description";
       } else if (sectionName.includes("milestone") || sectionName.includes("traguard") || sectionName.includes("fasi")) {
         currentSection = "milestones";
-      } else if (sectionName.includes("issue") || sectionName.includes("task") || sectionName.includes("attività") || sectionName.includes("schede")) {
+      } else if (
+        sectionName.includes("issue") ||
+        sectionName.includes("task") ||
+        sectionName.includes("attività") ||
+        sectionName.includes("schede")
+      ) {
         currentSection = "issues";
       } else {
         currentSection = "other";
@@ -119,7 +181,12 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         status = parseProjectStatus(trimmed);
       } else if (lower.includes("priority:") || lower.includes("priorità:")) {
         priority = parsePriority(trimmed);
-      } else if (lower.includes("target date:") || lower.includes("due date:") || lower.includes("scadenza:") || lower.includes("data:")) {
+      } else if (
+        lower.includes("target date:") ||
+        lower.includes("due date:") ||
+        lower.includes("scadenza:") ||
+        lower.includes("data:")
+      ) {
         targetDate = extractDate(trimmed);
       }
       continue;
@@ -133,16 +200,20 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
 
     // Section: Milestones
     if (currentSection === "milestones") {
-      // e.g. - [ ] Milestone 1: Setup DB (Target: 2026-09-30) or (Due: 2026-09-30)
-      if (trimmed.startsWith("- [ ]") || trimmed.startsWith("- [x]") || trimmed.startsWith("* [ ]") || trimmed.startsWith("* [x]")) {
+      if (
+        trimmed.startsWith("- [ ]") ||
+        trimmed.startsWith("- [x]") ||
+        trimmed.startsWith("* [ ]") ||
+        trimmed.startsWith("* [x]")
+      ) {
         const completed = trimmed.includes("[x]");
         let milestoneText = trimmed.replace(/^[-*]\s*\[[ x]\]\s*/i, "").trim();
 
         let msTargetDate: string | null = null;
-        const dateMatch = milestoneText.match(/\((?:target|due|scadenza):\s*([^\)]+)\)/i);
+        const dateMatch = milestoneText.match(/\((?:target|due|scadenza|data):\s*([^\)]+)\)/i);
         if (dateMatch) {
           msTargetDate = extractDate(dateMatch[1]);
-          milestoneText = milestoneText.replace(/\((?:target|due|scadenza):\s*[^\)]+\)/i, "").trim();
+          milestoneText = milestoneText.replace(/\((?:target|due|scadenza|data):\s*[^\)]+\)/i, "").trim();
         }
 
         milestones.push({
@@ -151,11 +222,17 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
           completed,
         });
       } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-        // Bullet without checkbox
-        const itemText = trimmed.replace(/^[-*]\s+/, "").trim();
+        let itemText = trimmed.replace(/^[-*]\s+/, "").trim();
         if (itemText) {
+          let msTargetDate: string | null = null;
+          const dateMatch = itemText.match(/\((?:target|due|scadenza|data):\s*([^\)]+)\)/i);
+          if (dateMatch) {
+            msTargetDate = extractDate(dateMatch[1]);
+            itemText = itemText.replace(/\((?:target|due|scadenza|data):\s*[^\)]+\)/i, "").trim();
+          }
           milestones.push({
             name: itemText,
+            targetDate: msTargetDate,
             completed: false,
           });
         }
@@ -165,9 +242,8 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
 
     // Section: Issues
     if (currentSection === "issues") {
-      // Detect individual Issue Header (### Title)
+      // Heading format: ### Issue Title
       if (trimmed.startsWith("### ")) {
-        // Flush previous issue
         if (currentIssue && currentIssue.title) {
           currentIssue.description = issueDescBuffer.join("\n").trim();
           issues.push(finalizeIssue(currentIssue));
@@ -185,24 +261,70 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         continue;
       }
 
-      // If inside an issue, parse its attributes or description lines
+      // Checkbox list format: - [ ] Issue Title
+      if (
+        (trimmed.startsWith("- [ ]") ||
+          trimmed.startsWith("- [x]") ||
+          trimmed.startsWith("* [ ]") ||
+          trimmed.startsWith("* [x]")) &&
+        !currentIssue
+      ) {
+        const isDone = trimmed.includes("[x]");
+        let taskTitle = trimmed.replace(/^[-*]\s*\[[ x]\]\s*/i, "").trim();
+        let est: number | null = null;
+        const estMatch = taskTitle.match(/\[(\d+)\s*(?:pt|punti|points|pts)?\]/i);
+        if (estMatch) {
+          est = parseInt(estMatch[1], 10);
+          taskTitle = taskTitle.replace(/\[\d+\s*(?:pt|punti|points|pts)?\]/i, "").trim();
+        }
+        issues.push({
+          title: taskTitle,
+          description: "",
+          status: isDone ? "done" : "todo",
+          priority: "medium",
+          estimate: est,
+          labels: [],
+        });
+        continue;
+      }
+
+      // Inside an active issue, parse attributes or description lines
       if (currentIssue) {
         const lower = trimmed.toLowerCase();
-        if (lower.startsWith("- **status**:") || lower.startsWith("- status:") || lower.startsWith("- **stato**:")) {
+        if (
+          lower.startsWith("- **status**:") ||
+          lower.startsWith("- status:") ||
+          lower.startsWith("- **stato**:") ||
+          lower.startsWith("- stato:")
+        ) {
           currentIssue.status = parseIssueStatus(trimmed);
-        } else if (lower.startsWith("- **priority**:") || lower.startsWith("- priority:") || lower.startsWith("- **priorità**:")) {
+        } else if (
+          lower.startsWith("- **priority**:") ||
+          lower.startsWith("- priority:") ||
+          lower.startsWith("- **priorità**:") ||
+          lower.startsWith("- priorità:")
+        ) {
           currentIssue.priority = parsePriority(trimmed);
-        } else if (lower.startsWith("- **estimate**:") || lower.startsWith("- estimate:") || lower.startsWith("- **stima**:")) {
+        } else if (
+          lower.startsWith("- **estimate**:") ||
+          lower.startsWith("- estimate:") ||
+          lower.startsWith("- **stima**:") ||
+          lower.startsWith("- stima:")
+        ) {
           const estNum = parseInt(trimmed.replace(/[^0-9]/g, ""), 10);
           if (!isNaN(estNum)) currentIssue.estimate = estNum;
-        } else if (lower.startsWith("- **labels**:") || lower.startsWith("- labels:") || lower.startsWith("- **tag**:")) {
+        } else if (
+          lower.startsWith("- **labels**:") ||
+          lower.startsWith("- labels:") ||
+          lower.startsWith("- **tag**:") ||
+          lower.startsWith("- tag:")
+        ) {
           const rawLabels = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:labels|tag)(?:\*\*)?:\s*/i, "");
           currentIssue.labels = rawLabels
             .split(/[,;]/)
             .map((l) => l.trim())
             .filter(Boolean);
         } else {
-          // Description line of issue
           issueDescBuffer.push(rawLine);
         }
       }
@@ -290,7 +412,22 @@ function parsePriority(line: string): Priority {
 }
 
 function extractDate(str: string): string | null {
-  const match = str.match(/(\d{4}-\d{2}-\d{2})/);
-  if (match) return match[1];
+  // ISO: 2026-09-30
+  const isoMatch = str.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
+  if (isoMatch) {
+    const parts = isoMatch[1].replace(/\//g, "-").split("-");
+    const y = parts[0];
+    const m = parts[1].padStart(2, "0");
+    const d = parts[2].padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+  // European: 30/09/2026 or 30-09-2026
+  const euroMatch = str.match(/(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+  if (euroMatch) {
+    const d = euroMatch[1].padStart(2, "0");
+    const m = euroMatch[2].padStart(2, "0");
+    const y = euroMatch[3];
+    return `${y}-${m}-${d}`;
+  }
   return null;
 }

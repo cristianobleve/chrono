@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     }
 
     let workspaceId = await resolveWorkspaceId(action, payload);
-    if (action === "pull_all" && !workspaceId) {
+    if (!workspaceId) {
       const { data: defaultMembership } = await supabaseServer
         .from("workspace_members")
         .select("workspace_id")
@@ -43,6 +43,10 @@ export async function POST(req: Request) {
         .limit(1)
         .maybeSingle();
       workspaceId = defaultMembership?.workspace_id || null;
+      if (workspaceId && payload && typeof payload === "object") {
+        if (!payload.workspace_id) payload.workspace_id = workspaceId;
+        if (payload.project && !payload.project.workspace_id) payload.project.workspace_id = workspaceId;
+      }
     }
     if (action === "pull_all" && workspaceId && payload) {
       payload.workspace_id = workspaceId;

@@ -1339,37 +1339,30 @@ export const useLinearStore = create<LinearState>()(
           const remoteWorkspaces = data.workspaces || [];
 
           // STRICT ISOLATION GUARD: If the authenticated user is not a member of any workspace,
-          // purge all workspaces, projects, issues, and associated data immediately.
+          // isolate workspace access while preserving any uncommitted local state.
           if (remoteWorkspaces.length === 0) {
-            set({
-              supabaseStatus: "connected",
-              workspaces: [],
-              workspace: emptyWorkspace,
-              currentWorkspaceId: "",
-              projects: [],
-              issues: [],
-              habits: [],
-              tags: [],
-              projectFolders: [],
-              trash: [],
-              timelineEvents: [],
-              accounts: matchingAccount ? [matchingAccount] : [],
-              ...(matchingAccount
-                ? {
-                    currentAccountId: matchingAccount.id,
-                    currentUser: {
-                      id: matchingAccount.id,
-                      identifier: matchingAccount.identifier,
-                      internalId: matchingAccount.internalId,
-                      name: matchingAccount.name,
-                      username: matchingAccount.username,
-                      email: matchingAccount.email,
-                      role: matchingAccount.role,
-                      avatarUrl: matchingAccount.avatarUrl || get().currentUser.avatarUrl || get().currentUser.avatar || undefined,
-                    },
-                  }
-                : {}),
-            });
+            if (matchingAccount) {
+              set({
+                supabaseStatus: "connected",
+                workspaces: [],
+                workspace: emptyWorkspace,
+                currentWorkspaceId: "",
+                accounts: [matchingAccount],
+                currentAccountId: matchingAccount.id,
+                currentUser: {
+                  id: matchingAccount.id,
+                  identifier: matchingAccount.identifier,
+                  internalId: matchingAccount.internalId,
+                  name: matchingAccount.name,
+                  username: matchingAccount.username,
+                  email: matchingAccount.email,
+                  role: matchingAccount.role,
+                  avatarUrl: matchingAccount.avatarUrl || get().currentUser.avatarUrl || get().currentUser.avatar || undefined,
+                },
+              });
+            } else {
+              set({ supabaseStatus: "connected" });
+            }
             return true;
           }
 
@@ -1383,9 +1376,49 @@ export const useLinearStore = create<LinearState>()(
             : workspaces[0].id;
           const activeWorkspace = workspaces.find((w) => w.id === currentWorkspaceId) || workspaces[0];
 
-          // Filter collections strictly to allowed workspaces only
-          const projects = (data.projects || []).filter((p) => p.workspaceId && allowedWsIds.has(p.workspaceId));
-          const issues = (data.issues || []).filter((i) => i.workspaceId && allowedWsIds.has(i.workspaceId));
+          // Retain and reconcile local projects that belong to allowed workspaces or active workspace
+          const remoteProjects = (data.projects || []).filter((p) => p.workspaceId && allowedWsIds.has(p.workspaceId));
+          const remoteProjectIds = new Set(remoteProjects.map((p) => p.id));
+          const remoteProjectSlugs = new Set(remoteProjects.map((p) => p.slug));
+
+          const localOnlyProjects = get().projects.filter((p) => {
+            const belongsToAllowed = !p.workspaceId || allowedWsIds.has(p.workspaceId) || p.workspaceId === currentWorkspaceId;
+            const existsInRemote = remoteProjectIds.has(p.id) || (p.slug && remoteProjectSlugs.has(p.slug));
+            return belongsToAllowed && !existsInRemote;
+          }).map((p) => ({
+            ...p,
+            workspaceId: p.workspaceId && allowedWsIds.has(p.workspaceId) ? p.workspaceId : currentWorkspaceId,
+          }));
+
+          // Background sync local-only projects to remote Supabase so they persist across sessions
+          if (localOnlyProjects.length > 0) {
+            localOnlyProjects.forEach((p) => {
+              void supabaseSync.syncProject(p);
+            });
+          }
+
+          const projects = [...remoteProjects, ...localOnlyProjects];
+
+          // Retain and reconcile local issues
+          const remoteIssues = (data.issues || []).filter((i) => i.workspaceId && allowedWsIds.has(i.workspaceId));
+          const remoteIssueIds = new Set(remoteIssues.map((i) => i.id));
+
+          const localOnlyIssues = get().issues.filter((i) => {
+            const belongsToAllowed = !i.workspaceId || allowedWsIds.has(i.workspaceId) || i.workspaceId === currentWorkspaceId;
+            return belongsToAllowed && !remoteIssueIds.has(i.id);
+          }).map((i) => ({
+            ...i,
+            workspaceId: i.workspaceId && allowedWsIds.has(i.workspaceId) ? i.workspaceId : currentWorkspaceId,
+          }));
+
+          if (localOnlyIssues.length > 0) {
+            localOnlyIssues.forEach((iss) => {
+              void supabaseSync.syncIssue(iss);
+            });
+          }
+
+          const issues = [...remoteIssues, ...localOnlyIssues];
+
           const habits = (data.habits || []).filter((h) => !h.workspaceId || allowedWsIds.has(h.workspaceId));
           const tags = (data.tags || []).filter((t) => !t.workspaceId || allowedWsIds.has(t.workspaceId));
           const projectFolders = (data.folders || []).filter((f) => !f.workspaceId || allowedWsIds.has(f.workspaceId));
@@ -1547,7 +1580,11 @@ export const useLinearStore = create<LinearState>()(
       importProjectFromMarkdown: (parsedData) => {
         const state = get();
         const projectId = "proj-" + Date.now();
-        const targetWorkspaceId = state.currentWorkspaceId || state.workspace?.id || "";
+        const targetWorkspaceId =
+          state.currentWorkspaceId ||
+          state.workspace?.id ||
+          state.workspaces[0]?.id ||
+          "ws-1790213482796";
         const slug = parsedData.name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-") + "-" + Math.random().toString(36).substring(2, 8);
@@ -1637,6 +1674,7 @@ export const useLinearStore = create<LinearState>()(
         set((prevState) => ({
           projects: [newProject, ...prevState.projects],
           issues: [...newIssues, ...prevState.issues],
+          ...((!prevState.currentWorkspaceId) ? { currentWorkspaceId: targetWorkspaceId } : {}),
         }));
 
         supabaseSync.syncProject(newProject);
@@ -1658,7 +1696,11 @@ export const useLinearStore = create<LinearState>()(
         const createdProjects: Project[] = [];
         const allNewIssues: Issue[] = [];
         let issueCounter = state.issues.length;
-        const targetWorkspaceId = state.currentWorkspaceId || state.workspace?.id || "";
+        const targetWorkspaceId =
+          state.currentWorkspaceId ||
+          state.workspace?.id ||
+          state.workspaces[0]?.id ||
+          "ws-1790213482796";
 
         projectsData.forEach((parsedData, pIdx) => {
           const projectId = `proj-${Date.now()}-${pIdx}`;
@@ -1755,6 +1797,7 @@ export const useLinearStore = create<LinearState>()(
         set((prevState) => ({
           projects: [...createdProjects, ...prevState.projects],
           issues: [...allNewIssues, ...prevState.issues],
+          ...((!prevState.currentWorkspaceId) ? { currentWorkspaceId: targetWorkspaceId } : {}),
         }));
 
         createdProjects.forEach((p) => supabaseSync.syncProject(p));

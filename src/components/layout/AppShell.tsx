@@ -11,7 +11,7 @@ import { NewIssueModal } from "@/components/issues/NewIssueModal";
 import { ImportProjectModal } from "@/components/projects/ImportProjectModal";
 import { IssueDetailDrawer } from "@/components/issues/IssueDetailDrawer";
 import { ToastContainer } from "@/components/ui/ToastContainer";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChronoLogo } from "@/components/ui/ChronoLogo";
 import { useTranslation } from "@/i18n";
@@ -30,11 +30,13 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const workspaces = useLinearStore((state) => state.workspaces);
   const supabaseStatus = useLinearStore((state) => state.supabaseStatus);
   const pathname = usePathname();
+  const router = useRouter();
   const lastKeyRef = useRef<string | null>(null);
   const keyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const isSettings = pathname?.startsWith("/settings");
   const isAgent = pathname?.startsWith("/agent");
+  const isImport = pathname === "/projects/import" || pathname?.startsWith("/projects/import");
   const isLogin = pathname === "/login" || pathname === "/signup" || pathname === "/reset-password" || pathname?.startsWith("/invite/");
   const isHome = pathname === "/";
   const isMarketing = ["/product", "/method", "/security", "/resources"].some(
@@ -86,10 +88,10 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
         return;
       }
 
-      // 'i' -> Import Project
+      // 'i' -> Import Project Page
       if (e.key.toLowerCase() === "i" && !activeModal && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
-        setActiveModal("import_project");
+        router.push("/projects/import");
         return;
       }
 
@@ -114,7 +116,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeModal, setActiveModal, isStandalone]);
+  }, [activeModal, setActiveModal, isStandalone, router]);
 
   if (isStandalone) {
     return (
@@ -169,8 +171,8 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
           <NoWorkspaceAccess />
           <TwingateFooter />
         </main>
-      ) : isAgent ? (
-        /* Agent Cockpit: 100% fixed viewport height with zero body scroll */
+      ) : isAgent || isImport ? (
+        /* Agent Cockpit & Markdown Editor: 100% fixed viewport height with zero body scroll */
         <main className="flex-1 flex flex-col w-full min-h-0 overflow-hidden bg-[#09090b] pt-20 md:pt-24">
           {children}
         </main>

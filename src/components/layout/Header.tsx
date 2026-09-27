@@ -52,14 +52,14 @@ export const Header: React.FC<HeaderProps> = ({ title, breadcrumbs, actions }) =
           actions
         ) : (
           <>
-            <button
-              onClick={() => setActiveModal("import_project")}
+            <Link
+              href="/projects/import"
               className="hidden sm:flex items-center gap-1 px-2 py-1 bg-surface-1 hover:bg-surface-2 text-ink-subtle hover:text-ink border border-hairline rounded-md transition-colors text-xs font-medium"
               title={t.projects.importProject}
             >
               <UploadCloud className="w-3.5 h-3.5 text-zinc-400" />
               <span>{t.projectsList.importMd}</span>
-            </button>
+            </Link>
 
             <button
               onClick={() => setActiveModal("new_project")}

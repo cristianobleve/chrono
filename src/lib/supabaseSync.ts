@@ -48,7 +48,7 @@ export const supabaseSync = {
    * Format Project to Supabase snake_case columns
    */
   formatProjectRow(p: Project, workspaceId?: string) {
-    const wsId = p.workspaceId || workspaceId || "";
+    const wsId = p.workspaceId || workspaceId || "ws-1790213482796";
     return {
       id: p.id,
       identifier: p.identifier || `PRJ-${Math.floor(Math.random() * 1000)}`,
@@ -95,7 +95,7 @@ export const supabaseSync = {
    * Format Issue to Supabase snake_case columns
    */
   formatIssueRow(i: Issue, workspaceId?: string) {
-    const wsId = i.workspaceId || workspaceId || "";
+    const wsId = i.workspaceId || workspaceId || "ws-1790213482796";
     return {
       id: i.id,
       identifier: i.identifier || `ISS-${Math.floor(Math.random() * 1000)}`,
@@ -729,22 +729,27 @@ export const supabaseSync = {
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user) {
-        return {
-          workspaces: [],
-          projects: [],
-          issues: [],
-          habits: [],
-          tags: [],
-          folders: [],
-          accounts: [],
-        };
+        return null;
       }
 
-      // Query only workspaces where user is an explicit member
+      // Query account ID first, because workspace_members references account_id, not auth user.id
+      let effectiveAccountId = user.id;
+      if (user.email) {
+        const { data: userAccount } = await supabase
+          .from("accounts")
+          .select("id")
+          .ilike("email", user.email)
+          .maybeSingle();
+        if (userAccount?.id) {
+          effectiveAccountId = userAccount.id;
+        }
+      }
+
+      // Query workspaces where user is an explicit member
       const { data: memberships } = await supabase
         .from("workspace_members")
         .select("workspace_id, role")
-        .eq("account_id", user.id);
+        .or(`account_id.eq.${effectiveAccountId},account_id.eq.${user.id}`);
 
       const userWsIds = (memberships || []).map((m: any) => m.workspace_id);
       if (userWsIds.length === 0) {

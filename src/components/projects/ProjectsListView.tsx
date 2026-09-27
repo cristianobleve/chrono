@@ -234,13 +234,13 @@ export const ProjectsListView: React.FC = () => {
                       <Box className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                       <span className="text-[11px] font-medium leading-tight">{t.projectsList.newProject}</span>
                     </button>
-                    <button
-                      onClick={() => setActiveModal("import_project")}
+                    <Link
+                      href="/projects/import"
                       className="p-2.5 rounded-[8px] bg-zinc-800/60 hover:bg-zinc-800 border border-white/5 text-white flex flex-col items-center justify-center gap-1.5 text-center transition-all cursor-pointer group"
                     >
                       <UploadCloud className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                       <span className="text-[11px] font-medium leading-tight">{t.projectsList.importMd}</span>
-                    </button>
+                    </Link>
                     <Link
                       href="/agent"
                       className="p-2.5 rounded-[8px] bg-zinc-800/60 hover:bg-zinc-800 border border-white/5 text-white flex flex-col items-center justify-center gap-1.5 text-center transition-all cursor-pointer group"
@@ -478,13 +478,13 @@ export const ProjectsListView: React.FC = () => {
                   <Plus className="w-4 h-4" />
                   <span>{t.projectsList.createNew}</span>
                 </button>
-                <button
-                  onClick={() => setActiveModal("import_project")}
+                <Link
+                  href="/projects/import"
                   className="px-4 py-2 rounded-[8px] bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-white/5 text-xs font-medium transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <UploadCloud className="w-4 h-4 text-zinc-400" />
                   <span>{t.projectsList.importFromMarkdown}</span>
-                </button>
+                </Link>
               </div>
             </div>
           ) : viewMode === "grid" ? (
