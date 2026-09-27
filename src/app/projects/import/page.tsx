@@ -550,7 +550,7 @@ export default function ImportProjectsPage() {
                   type="button"
                   onClick={() => setSelectedIdx(idx)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all shrink-0 cursor-pointer border",
+                    "flex items-center gap-2 px-2.5 py-1 h-7 rounded-[6px] text-xs font-medium transition-all shrink-0 cursor-pointer border max-w-[200px] overflow-hidden",
                     selectedIdx === idx
                       ? "bg-zinc-800 text-white border-white/10 shadow-sm"
                       : "bg-zinc-900/60 text-zinc-400 hover:text-zinc-200 border-white/5"
@@ -562,8 +562,9 @@ export default function ImportProjectsPage() {
                     iconColor={p.iconColor}
                     name={p.name}
                     size="xs"
+                    className="shrink-0"
                   />
-                  <span className="truncate max-w-[140px]">{p.name}</span>
+                  <span className="truncate">{p.name}</span>
                 </button>
               ))}
             </div>

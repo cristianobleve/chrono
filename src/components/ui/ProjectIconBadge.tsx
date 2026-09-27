@@ -132,12 +132,20 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
       ? currentIcon
       : displayName.charAt(0).toUpperCase();
 
+  const pxSizes = {
+    xs: 18,
+    sm: 28,
+    md: 40,
+    lg: 48,
+    xl: 64,
+  };
+
   const sizeClasses = {
-    xs: "w-4.5 h-4.5 rounded-[5px] text-[9px] font-bold",
-    sm: "w-7 h-7 rounded-[10px] text-xs font-bold",
-    md: "w-10 h-10 rounded-[14px] text-base font-bold",
-    lg: "w-12 h-12 rounded-[16px] text-xl font-bold",
-    xl: "w-16 h-16 rounded-[22px] text-3xl font-bold",
+    xs: "rounded-[5px] text-[9px] font-bold aspect-square",
+    sm: "rounded-[9px] text-xs font-bold aspect-square",
+    md: "rounded-[14px] text-base font-bold aspect-square",
+    lg: "rounded-[16px] text-xl font-bold aspect-square",
+    xl: "rounded-[22px] text-3xl font-bold aspect-square",
   };
 
   const iconSizes = {
@@ -148,16 +156,24 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
     xl: "w-8 h-8",
   };
 
+  const dim = pxSizes[size] || 40;
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        "superquadrato-badge flex items-center justify-center shrink-0 border select-none transition-all shadow-md overflow-hidden relative",
+        "superquadrato-badge flex items-center justify-center shrink-0 border select-none transition-all shadow-md overflow-hidden relative aspect-square",
         sizeClasses[size],
         onClick && "cursor-pointer hover:scale-105 active:scale-95",
         className
       )}
       style={{
+        width: dim,
+        height: dim,
+        minWidth: dim,
+        minHeight: dim,
+        maxWidth: dim,
+        maxHeight: dim,
         backgroundColor: isBgImage ? undefined : currentBg,
         backgroundImage: isBgImage && isIconImage ? `url(${currentBg})` : undefined,
         backgroundSize: "cover",
@@ -170,7 +186,8 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
         <img
           src={imageSrc!}
           alt={displayName}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover block aspect-square pointer-events-none"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       ) : LucideComponent ? (
         <LucideComponent className={cn(iconSizes[size], "shrink-0")} strokeWidth={2} />
