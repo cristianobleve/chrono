@@ -13,6 +13,8 @@ const publicPaths = [
   "/reset-password",
   "/auth/callback",
   "/invite",
+  "/email-preview",
+  "/api/email-preview",
   "/api/workspace/invites",
   "/api/auth/reset-password",
 ];

@@ -258,7 +258,7 @@ export async function POST(req: Request) {
   const mailResult = await sendWorkspaceInviteEmail({
     to: email,
     workspaceName: wsData?.name || "Workspace Chrono",
-    inviterName: inviterAccount?.name || auth.email || "Un amministratore",
+    inviterName: inviterAccount?.name || auth.email || "A team administrator",
     role,
     inviteUrl,
   });

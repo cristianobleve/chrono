@@ -407,9 +407,19 @@ export default function SettingsMembersPage() {
 
       {/* Invite Member Section */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-xs font-bold text-white uppercase tracking-wider text-zinc-500">
-          Invita Nuovo Membro
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold text-white uppercase tracking-wider text-zinc-500">
+            Invita Nuovo Membro
+          </h2>
+          <Link
+            href="/email-preview"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Anteprima email inviti</span>
+          </Link>
+        </div>
         <form onSubmit={handleSendInvite} className="p-6 rounded-[16px] bg-zinc-950 border border-white/10 flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             <div className="sm:col-span-5 relative flex items-center">
