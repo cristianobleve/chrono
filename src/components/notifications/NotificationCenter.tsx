@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bell, CheckCheck, Check, X, Loader2, Mail, Inbox, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Bell, Check, Inbox, Loader, ChevronRight } from "reicon-react";
 import { supabase } from "@/lib/supabase";
 import { useLinearStore } from "@/store/useLinearStore";
 import { useTranslation } from "@/i18n";
@@ -197,7 +197,7 @@ export function NotificationCenter() {
         title={t.notifications.title}
         aria-label={t.notifications.title}
       >
-        <Bell className="h-4 w-4" />
+        <Bell size={16} />
         {unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold text-black font-mono shadow-sm">
             {unread > 9 ? "9+" : unread}
@@ -248,7 +248,7 @@ export function NotificationCenter() {
                 onClick={() => void markAllRead()}
                 className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
-                <CheckCheck className="h-3.5 w-3.5" />
+                <Check size={14} />
                 <span>{t.notifications.markAllRead}</span>
               </button>
             )}
@@ -259,7 +259,7 @@ export function NotificationCenter() {
             {filteredItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 border border-white/5 text-zinc-500 mb-2.5">
-                  <Inbox className="h-5 w-5" />
+                  <Inbox size={20} />
                 </div>
                 <p className="text-xs font-semibold text-zinc-300">
                   {tab === "unread" ? t.notifications.noUnread : t.notifications.noNotifications}
@@ -314,9 +314,9 @@ export function NotificationCenter() {
                               className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-semibold text-black hover:bg-zinc-200 transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
                             >
                               {isLoadingThis ? (
-                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                <Loader size={14} className="animate-spin" />
                               ) : (
-                                <Check className="h-3.5 w-3.5 stroke-[2.5]" />
+                                <Check size={14} strokeWidth={2.5} />
                               )}
                               {t.notifications.accept}
                             </button>
@@ -347,7 +347,7 @@ export function NotificationCenter() {
               className="inline-flex items-center gap-1 text-zinc-400 hover:text-white transition-colors"
             >
               <span>Membri e inviti</span>
-              <ChevronRight className="h-3 w-3" />
+              <ChevronRight size={12} />
             </Link>
           </div>
         </div>

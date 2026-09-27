@@ -2,19 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useLinearStore } from "@/store/useLinearStore";
-import {
-  ChevronDown,
-  Check,
-  Plus,
-  Settings,
-  Layers,
-  Sparkles,
-  ExternalLink,
-} from "lucide-react";
-import Link from "next/link";
+import { ChevronDown, Check, Add } from "reicon-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ChronoLogo } from "@/components/ui/ChronoLogo";
 import { WorkspaceIcon } from "@/components/workspaces/WorkspaceIcon";
 import { useTranslation } from "@/i18n";
 
@@ -88,8 +78,9 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
             {workspace.name}
           </span>
           <ChevronDown
+            size={14}
             className={cn(
-              "w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-transform shrink-0",
+              "text-zinc-400 group-hover:text-white transition-transform shrink-0",
               isOpen && "rotate-180 text-white"
             )}
           />
@@ -125,8 +116,9 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
             </div>
           </div>
           <ChevronDown
+            size={14}
             className={cn(
-              "w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-transform shrink-0",
+              "text-zinc-500 group-hover:text-white transition-transform shrink-0",
               isOpen && "rotate-180 text-white"
             )}
           />
@@ -172,7 +164,7 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
                   </div>
 
                   {isActive && (
-                    <Check className="w-3.5 h-3.5 text-white shrink-0 stroke-[2.5]" />
+                    <Check size={14} strokeWidth={2.5} className="text-white shrink-0" />
                   )}
                 </button>
               );
@@ -189,7 +181,7 @@ export const WorkspaceSwitcherDropdown: React.FC<WorkspaceSwitcherDropdownProps>
               }}
               className="flex items-center gap-2 px-2.5 py-1.5 rounded-[6px] text-left text-zinc-400 hover:text-white hover:bg-white/[0.04] text-xs font-medium transition-colors cursor-pointer group"
             >
-              <Plus className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+              <Add size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
               <span>{t.modals.addAnotherWorkspace}</span>
             </button>
           </div>

@@ -7,17 +7,18 @@ import { useLinearStore } from "@/store/useLinearStore";
 import {
   Sparkles,
   Box,
-  CheckSquare,
-  LayoutGrid,
+  TaskSquare,
   Settings,
   Search,
-  Plus,
-  LogOut,
-  User as UserIcon,
+  Add,
+  Logout,
+  User,
   Clock,
-  ImageIcon,
+  Timer,
+  Image as ImageIcon,
   Target,
-} from "lucide-react";
+  Grid2,
+} from "reicon-react";
 import { cn } from "@/lib/utils";
 import { WorkspaceSwitcherDropdown } from "@/components/workspaces/WorkspaceSwitcherDropdown";
 import { UserAvatar } from "@/components/ui/UserAvatar";
@@ -125,7 +126,7 @@ export const TwingateNavbar: React.FC = () => {
 
   const mainNavItems = [
     { label: t.nav.projects, href: "/projects", icon: Box, match: (p: string) => p.startsWith("/project") },
-    { label: t.nav.issues, href: "/issues", icon: CheckSquare, match: (p: string) => p === "/issues" || p === "/my-issues" },
+    { label: t.nav.issues, href: "/issues", icon: TaskSquare, match: (p: string) => p === "/issues" || p === "/my-issues" },
     { label: t.nav.timeline, href: "/timeline", icon: Clock, match: (p: string) => p.startsWith("/timeline") },
     { label: t.nav.views, href: "/views", icon: Target, match: (p: string) => p.startsWith("/views") },
     { label: t.nav.agent, href: "/agent", icon: Sparkles, match: (p: string) => p.startsWith("/agent") },
@@ -156,7 +157,7 @@ export const TwingateNavbar: React.FC = () => {
                     : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                 )}
               >
-                <Icon className={cn("w-3.5 h-3.5 shrink-0", isActive ? "text-white" : "text-zinc-400")} />
+                <Icon size={14} className={cn("shrink-0", isActive ? "text-white" : "text-zinc-400")} />
                 <span className="truncate">{item.label}</span>
               </Link>
             );
@@ -173,7 +174,7 @@ export const TwingateNavbar: React.FC = () => {
             title="Cerca nel workspace o digita un comando (⌘K)"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <Search className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+              <Search size={14} className="text-zinc-500 group-hover:text-zinc-300 shrink-0" />
               <span className="hidden lg:inline text-[11px] text-zinc-400 group-hover:text-zinc-300 truncate select-none">
                 {t.common.search}
               </span>
@@ -191,7 +192,7 @@ export const TwingateNavbar: React.FC = () => {
             title="Nuova Issue (C)"
             aria-label="Nuova Issue"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+            <Add size={14} strokeWidth={2.5} className="shrink-0" />
             <span className="hidden sm:inline">Nuovo</span>
           </button>
 
@@ -248,7 +249,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors group cursor-pointer"
                   >
-                    <UserIcon className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <User size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
                     <span>{t.nav.profileAndAccount}</span>
                   </Link>
 
@@ -257,7 +258,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors group cursor-pointer"
                   >
-                    <Settings className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <Settings size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
                     <span>{t.nav.workspaceSettings}</span>
                   </Link>
 
@@ -266,7 +267,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors group cursor-pointer"
                   >
-                    <Clock className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <Clock size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
                     <span>{t.nav.timeline}</span>
                   </Link>
 
@@ -275,7 +276,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors group cursor-pointer"
                   >
-                    <Clock className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <Timer size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
                     <span>{t.nav.pomodoro}</span>
                   </Link>
 
@@ -284,7 +285,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors group cursor-pointer"
                   >
-                    <ImageIcon className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <ImageIcon size={14} className="text-zinc-400 group-hover:text-white transition-colors" />
                     <span>ASCII</span>
                   </Link>
                 </div>
@@ -296,7 +297,7 @@ export const TwingateNavbar: React.FC = () => {
                     onClick={handleLogout}
                     className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[7px] text-xs text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer text-left group font-normal"
                   >
-                    <LogOut className="w-3.5 h-3.5 text-zinc-400 group-hover:text-red-400 transition-colors" />
+                    <Logout size={14} className="text-zinc-400 group-hover:text-red-400 transition-colors" />
                     <span>{t.nav.signOut}</span>
                   </button>
                 </div>
@@ -312,7 +313,7 @@ export const TwingateNavbar: React.FC = () => {
             aria-label={mobileMenuOpen ? t.common.close : t.nav.settings}
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <span className="text-lg leading-none">×</span> : <LayoutGrid className="h-4 w-4" />}
+            {mobileMenuOpen ? <span className="text-lg leading-none">×</span> : <Grid2 size={16} />}
           </button>
         </div>
       </div>
@@ -336,7 +337,7 @@ export const TwingateNavbar: React.FC = () => {
                       : "text-zinc-400 hover:bg-white/[0.05] hover:text-white"
                   )}
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <Icon size={16} className="shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Link>
               );
@@ -349,7 +350,7 @@ export const TwingateNavbar: React.FC = () => {
               }}
               className="flex min-h-[44px] items-center gap-2.5 rounded-[7px] px-3 text-xs font-medium text-zinc-300 hover:bg-white/[0.05] hover:text-white transition-colors cursor-pointer"
             >
-              <Plus className="h-4 w-4 shrink-0" />
+              <Add size={16} className="shrink-0" />
               <span className="truncate">{t.issues.newIssue}</span>
             </button>
             <Link
@@ -357,7 +358,7 @@ export const TwingateNavbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="flex min-h-[44px] items-center gap-2.5 rounded-[7px] px-3 text-xs font-medium text-zinc-400 hover:bg-white/[0.05] hover:text-white transition-colors"
             >
-              <Settings className="h-4 w-4 shrink-0" />
+              <Settings size={16} className="shrink-0" />
               <span className="truncate">{t.nav.settings}</span>
             </Link>
           </nav>

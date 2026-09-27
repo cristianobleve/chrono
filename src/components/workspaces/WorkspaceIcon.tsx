@@ -2,9 +2,9 @@
 
 import React from "react";
 import {
-  Zap,
+  Bolt,
   Rocket,
-  Terminal,
+  BrowserTerminal,
   Layers,
   Sparkles,
   Shield,
@@ -14,17 +14,12 @@ import {
   Flame,
   Target,
   Box,
-  Code2,
+  Code,
   Cpu,
-  Feather,
   Compass,
-  Folder,
-  Activity,
-  Heart,
-  Award,
   Crown,
   Command,
-} from "lucide-react";
+} from "reicon-react";
 import { ChronoLogo } from "@/components/ui/ChronoLogo";
 import { cn } from "@/lib/utils";
 
@@ -40,9 +35,9 @@ export interface WorkspaceIconProps {
 
 export const WORKSPACE_ICON_LIST = [
   { id: "chrono", label: "Chrono Logo", component: ChronoLogo },
-  { id: "zap", label: "Zap / Fulmine", component: Zap },
+  { id: "zap", label: "Zap / Fulmine", component: Bolt },
   { id: "rocket", label: "Rocket / Lancio", component: Rocket },
-  { id: "terminal", label: "Terminal / Dev", component: Terminal },
+  { id: "terminal", label: "Terminal / Dev", component: BrowserTerminal },
   { id: "layers", label: "Layers / Stack", component: Layers },
   { id: "sparkles", label: "Sparkles / AI", component: Sparkles },
   { id: "shield", label: "Shield / Security", component: Shield },
@@ -52,7 +47,7 @@ export const WORKSPACE_ICON_LIST = [
   { id: "flame", label: "Flame / Focus", component: Flame },
   { id: "target", label: "Target / Obiettivi", component: Target },
   { id: "box", label: "Box / Prodotti", component: Box },
-  { id: "code", label: "Code / Sviluppo", component: Code2 },
+  { id: "code", label: "Code / Sviluppo", component: Code },
   { id: "cpu", label: "CPU / Hardware", component: Cpu },
   { id: "compass", label: "Compass / Roadmap", component: Compass },
   { id: "crown", label: "Crown / Premium", component: Crown },
@@ -96,7 +91,7 @@ export const WorkspaceIcon: React.FC<WorkspaceIconProps> = ({
     iconContent = <ChronoLogo size={currentSize.iconSize} glow={size === "xl" || size === "lg"} />;
   } else if (iconEntry) {
     const IconComp = iconEntry.component;
-    iconContent = <IconComp className="shrink-0" style={{ width: currentSize.iconSize, height: currentSize.iconSize }} />;
+    iconContent = <IconComp size={currentSize.iconSize} color="currentColor" className="shrink-0" />;
   } else if (icon && icon.length <= 2) {
     // Single letter initial or emoji
     iconContent = <span className={currentSize.text}>{icon}</span>;
