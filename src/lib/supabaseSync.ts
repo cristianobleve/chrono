@@ -49,12 +49,13 @@ export const supabaseSync = {
    */
   formatProjectRow(p: Project, workspaceId?: string) {
     const wsId = p.workspaceId || workspaceId || "ws-1790213482796";
+    const teamId = p.teamId && p.teamId !== "team-1" ? p.teamId : `team-${wsId}`;
     return {
       id: p.id,
       identifier: p.identifier || `PRJ-${Math.floor(Math.random() * 1000)}`,
       internal_id: p.internalId || `prj_${p.id}`,
       workspace_id: wsId,
-      team_id: p.teamId || "team-1",
+      team_id: teamId,
       name: p.name || "Untitled Project",
       slug: p.slug || `project-${Date.now()}`,
       summary: p.summary || null,
@@ -96,12 +97,13 @@ export const supabaseSync = {
    */
   formatIssueRow(i: Issue, workspaceId?: string) {
     const wsId = i.workspaceId || workspaceId || "ws-1790213482796";
+    const teamId = i.teamId && i.teamId !== "team-1" ? i.teamId : `team-${wsId}`;
     return {
       id: i.id,
       identifier: i.identifier || `ISS-${Math.floor(Math.random() * 1000)}`,
       internal_id: i.internalId || `iss_${i.id}`,
       workspace_id: wsId,
-      team_id: i.teamId || "team-1",
+      team_id: teamId,
       project_id: i.projectId || null,
       assignee_id: i.assigneeId || i.assignee?.id || null,
       creator_id: i.creatorId || i.creator?.id || null,

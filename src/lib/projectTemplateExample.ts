@@ -6,16 +6,20 @@ export const sampleProjectMarkdown = `# Cloud Infrastructure & Database Migratio
 - **Status**: In Progress
 - **Priority**: High
 - **Target Date**: 2026-11-30
+- **Icon**: database
+- **Icon Color**: #38bdf8
+- **Icon Bg**: #082f49
+- **Cover**: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80
 - **Lead**: Cristiano Bleve
 
 ## Description
 Questo progetto ha l'obiettivo di modernizzare l'intera pipeline di persistenza dati del workspace.
-Include la creazione dello schema relazionale su PostgreSQL, l'abilitazione di Row Level Security (RLS) per la multi-tenancy e l'ottimizzazione degli indici composti per garantire latenze sotto i 10ms.
+Include la creazione dello schema relazionale su PostgreSQL, l'abilitazione di Row Level Security (RLS) per la multi-tenancy e l'ottimizzazione degli indici composti per garantire latenze minime.
 
 ## Milestones
-- [x] Milestone 1: Configurazione Progetto Supabase & Client SDK (Target: 2026-09-15)
+- [x] Milestone 1: Configurazione Progetto Supabase e Client SDK (Target: 2026-09-15)
 - [ ] Milestone 2: Migrazione Tabelle e Script di Seed Relazionale (Target: 2026-10-15)
-- [ ] Milestone 3: Benchmark Prestazioni & Rilascio in Produzione (Target: 2026-11-30)
+- [ ] Milestone 3: Benchmark Prestazioni e Rilascio in Produzione (Target: 2026-11-30)
 
 ## Issues
 ### Setup Client Supabase e Variabili d'Ambiente
@@ -48,12 +52,16 @@ export const sampleBulkProjectsMarkdown = `# Cloud Infrastructure & Database Mig
 - **Status**: In Progress
 - **Priority**: High
 - **Target Date**: 2026-11-30
+- **Icon**: database
+- **Icon Color**: #38bdf8
+- **Icon Bg**: #082f49
+- **Cover**: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80
 
 ## Description
 Modernizzare l'intera pipeline di persistenza dati del workspace con indici e RLS multi-tenant.
 
 ## Milestones
-- [x] Fase 1: Configurazione Supabase & Schema Relazionale (Target: 2026-09-15)
+- [x] Fase 1: Configurazione Supabase e Schema Relazionale (Target: 2026-09-15)
 - [ ] Fase 2: Script di migrazione e benchmark latenza (Target: 2026-10-30)
 
 ## Issues
@@ -81,14 +89,18 @@ __sep
 - **Status**: Planned
 - **Priority**: Urgent
 - **Target Date**: 2026-12-15
+- **Icon**: sparkles
+- **Icon Color**: #c084fc
+- **Icon Bg**: #2e1065
+- **Cover**: https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80
 
 ## Description
-Integrazione di modelli linguistici di frontiera (Gemini 2.5, Claude 3.7, DeepSeek R1, GPT-4o, Ollama locale) per orchestrare task e aggiornare lo stato dei progetti direttamente dalla chat.
+Integrazione di modelli linguistici per orchestrare task e aggiornare lo stato dei progetti direttamente dalla chat.
 
 ## Milestones
-- [ ] Milestone 1: Architettura Function Calling & Action Tags (Target: 2026-10-10)
-- [ ] Milestone 2: Supporto Container Docker & Local LLM (Target: 2026-11-20)
-- [ ] Milestone 3: Testing End-to-End & Voice Input (Target: 2026-12-15)
+- [ ] Milestone 1: Architettura Function Calling e Action Tags (Target: 2026-10-10)
+- [ ] Milestone 2: Supporto Container Docker e Local LLM (Target: 2026-11-20)
+- [ ] Milestone 3: Testing End-to-End e Voice Input (Target: 2026-12-15)
 
 ## Issues
 ### Parser Azioni di Massa e Aggiornamenti con Esclusione
@@ -98,7 +110,7 @@ Integrazione di modelli linguistici di frontiera (Gemini 2.5, Claude 3.7, DeepSe
 - **Labels**: AI, Core
 Supporto per comandi naturali di massa e filtri di esclusione ("tutti tranne X").
 
-### Multi-Provider API Key Hub & Custom Endpoints
+### Multi-Provider API Key Hub e Custom Endpoints
 - **Status**: Todo
 - **Priority**: Medium
 - **Estimate**: 3
@@ -109,22 +121,26 @@ __sep
 
 # Design System Superquadrato & Dark Craft UI
 
-> Refactoring completo dell'interfaccia con curve di Lamé, logo Chrono e font tipografico Söhne.
+> Refactoring completo dell'interfaccia con curve continue di Lamé e tipografia Söhne.
 
 ## Metadata
 - **Status**: Completed
 - **Priority**: Medium
 - **Target Date**: 2026-09-30
+- **Icon**: layers
+- **Icon Color**: #34d399
+- **Icon Bg**: #062316
+- **Cover**: https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1600&q=80
 
 ## Description
 Creazione del design system Chrono ad altissima precisione con angoli superquadrati continui, palette colori oled dark e tipografia Söhne Breit per i titoli.
 
 ## Milestones
 - [x] Fase 1: Implementazione motore Superquadrato CSS (Target: 2026-08-30)
-- [x] Fase 2: Integrazione Logo Vettoriale Chrono & Webfont Söhne (Target: 2026-08-31)
+- [x] Fase 2: Integrazione Logo Vettoriale Chrono e Webfont Söhne (Target: 2026-08-31)
 
 ## Issues
-### Integrazione Webfont Klim Söhne e Söhne Breit
+### Integrazione Webfont Söhne e Söhne Breit
 - **Status**: Done
 - **Priority**: High
 - **Estimate**: 2

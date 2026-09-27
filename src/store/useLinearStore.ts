@@ -1589,6 +1589,11 @@ export const useLinearStore = create<LinearState>()(
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-") + "-" + Math.random().toString(36).substring(2, 8);
 
+        const activeTeamId =
+          state.team?.id && state.team.id !== "team-1"
+            ? state.team.id
+            : `team-${targetWorkspaceId}`;
+
         // 1. Build Milestones
         const milestones: Milestone[] = (parsedData.milestones || []).map((m, idx) => ({
           id: `ms-${Date.now()}-${idx}`,
@@ -1609,8 +1614,12 @@ export const useLinearStore = create<LinearState>()(
           description: parsedData.description,
           status: parsedData.status,
           priority: parsedData.priority,
-          icon: "cube",
-          teamId: state.team.id,
+          icon: parsedData.icon || "cube",
+          iconColor: parsedData.iconColor || "#5e6ad2",
+          iconBg: parsedData.iconBg || "#121419",
+          coverUrl: parsedData.coverUrl || null,
+          coverGradient: parsedData.coverGradient || null,
+          teamId: activeTeamId,
           leadId: state.currentUser.id,
           lead: state.currentUser,
           startDate: new Date().toISOString().split("T")[0],
@@ -1658,7 +1667,7 @@ export const useLinearStore = create<LinearState>()(
             priority: iss.priority,
             estimate: iss.estimate || null,
             sortOrder: state.issues.length + idx + 1,
-            teamId: state.team.id,
+            teamId: activeTeamId,
             projectId,
             project: newProject,
             assigneeId: state.currentUser.id,
@@ -1724,6 +1733,11 @@ export const useLinearStore = create<LinearState>()(
           const bgs = ["#13162b", "#062316", "#261a06", "#260a1a", "#1a0d2e", "#0a192f"];
           const colorIdx = (state.projects.length + pIdx) % colors.length;
 
+          const activeTeamId =
+            state.team?.id && state.team.id !== "team-1"
+              ? state.team.id
+              : `team-${targetWorkspaceId}`;
+
           const newProject: Project = {
             id: projectId,
             identifier,
@@ -1735,11 +1749,12 @@ export const useLinearStore = create<LinearState>()(
             description: parsedData.description,
             status: parsedData.status,
             priority: parsedData.priority,
-            icon: parsedData.name.charAt(0).toUpperCase() || "P",
-            iconColor: colors[colorIdx],
-            iconBg: bgs[colorIdx],
-            coverUrl: null,
-            teamId: state.team.id,
+            icon: parsedData.icon || parsedData.name.charAt(0).toUpperCase() || "P",
+            iconColor: parsedData.iconColor || colors[colorIdx],
+            iconBg: parsedData.iconBg || bgs[colorIdx],
+            coverUrl: parsedData.coverUrl || null,
+            coverGradient: parsedData.coverGradient || null,
+            teamId: activeTeamId,
             leadId: state.currentUser.id,
             lead: state.currentUser,
             startDate: null,
@@ -1777,7 +1792,7 @@ export const useLinearStore = create<LinearState>()(
               priority: iss.priority,
               estimate: iss.estimate || null,
               sortOrder: issueCounter,
-              teamId: state.team.id,
+              teamId: activeTeamId,
               projectId,
               project: newProject,
               assigneeId: state.currentUser.id,

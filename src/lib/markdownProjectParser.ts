@@ -22,6 +22,11 @@ export interface ParsedProjectImport {
   status: ProjectStatus;
   priority: Priority;
   targetDate?: string | null;
+  icon?: string;
+  iconColor?: string;
+  iconBg?: string;
+  coverUrl?: string | null;
+  coverGradient?: string | null;
   milestones: ParsedMilestoneImport[];
   issues: ParsedIssueImport[];
   rawMarkdown: string;
@@ -89,6 +94,11 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
   let status: ProjectStatus = "Planned";
   let priority: Priority = "high";
   let targetDate: string | null = null;
+  let icon: string = "cube";
+  let iconColor: string = "#5e6ad2";
+  let iconBg: string = "#121419";
+  let coverUrl: string | null = null;
+  let coverGradient: string | null = null;
   const milestones: ParsedMilestoneImport[] = [];
   const issues: ParsedIssueImport[] = [];
 
@@ -108,9 +118,36 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         if (key === "targetdate" || key === "target_date" || key === "duedate" || key === "due_date") {
           targetDate = extractDate(val);
         }
+        if (key === "icon" || key === "icona") icon = val;
+        if (key === "iconcolor" || key === "icon_color" || key === "colore_icona" || key === "color") {
+          iconColor = val;
+        }
+        if (key === "iconbg" || key === "icon_bg" || key === "sfondo_icona") {
+          iconBg = val;
+        }
+        if (
+          key === "cover" ||
+          key === "coverurl" ||
+          key === "cover_url" ||
+          key === "copertina" ||
+          key === "hero" ||
+          key === "hero_url" ||
+          key === "banner"
+        ) {
+          coverUrl = val;
+        }
+        if (key === "covergradient" || key === "cover_gradient" || key === "gradient") {
+          coverGradient = val;
+        }
       }
     }
     text = text.replace(frontmatterMatch[0], "");
+  }
+
+  // Check for standalone markdown hero/cover image: ![Cover](https://...) or ![Hero](https://...)
+  const coverImgMatch = text.match(/!\[(?:cover|hero|copertina|banner|sfondo|header)\]\((https?:\/\/[^\s\)]+)\)/i);
+  if (coverImgMatch && !coverUrl) {
+    coverUrl = coverImgMatch[1];
   }
 
   const lines = text.split("\n");
@@ -188,6 +225,51 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         lower.includes("data:")
       ) {
         targetDate = extractDate(trimmed);
+      } else if (
+        lower.startsWith("- **icon**:") ||
+        lower.startsWith("- icon:") ||
+        lower.startsWith("- **icona**:") ||
+        lower.startsWith("- icona:")
+      ) {
+        icon = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon|icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+      } else if (
+        lower.startsWith("- **icon color**:") ||
+        lower.startsWith("- icon color:") ||
+        lower.startsWith("- **icon_color**:") ||
+        lower.startsWith("- icon_color:") ||
+        lower.startsWith("- **colore icona**:") ||
+        lower.startsWith("- colore icona:")
+      ) {
+        iconColor = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon[-_ ]?color|colore[-_ ]?icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+      } else if (
+        lower.startsWith("- **icon bg**:") ||
+        lower.startsWith("- icon bg:") ||
+        lower.startsWith("- **icon_bg**:") ||
+        lower.startsWith("- icon_bg:") ||
+        lower.startsWith("- **sfondo icona**:") ||
+        lower.startsWith("- sfondo icona:")
+      ) {
+        iconBg = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon[-_ ]?bg|sfondo[-_ ]?icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+      } else if (
+        lower.startsWith("- **cover**:") ||
+        lower.startsWith("- cover:") ||
+        lower.startsWith("- **copertina**:") ||
+        lower.startsWith("- copertina:") ||
+        lower.startsWith("- **hero**:") ||
+        lower.startsWith("- hero:") ||
+        lower.startsWith("- **banner**:") ||
+        lower.startsWith("- banner:")
+      ) {
+        const rawVal = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:cover|copertina|hero|banner)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+        const linkMatch = rawVal.match(/\((https?:\/\/[^\s\)]+)\)/);
+        coverUrl = linkMatch ? linkMatch[1] : rawVal;
+      } else if (
+        lower.startsWith("- **cover gradient**:") ||
+        lower.startsWith("- cover gradient:") ||
+        lower.startsWith("- **gradient**:") ||
+        lower.startsWith("- gradient:")
+      ) {
+        coverGradient = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:cover[-_ ]?gradient|gradient)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
       }
       continue;
     }
@@ -367,6 +449,11 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
     status,
     priority,
     targetDate,
+    icon,
+    iconColor,
+    iconBg,
+    coverUrl,
+    coverGradient,
     milestones,
     issues,
     rawMarkdown: markdownText,

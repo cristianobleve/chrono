@@ -114,14 +114,19 @@ export async function POST(req: Request) {
     switch (action) {
       // 1. PROJECTS
       case "upsert_project": {
-        const projectRow = {
-          ...payload,
-          identifier: payload.identifier || `PRJ-${Math.floor(Math.random() * 9000 + 1000)}`,
-          internal_id: payload.internal_id || `prj_${payload.id || Date.now()}`,
-          workspace_id: payload.workspace_id || workspaceId,
-          team_id: payload.team_id || "team-1",
-          updated_at: new Date().toISOString(),
-        };
+          const projectWsId = payload.workspace_id || workspaceId;
+          const projectTeamId =
+            payload.team_id && payload.team_id !== "team-1"
+              ? payload.team_id
+              : `team-${projectWsId}`;
+          const projectRow = {
+            ...payload,
+            identifier: payload.identifier || `PRJ-${Math.floor(Math.random() * 9000 + 1000)}`,
+            internal_id: payload.internal_id || `prj_${payload.id || Date.now()}`,
+            workspace_id: projectWsId,
+            team_id: projectTeamId,
+            updated_at: new Date().toISOString(),
+          };
         const { error } = await supabaseServer.from("projects").upsert(projectRow);
         if (error) {
           console.error("[API Sync] upsert_project error:", error);
@@ -175,14 +180,19 @@ export async function POST(req: Request) {
 
       // 3. ISSUES
       case "upsert_issue": {
-        const issueRow = {
-          ...payload,
-          identifier: payload.identifier || `ISS-${Math.floor(Math.random() * 9000 + 1000)}`,
-          internal_id: payload.internal_id || `iss_${payload.id || Date.now()}`,
-          workspace_id: payload.workspace_id || workspaceId,
-          team_id: payload.team_id || "team-1",
-          updated_at: new Date().toISOString(),
-        };
+          const issueWsId = payload.workspace_id || workspaceId;
+          const issueTeamId =
+            payload.team_id && payload.team_id !== "team-1"
+              ? payload.team_id
+              : `team-${issueWsId}`;
+          const issueRow = {
+            ...payload,
+            identifier: payload.identifier || `ISS-${Math.floor(Math.random() * 9000 + 1000)}`,
+            internal_id: payload.internal_id || `iss_${payload.id || Date.now()}`,
+            workspace_id: issueWsId,
+            team_id: issueTeamId,
+            updated_at: new Date().toISOString(),
+          };
         const { error } = await supabaseServer.from("issues").upsert(issueRow);
         if (error) {
           console.error("[API Sync] upsert_issue error:", error);

@@ -3,6 +3,79 @@
 import React from "react";
 import { Project } from "@/types";
 import { cn } from "@/lib/utils";
+import {
+  Database,
+  Zap,
+  Box,
+  Layers,
+  Shield,
+  Terminal,
+  Globe,
+  Sparkles,
+  Cpu,
+  Flame,
+  Activity,
+  Compass,
+  Code,
+  Layout,
+  Server,
+  Cloud,
+  GitBranch,
+  Workflow,
+  Lock,
+  Rocket,
+  Key,
+  Search,
+  Star,
+  Folder,
+  CheckCircle,
+  FileCode,
+  HardDrive,
+  LucideIcon,
+} from "lucide-react";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  database: Database,
+  db: Database,
+  zap: Zap,
+  bolt: Zap,
+  box: Box,
+  cube: Box,
+  layers: Layers,
+  layer: Layers,
+  shield: Shield,
+  security: Shield,
+  terminal: Terminal,
+  cli: Terminal,
+  globe: Globe,
+  web: Globe,
+  sparkles: Sparkles,
+  ai: Sparkles,
+  cpu: Cpu,
+  chip: Cpu,
+  flame: Flame,
+  fire: Flame,
+  activity: Activity,
+  pulse: Activity,
+  compass: Compass,
+  code: Code,
+  layout: Layout,
+  server: Server,
+  cloud: Cloud,
+  "git-branch": GitBranch,
+  git: GitBranch,
+  workflow: Workflow,
+  lock: Lock,
+  rocket: Rocket,
+  launch: Rocket,
+  key: Key,
+  search: Search,
+  star: Star,
+  folder: Folder,
+  check: CheckCircle,
+  file: FileCode,
+  storage: HardDrive,
+};
 
 interface ProjectIconBadgeProps {
   project?: Project | null;
@@ -26,17 +99,24 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
   onClick,
 }) => {
   const currentIcon = icon !== undefined ? icon : project?.icon;
-  const currentBg = (iconBg !== undefined ? iconBg : project?.iconBg) || "#2a0808"; // Default crimson/obsidian like screenshot L
-  const currentColor = (iconColor !== undefined ? iconColor : project?.iconColor) || "#e53e3e"; // Vivid Red
+  const currentBg = (iconBg !== undefined ? iconBg : project?.iconBg) || "#2a0808";
+  const currentColor = (iconColor !== undefined ? iconColor : project?.iconColor) || "#e53e3e";
   const displayName = (name || project?.name || "Project").trim();
-  const letter = (currentIcon && currentIcon.length <= 3) ? currentIcon : displayName.charAt(0).toUpperCase();
 
-  const isImage = currentIcon && (
-    currentIcon.startsWith("http://") ||
-    currentIcon.startsWith("https://") ||
-    currentIcon.startsWith("/") ||
-    currentIcon.startsWith("data:image/")
-  );
+  const isImage =
+    currentIcon &&
+    (currentIcon.startsWith("http://") ||
+      currentIcon.startsWith("https://") ||
+      currentIcon.startsWith("/") ||
+      currentIcon.startsWith("data:image/"));
+
+  const normalizedIconKey = currentIcon ? currentIcon.toLowerCase().trim() : "";
+  const LucideComponent = !isImage && normalizedIconKey ? ICON_MAP[normalizedIconKey] : null;
+
+  const letter =
+    currentIcon && currentIcon.length <= 3
+      ? currentIcon
+      : displayName.charAt(0).toUpperCase();
 
   const sizeClasses = {
     xs: "w-4.5 h-4.5 rounded-[5px] text-[9px] font-bold",
@@ -44,6 +124,14 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
     md: "w-10 h-10 rounded-[14px] text-base font-bold",
     lg: "w-12 h-12 rounded-[16px] text-xl font-bold",
     xl: "w-16 h-16 rounded-[22px] text-3xl font-bold",
+  };
+
+  const iconSizes = {
+    xs: "w-2.5 h-2.5",
+    sm: "w-3.5 h-3.5",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
+    xl: "w-8 h-8",
   };
 
   return (
@@ -63,10 +151,12 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
     >
       {isImage ? (
         <img
-          src={currentIcon}
+          src={currentIcon!}
           alt={displayName}
           className="w-full h-full object-cover"
         />
+      ) : LucideComponent ? (
+        <LucideComponent className={cn(iconSizes[size], "shrink-0")} strokeWidth={2} />
       ) : (
         <span
           className="leading-none tracking-tight flex items-center justify-center font-bold"
