@@ -5,21 +5,21 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  UploadCloud,
-  FileCode,
+  CloudUpload,
+  CodeFile,
   Sparkles,
   Calendar,
   Check,
   Copy,
   Trash2,
-  FileText,
-  Loader2,
+  DocumentText,
+  Loader,
   ChevronRight,
   Clock,
   Layers,
   Camera,
   Image as ImageIcon,
-} from "lucide-react";
+} from "reicon-react";
 import {
   parseBulkProjectsMarkdown,
   ParsedProjectImport,
@@ -362,7 +362,7 @@ export default function ImportProjectsPage() {
           </Link>
           <span className="text-zinc-700 text-xs">/</span>
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[5px] bg-zinc-900/80 border border-white/5 text-[11px] text-zinc-300 font-mono shrink-0">
-            <FileCode className="w-3 h-3 text-zinc-400" />
+            <CodeFile className="w-3 h-3 text-zinc-400" />
             <span>specification.md</span>
           </div>
 
@@ -442,7 +442,7 @@ export default function ImportProjectsPage() {
             onClick={() => fileInputRef.current?.click()}
             className="px-2.5 py-1 rounded-[6px] bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/5 text-[11px] font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <UploadCloud className="w-3 h-3 text-zinc-400" />
+            <CloudUpload className="w-3 h-3 text-zinc-400" />
             <span className="hidden sm:inline">Carica .md</span>
           </button>
 
@@ -490,7 +490,7 @@ export default function ImportProjectsPage() {
           {/* Drop Overlay */}
           {dragActive && (
             <div className="absolute inset-0 bg-blue-950/80 border-2 border-dashed border-blue-500 z-30 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm">
-              <UploadCloud className="w-10 h-10 text-blue-400 mb-2 animate-bounce" />
+              <CloudUpload className="w-10 h-10 text-blue-400 mb-2 animate-bounce" />
               <p className="text-sm font-medium text-white">Rilascia il file Markdown qui</p>
             </div>
           )}
@@ -790,7 +790,7 @@ export default function ImportProjectsPage() {
               </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8 text-center text-zinc-500">
-                <FileText className="w-12 h-12 mb-3 stroke-[1.2] text-zinc-600" />
+                <DocumentText className="w-12 h-12 mb-3 stroke-[1.2] text-zinc-600" />
                 <p className="text-sm font-medium text-zinc-400">Nessun progetto rilevato</p>
                 <p className="text-xs mt-1 max-w-sm">
                   Scrivi o incolla una specifica in formato Markdown nell&apos;editor per visualizzare
@@ -810,7 +810,7 @@ export default function ImportProjectsPage() {
             >
               {isImporting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-black" />
+                  <Loader className="w-4 h-4 animate-spin text-black" />
                   <span>Importazione in corso...</span>
                 </>
               ) : (

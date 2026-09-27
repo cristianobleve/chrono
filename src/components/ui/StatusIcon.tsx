@@ -1,6 +1,6 @@
 import React from "react";
 import { ProjectStatus, IssueStatus } from "@/types";
-import { Circle, CircleDot, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { CheckCircle, CloseCircle } from "reicon-react";
 import { cn } from "@/lib/utils";
 
 interface StatusIconProps {
@@ -27,7 +27,17 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, className }) => 
   }
 
   if (norm === "todo" || norm === "planned") {
-    return <Circle className={cn("w-3.5 h-3.5 text-ink-subtle shrink-0", className)} strokeWidth={1.5} />;
+    return (
+      <svg
+        className={cn("w-3.5 h-3.5 text-zinc-400 shrink-0", className)}
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <circle cx="8" cy="8" r="6" />
+      </svg>
+    );
   }
 
   if (norm === "in_progress" || norm === "in progress") {
@@ -39,12 +49,22 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, className }) => 
   }
 
   if (norm === "done" || norm === "completed") {
-    return <CheckCircle2 className={cn("w-3.5 h-3.5 text-emerald-400 shrink-0", className)} strokeWidth={1.75} />;
+    return <CheckCircle size={14} className={cn("text-emerald-400 shrink-0", className)} />;
   }
 
   if (norm === "canceled") {
-    return <XCircle className={cn("w-3.5 h-3.5 text-red-400 shrink-0", className)} strokeWidth={1.5} />;
+    return <CloseCircle size={14} className={cn("text-red-400 shrink-0", className)} />;
   }
 
-  return <Circle className={cn("w-3.5 h-3.5 text-ink-subtle shrink-0", className)} strokeWidth={1.5} />;
+  return (
+    <svg
+      className={cn("w-3.5 h-3.5 text-zinc-400 shrink-0", className)}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <circle cx="8" cy="8" r="6" />
+    </svg>
+  );
 };

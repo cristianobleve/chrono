@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight } from "reicon-react";
 import { useLinearStore } from "@/store/useLinearStore";
 
 import { useTranslation } from "@/i18n";
@@ -25,7 +25,7 @@ export const TwingateFooter: React.FC = () => {
             <span className="font-medium text-zinc-400 group-hover:text-white text-xs">
               {t.nav.allSystemsOperational}
             </span>
-            <ArrowRight className="w-3 h-3 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight size={12} className="text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
           </Link>
 
           {/* Right: Links */}

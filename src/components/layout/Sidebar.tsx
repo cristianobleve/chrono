@@ -1,41 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLinearStore } from "@/store/useLinearStore";
 import {
-  Inbox,
-  CheckSquare,
-  GitPullRequest,
-  Sparkles,
-  Layers,
-  LayoutGrid,
-  ChevronDown,
-  ChevronRight,
-  Plus,
   Search,
-  PenSquare,
-  HelpCircle,
-  Settings,
-  Zap,
+  Edit2,
   Box,
-  SlidersHorizontal,
-  Home,
-  UserPlus,
-  ArrowDownToLine,
-  MoreHorizontal,
-  UploadCloud,
-  Calendar,
-  Grid2X2,
-  Flame,
-  Tag as TagIcon,
-  Trash2,
+  TaskSquare,
   Clock,
-  User as UserIcon,
-} from "lucide-react";
+  Inbox,
+  User,
+  Sparkles,
+  Calendar,
+  Grid2,
+  Flame,
+  Hashtag,
+  Trash2,
+  Settings,
+} from "reicon-react";
 import { cn } from "@/lib/utils";
-import { ChronoLogo } from "@/components/ui/ChronoLogo";
 import { WorkspaceSwitcherDropdown } from "@/components/workspaces/WorkspaceSwitcherDropdown";
 import { AccountSwitcherMenu } from "@/components/accounts/AccountSwitcherMenu";
 import { useTranslation } from "@/i18n";
@@ -44,8 +29,6 @@ export const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const { t } = useTranslation();
   const {
-    workspace,
-    team,
     currentUser,
     trash,
     supabaseStatus,
@@ -71,9 +54,9 @@ export const Sidebar: React.FC = () => {
                 setActiveModal("command_menu");
               }}
               title="Cerca o salta a... (⌘K)"
-              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
             >
-              <Search className="w-3.5 h-3.5" />
+              <Search size={14} />
             </button>
             <button
               onClick={(e) => {
@@ -81,9 +64,9 @@ export const Sidebar: React.FC = () => {
                 setActiveModal("new_issue");
               }}
               title="Nuova Issue (+)"
-              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
             >
-              <PenSquare className="w-3.5 h-3.5" />
+              <Edit2 size={14} />
             </button>
           </div>
         </div>
@@ -105,7 +88,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Box className="w-4 h-4 text-zinc-400" />
+              <Box size={16} className="text-zinc-400" />
               <span>{t.projects.title}</span>
             </Link>
 
@@ -118,7 +101,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <CheckSquare className="w-4 h-4 text-zinc-400" />
+              <TaskSquare size={16} className="text-zinc-400" />
               <span>{t.issues.title}</span>
             </Link>
 
@@ -131,7 +114,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Clock className="w-4 h-4 text-zinc-400" />
+              <Clock size={16} className="text-zinc-400" />
               <span>{t.nav.timeline}</span>
             </Link>
 
@@ -144,7 +127,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Inbox className="w-4 h-4 text-zinc-400" />
+              <Inbox size={16} className="text-zinc-400" />
               <span>{t.nav.inbox}</span>
             </Link>
 
@@ -157,7 +140,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <UserIcon className="w-4 h-4 text-zinc-400" />
+              <User size={16} className="text-zinc-400" />
               <span>{t.nav.profiles}</span>
             </Link>
 
@@ -170,7 +153,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Sparkles className="w-4 h-4 text-zinc-400 group-hover:scale-105 transition-transform" />
+              <Sparkles size={16} className="text-zinc-400 group-hover:scale-105 transition-transform" />
               <span className="flex-1">{t.nav.agent}</span>
             </Link>
           </div>
@@ -190,7 +173,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Calendar className="w-4 h-4 text-emerald-400" />
+              <Calendar size={16} className="text-emerald-400" />
               <span>Calendario</span>
             </Link>
 
@@ -203,7 +186,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Grid2X2 className="w-4 h-4 text-cyan-400" />
+              <Grid2 size={16} className="text-cyan-400" />
               <span>Matrice Eisenhower</span>
             </Link>
 
@@ -216,7 +199,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <Flame className="w-4 h-4 text-amber-400" />
+              <Flame size={16} className="text-amber-400" />
               <span>{t.nav.habits}</span>
             </Link>
 
@@ -229,7 +212,7 @@ export const Sidebar: React.FC = () => {
                   : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
               )}
             >
-              <TagIcon className="w-4 h-4 text-fuchsia-400" />
+              <Hashtag size={16} className="text-fuchsia-400" />
               <span>{t.nav.tags}</span>
             </Link>
 
@@ -243,7 +226,7 @@ export const Sidebar: React.FC = () => {
               )}
             >
               <div className="flex items-center gap-2.5">
-                <Trash2 className="w-4 h-4 text-red-400/80 group-hover:text-red-400 transition-colors" />
+                <Trash2 size={16} className="text-red-400/80 group-hover:text-red-400 transition-colors" />
                 <span>{t.nav.trash}</span>
               </div>
               {trash.length > 0 && (
@@ -271,7 +254,7 @@ export const Sidebar: React.FC = () => {
             )}
             title="Impostazioni di sistema"
           >
-            <Settings className="w-3.5 h-3.5 text-zinc-400" />
+            <Settings size={14} className="text-zinc-400" />
             <span>{t.nav.settings}</span>
           </Link>
 

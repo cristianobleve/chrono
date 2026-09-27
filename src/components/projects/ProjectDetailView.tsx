@@ -5,23 +5,23 @@ import { useLinearStore } from "@/store/useLinearStore";
 import { Project, ProjectStatus, Priority, IssueStatus, User, Account } from "@/types";
 import {
   Box,
-  Plus,
+  Add,
   Calendar,
-  CheckCircle2,
+  CheckCircle,
   Clock,
   Trash2,
   Layers,
   ArrowRight,
-  ExternalLink,
+  Link as LinkIcon,
   Kanban,
   Check,
   Palette,
   Camera,
   Settings,
   Flag,
-  Users,
+  Profile2user,
   X,
-} from "lucide-react";
+} from "reicon-react";
 import { StatusIcon } from "@/components/ui/StatusIcon";
 import { PriorityIcon } from "@/components/ui/PriorityIcon";
 import { ProjectIconBadge } from "@/components/ui/ProjectIconBadge";
@@ -470,7 +470,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                     >
                       {getLinkIcon(lnk.category)}
                       <span>{lnk.title}</span>
-                      <ExternalLink className="w-2.5 h-2.5 text-zinc-500 group-hover/lnk:text-white transition-colors" />
+                      <LinkIcon size={12} className="text-zinc-500 group-hover/lnk:text-white transition-colors" />
                     </a>
                   ))
                 )}
@@ -482,7 +482,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-white/[0.02] hover:bg-white/[0.06] border border-dashed border-white/15 hover:border-white/30 text-zinc-400 hover:text-white text-[11px] font-medium transition-colors cursor-pointer"
                   title="Aggiungi link (GitHub, Figma, Docs, ecc.)"
                 >
-                  <Plus className="w-3 h-3 text-zinc-400" />
+                  <Add size={12} className="text-zinc-400" />
                   <span>Aggiungi link</span>
                 </button>
               </div>
@@ -703,7 +703,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                   onClick={() => setShowAddMember(!showAddMember)}
                   className="h-7 px-2.5 rounded-[6px] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Add className="w-3.5 h-3.5" />
                   <span>{t.projectDetail.addMember}</span>
                 </button>
               </div>
@@ -849,7 +849,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                 onClick={() => setShowAddMilestone(!showAddMilestone)}
                 className="h-7 px-2.5 rounded-[6px] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Add className="w-3.5 h-3.5" />
                 <span>{t.projectDetail.newMilestone}</span>
               </button>
             </div>
@@ -897,7 +897,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
               {milestonesList.length === 0 ? (
                 <div className="p-8 flex flex-col items-center justify-center text-center gap-3">
                   <div className="w-9 h-9 rounded-[8px] bg-zinc-800/80 flex items-center justify-center text-zinc-500">
-                    <CheckCircle2 className="w-5 h-5" />
+                    <CheckCircle className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-semibold text-white text-xs">{t.projectDetail.noMilestoneDefined}</span>
@@ -1012,7 +1012,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                   {isProjectCompleted ? (
                     <div className="relative group pt-2">
                       <div className="absolute -left-8 top-3.5 w-5 h-5 rounded-full border border-emerald-500 bg-zinc-950 flex items-center justify-center text-emerald-400 z-10 shadow-sm">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <CheckCircle className="w-3.5 h-3.5" />
                       </div>
 
                       <div className="p-3.5 rounded-[8px] bg-emerald-500/[0.06] border border-emerald-500/20 flex flex-col gap-2">
@@ -1070,7 +1070,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ slug }) =>
                           }}
                           className="px-3 py-1.5 rounded-[6px] bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <CheckCircle className="w-3.5 h-3.5" />
                           <span>{t.projectDetail.concludeProject}</span>
                         </button>
                       </div>

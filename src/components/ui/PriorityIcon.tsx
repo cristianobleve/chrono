@@ -1,6 +1,6 @@
 import React from "react";
 import { Priority } from "@/types";
-import { AlertCircle, SignalHigh, SignalMedium, SignalLow, MoreHorizontal } from "lucide-react";
+import { AlertTriangle, MoreH } from "reicon-react";
 import { cn } from "@/lib/utils";
 
 interface PriorityIconProps {
@@ -18,34 +18,52 @@ export const PriorityIcon: React.FC<PriorityIconProps> = ({
     switch (priority) {
       case "urgent":
         return {
-          icon: <AlertCircle className={cn("w-3.5 h-3.5 text-priority-urgent", className)} />,
+          icon: <AlertTriangle size={14} className={cn("text-[#ef4444] shrink-0", className)} />,
           label: "Urgent",
-          color: "text-priority-urgent",
+          color: "text-[#ef4444]",
         };
       case "high":
         return {
-          icon: <SignalHigh className={cn("w-3.5 h-3.5 text-priority-high", className)} />,
+          icon: (
+            <svg className={cn("w-3.5 h-3.5 text-[#f97316] shrink-0", className)} viewBox="0 0 16 16" fill="currentColor">
+              <rect x="2" y="10" width="2.5" height="4" rx="1" />
+              <rect x="6.75" y="6.5" width="2.5" height="7.5" rx="1" />
+              <rect x="11.5" y="3" width="2.5" height="11" rx="1" />
+            </svg>
+          ),
           label: "High",
-          color: "text-priority-high",
+          color: "text-[#f97316]",
         };
       case "medium":
         return {
-          icon: <SignalMedium className={cn("w-3.5 h-3.5 text-priority-medium", className)} />,
+          icon: (
+            <svg className={cn("w-3.5 h-3.5 text-[#eab308] shrink-0", className)} viewBox="0 0 16 16" fill="currentColor">
+              <rect x="2" y="10" width="2.5" height="4" rx="1" />
+              <rect x="6.75" y="6.5" width="2.5" height="7.5" rx="1" />
+              <rect x="11.5" y="3" width="2.5" height="11" rx="1" opacity="0.25" />
+            </svg>
+          ),
           label: "Medium",
-          color: "text-priority-medium",
+          color: "text-[#eab308]",
         };
       case "low":
         return {
-          icon: <SignalLow className={cn("w-3.5 h-3.5 text-priority-low", className)} />,
+          icon: (
+            <svg className={cn("w-3.5 h-3.5 text-[#38bdf8] shrink-0", className)} viewBox="0 0 16 16" fill="currentColor">
+              <rect x="2" y="10" width="2.5" height="4" rx="1" />
+              <rect x="6.75" y="6.5" width="2.5" height="7.5" rx="1" opacity="0.25" />
+              <rect x="11.5" y="3" width="2.5" height="11" rx="1" opacity="0.25" />
+            </svg>
+          ),
           label: "Low",
-          color: "text-priority-low",
+          color: "text-[#38bdf8]",
         };
       case "none":
       default:
         return {
-          icon: <MoreHorizontal className={cn("w-3.5 h-3.5 text-ink-subtle", className)} />,
+          icon: <MoreH size={14} className={cn("text-zinc-500 shrink-0", className)} />,
           label: "No priority",
-          color: "text-ink-subtle",
+          color: "text-zinc-500",
         };
     }
   };

@@ -3,79 +3,85 @@
 import React from "react";
 import { Project } from "@/types";
 import { cn } from "@/lib/utils";
-import {
-  Database,
-  Zap,
-  Box,
-  Layers,
-  Shield,
-  Terminal,
-  Globe,
-  Sparkles,
-  Cpu,
-  Flame,
-  Activity,
-  Compass,
-  Code,
-  Layout,
-  Server,
-  Cloud,
-  GitBranch,
-  Workflow,
-  Lock,
-  Rocket,
-  Key,
-  Search,
-  Star,
-  Folder,
-  CheckCircle,
-  FileCode,
-  HardDrive,
-  LucideIcon,
-} from "lucide-react";
+import * as ReiconIcons from "reicon-react";
+import type { IconComponent } from "reicon-react";
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  database: Database,
-  db: Database,
-  zap: Zap,
-  bolt: Zap,
-  box: Box,
-  cube: Box,
-  layers: Layers,
-  layer: Layers,
-  shield: Shield,
-  security: Shield,
-  terminal: Terminal,
-  cli: Terminal,
-  globe: Globe,
-  web: Globe,
-  sparkles: Sparkles,
-  ai: Sparkles,
-  cpu: Cpu,
-  chip: Cpu,
-  flame: Flame,
-  fire: Flame,
-  activity: Activity,
-  pulse: Activity,
-  compass: Compass,
-  code: Code,
-  layout: Layout,
-  server: Server,
-  cloud: Cloud,
-  "git-branch": GitBranch,
-  git: GitBranch,
-  workflow: Workflow,
-  lock: Lock,
-  rocket: Rocket,
-  launch: Rocket,
-  key: Key,
-  search: Search,
-  star: Star,
-  folder: Folder,
-  check: CheckCircle,
-  file: FileCode,
-  storage: HardDrive,
+// Pre-built case-insensitive lookup table for all 2670+ Reicon icons
+const REICON_LOWERCASE_MAP = new Map<string, IconComponent>();
+for (const [key, comp] of Object.entries(ReiconIcons)) {
+  if (typeof comp === "function" || (typeof comp === "object" && comp !== null)) {
+    REICON_LOWERCASE_MAP.set(key.toLowerCase(), comp as unknown as IconComponent);
+  }
+}
+
+// Aliases mapping common keywords to exact Reicon components
+const ICON_ALIASES: Record<string, string> = {
+  db: "database",
+  database: "database",
+  zap: "bolt",
+  bolt: "bolt",
+  lightning: "bolt",
+  cube: "box",
+  box: "box",
+  layer: "layers",
+  layers: "layers",
+  security: "shield",
+  shield: "shield",
+  terminal: "browserterminal",
+  cli: "browserterminal",
+  console: "terminalsquare",
+  web: "globe",
+  globe: "globe",
+  ai: "sparkles",
+  sparkles: "sparkles",
+  chip: "cpu",
+  cpu: "cpu",
+  fire: "flame",
+  flame: "flame",
+  activity: "activity",
+  pulse: "activity",
+  compass: "compass",
+  code: "code",
+  layout: "layout",
+  server: "server",
+  cloud: "cloud",
+  git: "branchdown",
+  "git-branch": "branchdown",
+  branch: "branchdown",
+  workflow: "hierarchy",
+  hierarchy: "hierarchy",
+  lock: "lock",
+  rocket: "rocket",
+  launch: "rocket",
+  key: "key",
+  search: "search",
+  star: "star",
+  folder: "folder",
+  check: "checkcircle",
+  file: "file",
+  storage: "harddrive",
+  drive: "harddrive",
+  bookmark: "bookmark",
+  tag: "hashtag",
+  hashtag: "hashtag",
+  chart: "chartbar",
+  route: "route",
+  diagram: "diagram",
 };
+
+function getReiconComponent(name: string): IconComponent | null {
+  const norm = name.toLowerCase().trim().replace(/[-_\s]+/g, "");
+  // 1. Check aliases
+  const aliasTarget = ICON_ALIASES[norm] || ICON_ALIASES[name.toLowerCase().trim()];
+  if (aliasTarget && REICON_LOWERCASE_MAP.has(aliasTarget)) {
+    return REICON_LOWERCASE_MAP.get(aliasTarget)!;
+  }
+  // 2. Direct case-insensitive match from Reicon catalog
+  if (REICON_LOWERCASE_MAP.has(norm)) {
+    return REICON_LOWERCASE_MAP.get(norm)!;
+  }
+  return null;
+}
 
 interface ProjectIconBadgeProps {
   project?: Project | null;
@@ -124,8 +130,7 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
   // If either icon or iconBg is an image URL, treat as custom image
   const imageSrc = isIconImage ? currentIcon : isBgImage ? currentBg : null;
 
-  const normalizedIconKey = currentIcon ? currentIcon.toLowerCase().trim() : "";
-  const LucideComponent = !imageSrc && normalizedIconKey ? ICON_MAP[normalizedIconKey] : null;
+  const ReiconComponent = !imageSrc && currentIcon ? getReiconComponent(currentIcon) : null;
 
   const letter =
     currentIcon && currentIcon.length <= 3
@@ -189,8 +194,12 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
           className="w-full h-full object-cover block aspect-square pointer-events-none"
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
-      ) : LucideComponent ? (
-        <LucideComponent className={cn(iconSizes[size], "shrink-0")} strokeWidth={2} />
+      ) : ReiconComponent ? (
+        <ReiconComponent
+          size={Math.round(dim * 0.5)}
+          className={cn(iconSizes[size], "shrink-0")}
+          color="currentColor"
+        />
       ) : (
         <span
           className="leading-none tracking-tight flex items-center justify-center font-bold"

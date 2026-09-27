@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { useLinearStore } from "@/store/useLinearStore";
 import {
-  Plus,
+  Add,
   ChevronRight,
   Box,
-  UploadCloud,
+  CloudUpload,
   Sparkles,
   Calendar,
   Layers,
@@ -14,13 +14,13 @@ import {
   AlertTriangle,
   Clock,
   Search,
-  LayoutGrid,
+  Grid2,
   List,
   Command,
   ChevronDown,
   ChevronUp,
-  FolderPlus,
-} from "lucide-react";
+  FolderAdd,
+} from "reicon-react";
 import { StatusIcon } from "@/components/ui/StatusIcon";
 import { PriorityIcon } from "@/components/ui/PriorityIcon";
 import { ProjectIconBadge } from "@/components/ui/ProjectIconBadge";
@@ -238,7 +238,7 @@ export const ProjectsListView: React.FC = () => {
                       href="/projects/import"
                       className="p-2.5 rounded-[8px] bg-zinc-800/60 hover:bg-zinc-800 border border-white/5 text-white flex flex-col items-center justify-center gap-1.5 text-center transition-all cursor-pointer group"
                     >
-                      <UploadCloud className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                      <CloudUpload className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                       <span className="text-[11px] font-medium leading-tight">{t.projectsList.importMd}</span>
                     </Link>
                     <Link
@@ -330,7 +330,7 @@ export const ProjectsListView: React.FC = () => {
                     )}
                     title="Grid"
                   >
-                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <Grid2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
@@ -349,7 +349,7 @@ export const ProjectsListView: React.FC = () => {
                   onClick={() => setActiveModal("new_project")}
                   className="px-3.5 py-1.5 rounded-[8px] bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Add className="w-3.5 h-3.5" />
                   <span>{t.projects.newProject}</span>
                 </button>
               </div>
@@ -396,7 +396,7 @@ export const ProjectsListView: React.FC = () => {
                   className="px-2.5 py-1.5 rounded-[8px] bg-zinc-900/80 hover:bg-zinc-800/80 border border-white/5 text-zinc-400 hover:text-white text-xs font-semibold shrink-0 transition-all flex items-center gap-1 cursor-pointer"
                   title={t.projectsList.newList}
                 >
-                  <FolderPlus className="w-3 h-3" />
+                  <FolderAdd className="w-3 h-3" />
                   <span>{t.projectsList.newList}</span>
                 </button>
               </div>
@@ -475,14 +475,14 @@ export const ProjectsListView: React.FC = () => {
                   onClick={() => setActiveModal("new_project")}
                   className="px-4 py-2 rounded-[8px] bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-md"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Add className="w-4 h-4" />
                   <span>{t.projectsList.createNew}</span>
                 </button>
                 <Link
                   href="/projects/import"
                   className="px-4 py-2 rounded-[8px] bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-white/5 text-xs font-medium transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <UploadCloud className="w-4 h-4 text-zinc-400" />
+                  <CloudUpload className="w-4 h-4 text-zinc-400" />
                   <span>{t.projectsList.importFromMarkdown}</span>
                 </Link>
               </div>
