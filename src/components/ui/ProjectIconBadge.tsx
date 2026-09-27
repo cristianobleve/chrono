@@ -103,15 +103,29 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
   const currentColor = (iconColor !== undefined ? iconColor : project?.iconColor) || "#e53e3e";
   const displayName = (name || project?.name || "Project").trim();
 
-  const isImage =
+  const isIconImage = Boolean(
     currentIcon &&
-    (currentIcon.startsWith("http://") ||
-      currentIcon.startsWith("https://") ||
-      currentIcon.startsWith("/") ||
-      currentIcon.startsWith("data:image/"));
+      (currentIcon.startsWith("http://") ||
+        currentIcon.startsWith("https://") ||
+        currentIcon.startsWith("/") ||
+        currentIcon.startsWith("data:image/") ||
+        /\.(png|jpe?g|svg|webp|gif|avif)(\?.*)?$/i.test(currentIcon))
+  );
+
+  const isBgImage = Boolean(
+    currentBg &&
+      (currentBg.startsWith("http://") ||
+        currentBg.startsWith("https://") ||
+        currentBg.startsWith("/") ||
+        currentBg.startsWith("data:image/") ||
+        /\.(png|jpe?g|svg|webp|gif|avif)(\?.*)?$/i.test(currentBg))
+  );
+
+  // If either icon or iconBg is an image URL, treat as custom image
+  const imageSrc = isIconImage ? currentIcon : isBgImage ? currentBg : null;
 
   const normalizedIconKey = currentIcon ? currentIcon.toLowerCase().trim() : "";
-  const LucideComponent = !isImage && normalizedIconKey ? ICON_MAP[normalizedIconKey] : null;
+  const LucideComponent = !imageSrc && normalizedIconKey ? ICON_MAP[normalizedIconKey] : null;
 
   const letter =
     currentIcon && currentIcon.length <= 3
@@ -144,14 +158,17 @@ export const ProjectIconBadge: React.FC<ProjectIconBadgeProps> = ({
         className
       )}
       style={{
-        backgroundColor: currentBg,
+        backgroundColor: isBgImage ? undefined : currentBg,
+        backgroundImage: isBgImage && isIconImage ? `url(${currentBg})` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         color: currentColor,
         borderColor: "rgba(255, 255, 255, 0.12)",
       }}
     >
-      {isImage ? (
+      {imageSrc ? (
         <img
-          src={currentIcon!}
+          src={imageSrc!}
           alt={displayName}
           className="w-full h-full object-cover"
         />

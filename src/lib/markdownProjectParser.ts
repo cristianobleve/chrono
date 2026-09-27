@@ -150,6 +150,12 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
     coverUrl = coverImgMatch[1];
   }
 
+  // Check for standalone markdown icon/logo image: ![Icon](https://...) or ![Logo](https://...)
+  const iconImgMatch = text.match(/!\[(?:icon|icona|logo|avatar|badge)\]\((https?:\/\/[^\s\)]+)\)/i);
+  if (iconImgMatch && (!icon || icon === "cube")) {
+    icon = iconImgMatch[1];
+  }
+
   const lines = text.split("\n");
 
   let currentSection: "header" | "metadata" | "description" | "milestones" | "issues" | "other" = "header";
@@ -229,9 +235,17 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         lower.startsWith("- **icon**:") ||
         lower.startsWith("- icon:") ||
         lower.startsWith("- **icona**:") ||
-        lower.startsWith("- icona:")
+        lower.startsWith("- icona:") ||
+        lower.startsWith("- **icon image**:") ||
+        lower.startsWith("- icon image:") ||
+        lower.startsWith("- **icon url**:") ||
+        lower.startsWith("- icon url:") ||
+        lower.startsWith("- **logo**:") ||
+        lower.startsWith("- logo:")
       ) {
-        icon = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon|icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+        const rawVal = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon[-_ ]?image|icon[-_ ]?url|icon|icona|logo)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+        const linkMatch = rawVal.match(/\((https?:\/\/[^\s\)]+)\)/);
+        icon = linkMatch ? linkMatch[1] : rawVal;
       } else if (
         lower.startsWith("- **icon color**:") ||
         lower.startsWith("- icon color:") ||
@@ -249,7 +263,9 @@ export function parseProjectMarkdown(markdownText: string): ParsedProjectImport 
         lower.startsWith("- **sfondo icona**:") ||
         lower.startsWith("- sfondo icona:")
       ) {
-        iconBg = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon[-_ ]?bg|sfondo[-_ ]?icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+        const rawBg = trimmed.replace(/^[-*]\s*(?:\*\*)?(?:icon[-_ ]?bg|sfondo[-_ ]?icona)(?:\*\*)?:\s*/i, "").trim().replace(/^["']|["']$/g, "");
+        const linkMatch = rawBg.match(/\((https?:\/\/[^\s\)]+)\)/);
+        iconBg = linkMatch ? linkMatch[1] : rawBg;
       } else if (
         lower.startsWith("- **cover**:") ||
         lower.startsWith("- cover:") ||

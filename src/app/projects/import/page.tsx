@@ -17,6 +17,8 @@ import {
   ChevronRight,
   Clock,
   Layers,
+  Camera,
+  Image as ImageIcon,
 } from "lucide-react";
 import {
   parseBulkProjectsMarkdown,
@@ -30,6 +32,8 @@ import { useLinearStore } from "@/store/useLinearStore";
 import { StatusIcon } from "@/components/ui/StatusIcon";
 import { PriorityIcon } from "@/components/ui/PriorityIcon";
 import { ProjectIconBadge } from "@/components/ui/ProjectIconBadge";
+import { ProjectIconPicker } from "@/components/projects/ProjectIconPicker";
+import { ProjectCoverPicker } from "@/components/projects/ProjectCoverPicker";
 import { cn } from "@/lib/utils";
 
 const blankTemplateMarkdown = `# Nome del Nuovo Progetto
@@ -90,7 +94,12 @@ export default function ImportProjectsPage() {
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [isImporting, setIsImporting] = useState<boolean>(false);
 
+  // Modals for custom icon and cover upload
+  const [showIconPicker, setShowIconPicker] = useState<boolean>(false);
+  const [showCoverPicker, setShowCoverPicker] = useState<boolean>(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const iconFileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const gutterRef = useRef<HTMLDivElement>(null);
 
@@ -130,7 +139,127 @@ export default function ImportProjectsPage() {
     }
   };
 
-  // File upload handling
+  // Helper to update project icon in markdown
+  const updateChunkIcon = (
+    chunk: string,
+    newIcon: string,
+    newBg?: string,
+    newColor?: string
+  ) => {
+    let res = chunk;
+    const iconRegex = /(^|\n)([-*]\s*(?:\*\*)?(?:icon[-_ ]?image|icon[-_ ]?url|icon|icona)(?:\*\*)?:\s*)([^\n]+)/i;
+    if (iconRegex.test(res)) {
+      res = res.replace(iconRegex, `$1$2${newIcon}`);
+    } else {
+      const metaRegex = /(##\s*(?:metadata|dati|info)[^\n]*\n)/i;
+      if (metaRegex.test(res)) {
+        res = res.replace(metaRegex, `$1- **Icon**: ${newIcon}\n`);
+      } else {
+        res = `- **Icon**: ${newIcon}\n` + res;
+      }
+    }
+
+    if (newBg) {
+      const bgRegex = /(^|\n)([-*]\s*(?:\*\*)?(?:icon[-_ ]?bg|sfondo[-_ ]?icona)(?:\*\*)?:\s*)([^\n]+)/i;
+      if (bgRegex.test(res)) {
+        res = res.replace(bgRegex, `$1$2${newBg}`);
+      } else {
+        const metaRegex = /(##\s*(?:metadata|dati|info)[^\n]*\n)/i;
+        if (metaRegex.test(res)) {
+          res = res.replace(metaRegex, `$1- **Icon Bg**: ${newBg}\n`);
+        }
+      }
+    }
+
+    if (newColor) {
+      const colorRegex = /(^|\n)([-*]\s*(?:\*\*)?(?:icon[-_ ]?color|colore[-_ ]?icona)(?:\*\*)?:\s*)([^\n]+)/i;
+      if (colorRegex.test(res)) {
+        res = res.replace(colorRegex, `$1$2${newColor}`);
+      } else {
+        const metaRegex = /(##\s*(?:metadata|dati|info)[^\n]*\n)/i;
+        if (metaRegex.test(res)) {
+          res = res.replace(metaRegex, `$1- **Icon Color**: ${newColor}\n`);
+        }
+      }
+    }
+
+    return res;
+  };
+
+  const updateProjectIconInMarkdown = (
+    newIcon: string,
+    newBg?: string,
+    newColor?: string
+  ) => {
+    if (!markdown) return;
+    const sepRegex = /(?:^|\n)\s*(?:---|<!--)?\s*__sep\s*(?:-->|---)?\s*(?:\n|$)/i;
+    if (sepRegex.test(markdown)) {
+      const chunks = markdown.split(sepRegex);
+      if (chunks[selectedIdx] !== undefined) {
+        chunks[selectedIdx] = updateChunkIcon(chunks[selectedIdx], newIcon, newBg, newColor);
+        setMarkdown(chunks.join("\n\n__sep\n\n"));
+        return;
+      }
+    }
+    setMarkdown(updateChunkIcon(markdown, newIcon, newBg, newColor));
+  };
+
+  // Helper to update project cover in markdown
+  const updateChunkCover = (chunk: string, coverVal: string) => {
+    let res = chunk;
+    const coverRegex = /(^|\n)([-*]\s*(?:\*\*)?(?:cover|copertina|hero)(?:\*\*)?:\s*)([^\n]+)/i;
+    if (coverRegex.test(res)) {
+      res = res.replace(coverRegex, `$1$2${coverVal}`);
+    } else {
+      const metaRegex = /(##\s*(?:metadata|dati|info)[^\n]*\n)/i;
+      if (metaRegex.test(res)) {
+        res = res.replace(metaRegex, `$1- **Cover**: ${coverVal}\n`);
+      } else {
+        res = `- **Cover**: ${coverVal}\n` + res;
+      }
+    }
+    return res;
+  };
+
+  const updateProjectCoverInMarkdown = (
+    newCoverUrl: string | null,
+    newGradient: string | null
+  ) => {
+    if (!markdown) return;
+    const coverVal = newCoverUrl || newGradient || "";
+    if (!coverVal) return;
+
+    const sepRegex = /(?:^|\n)\s*(?:---|<!--)?\s*__sep\s*(?:-->|---)?\s*(?:\n|$)/i;
+    if (sepRegex.test(markdown)) {
+      const chunks = markdown.split(sepRegex);
+      if (chunks[selectedIdx] !== undefined) {
+        chunks[selectedIdx] = updateChunkCover(chunks[selectedIdx], coverVal);
+        setMarkdown(chunks.join("\n\n__sep\n\n"));
+        return;
+      }
+    }
+    setMarkdown(updateChunkCover(markdown, coverVal));
+  };
+
+  // Direct icon file upload handler
+  const handleIconDirectUpload = (file: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      if (dataUrl) {
+        updateProjectIconInMarkdown(dataUrl);
+        addToast({
+          title: "Icona personalizzata caricata",
+          description: file.name,
+          type: "success",
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // File upload handling for entire markdown specification
   const handleFileUpload = (file: File) => {
     if (!file) return;
     const reader = new FileReader();
@@ -445,7 +574,7 @@ export default function ImportProjectsPage() {
             {currentProject ? (
               <div className="w-full flex flex-col">
                 {/* 1. Hero Cover Banner */}
-                <div className="w-full h-44 md:h-52 relative overflow-hidden bg-zinc-950 shrink-0">
+                <div className="w-full h-44 md:h-52 relative overflow-hidden bg-zinc-950 shrink-0 group">
                   {currentProject.coverUrl ? (
                     <img
                       src={currentProject.coverUrl}
@@ -462,23 +591,61 @@ export default function ImportProjectsPage() {
                   )}
                   {/* Subtle dark gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#08090a] via-[#08090a]/50 to-transparent pointer-events-none" />
+
+                  {/* Change Cover Button on Hero Hover */}
+                  <button
+                    type="button"
+                    onClick={() => setShowCoverPicker(true)}
+                    className="absolute top-3 right-3 px-2.5 py-1 rounded-[6px] bg-black/70 hover:bg-black text-white text-[11px] font-medium flex items-center gap-1.5 border border-white/20 shadow-lg transition-all cursor-pointer backdrop-blur-sm z-20 opacity-0 group-hover:opacity-100"
+                  >
+                    <Camera className="w-3 h-3 text-zinc-400" />
+                    <span>Cambia copertina</span>
+                  </button>
                 </div>
 
                 {/* 2. Project Header & Identity Deck */}
                 <div className="px-6 md:px-8 -mt-9 relative z-10 flex flex-col gap-5">
                   <div className="flex items-start gap-4">
-                    <ProjectIconBadge
-                      icon={currentProject.icon}
-                      iconBg={currentProject.iconBg}
-                      iconColor={currentProject.iconColor}
-                      name={currentProject.name}
-                      size="xl"
-                      className="shadow-xl ring-2 ring-black shrink-0"
-                    />
+                    {/* Project Icon Badge with click-to-edit / upload overlay */}
+                    <div className="relative group shrink-0">
+                      <ProjectIconBadge
+                        icon={currentProject.icon}
+                        iconBg={currentProject.iconBg}
+                        iconColor={currentProject.iconColor}
+                        name={currentProject.name}
+                        size="xl"
+                        className="shadow-xl ring-2 ring-black shrink-0 cursor-pointer"
+                        onClick={() => setShowIconPicker(true)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowIconPicker(true)}
+                        title="Personalizza o carica icona"
+                        className="absolute inset-0 rounded-[22px] bg-black/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-0.5 text-white transition-opacity cursor-pointer z-10"
+                      >
+                        <Camera className="w-4 h-4 text-white" />
+                        <span className="text-[9px] font-semibold">Cambia</span>
+                      </button>
+                    </div>
+
                     <div className="flex-1 pt-2 min-w-0">
-                      <h1 className="text-xl md:text-2xl font-semibold text-white tracking-tight break-words">
-                        {currentProject.name || "Nuovo Progetto"}
-                      </h1>
+                      <div className="flex items-center justify-between gap-3">
+                        <h1 className="text-xl md:text-2xl font-semibold text-white tracking-tight break-words">
+                          {currentProject.name || "Nuovo Progetto"}
+                        </h1>
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => setShowIconPicker(true)}
+                            className="px-2.5 py-1 rounded-[6px] bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/5 text-[11px] font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+                          >
+                            <Camera className="w-3 h-3 text-zinc-400" />
+                            <span>Carica icona</span>
+                          </button>
+                        </div>
+                      </div>
+
                       <div className="flex flex-wrap items-center gap-2 mt-2">
                         {/* Status Chip */}
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-white/10 text-xs text-zinc-300">
@@ -658,6 +825,59 @@ export default function ImportProjectsPage() {
           </div>
         </div>
       </div>
+
+      {/* Hidden file input for direct icon image selection */}
+      <input
+        ref={iconFileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleIconDirectUpload(e.target.files[0]);
+          }
+        }}
+        className="hidden"
+      />
+
+      {/* Project Icon Customization Modal */}
+      {showIconPicker && (
+        <ProjectIconPicker
+          isOpen={showIconPicker}
+          onClose={() => setShowIconPicker(false)}
+          icon={currentProject?.icon}
+          iconBg={currentProject?.iconBg}
+          iconColor={currentProject?.iconColor}
+          projectName={currentProject?.name || "Progetto"}
+          onSave={(customization) => {
+            updateProjectIconInMarkdown(
+              customization.icon,
+              customization.iconBg,
+              customization.iconColor
+            );
+            addToast({
+              title: "Icona progetto aggiornata",
+              type: "success",
+            });
+          }}
+        />
+      )}
+
+      {/* Project Cover Customization Modal */}
+      {showCoverPicker && (
+        <ProjectCoverPicker
+          isOpen={showCoverPicker}
+          onClose={() => setShowCoverPicker(false)}
+          currentCoverUrl={currentProject?.coverUrl}
+          currentCoverGradient={currentProject?.coverGradient}
+          onSave={(cover) => {
+            updateProjectCoverInMarkdown(cover.coverUrl, cover.coverGradient);
+            addToast({
+              title: "Copertina progetto aggiornata",
+              type: "success",
+            });
+          }}
+        />
+      )}
     </div>
   );
 }
