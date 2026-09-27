@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     case "welcome":
       rendered = renderWelcomeEmailHtml({
         to: "alex.turner@example.com",
-        name: "Alex Turner",
+        name: "Cristiano",
         siteUrl: origin,
       });
       break;

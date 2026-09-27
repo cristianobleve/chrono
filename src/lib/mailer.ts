@@ -23,7 +23,15 @@ const REICON_ROCKET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" he
 
 const REICON_SHIELD_TICK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="reicon" style="color:#ffffff;display:block;"><path d="M10.49 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L9.44003 21.2001C10.85 22.2601 13.17 22.2601 14.58 21.2001L18.88 17.9901C19.83 17.2801 20.61 15.7301 20.61 14.5501V7.12006C20.61 5.89006 19.67 4.53006 18.52 4.10006L13.53 2.23006C12.68 1.92006 11.32 1.92006 10.49 2.23006Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.05005 11.8701L10.66 13.4801L14.96 9.18005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-const REICON_SPARKLES_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="reicon" style="color:#ffffff;display:block;"><path d="M18.8179 2.08629C19.0253 1.45564 19.129 1.14031 19.2844 1.0552C19.4187 0.9816 19.5813 0.9816 19.7156 1.0552C19.871 1.14031 19.9747 1.45564 20.1821 2.08629L20.4973 3.04489C20.5389 3.17115 20.5596 3.23427 20.5953 3.28664C20.6269 3.33302 20.667 3.37305 20.7134 3.40467C20.7657 3.44037 20.8289 3.46113 20.9551 3.50265L21.9137 3.81792C22.5444 4.02533 22.8597 4.12903 22.9448 4.28437C23.0184 4.4187 23.0184 4.5813 22.9448 4.71563C22.8597 4.87097 22.5444 4.97467 21.9137 5.18208L20.9551 5.49735C20.8289 5.53887 20.7657 5.55963 20.7134 5.59533C20.667 5.62695 20.6269 5.66698 20.5953 5.71336C20.5596 5.76573 20.5389 5.82885 20.4973 5.95511L20.1821 6.91371C19.9747 7.54436 19.871 7.85969 19.7156 7.9448C19.5813 8.0184 19.4187 8.0184 19.2844 7.9448C19.129 7.85969 19.0253 7.54436 18.8179 6.91371L18.5027 5.95511C18.4611 5.82885 18.4404 5.76573 18.4047 5.71336C18.3731 5.66698 18.333 5.62695 18.2866 5.59533C18.2343 5.55963 18.1711 5.53887 18.0449 5.49735L17.0863 5.18208C16.4556 4.97467 16.1403 4.87097 16.0552 4.71563C15.9816 4.5813 15.9816 4.4187 16.0552 4.28437C16.1403 4.12903 16.4556 4.02533 17.0863 3.81792L18.0449 3.50265C18.1711 3.46113 18.2343 3.44037 18.2866 3.40467C18.333 3.37305 18.3731 3.33302 18.4047 3.28664C18.4404 3.23427 18.4611 3.17115 18.5027 3.04489L18.8179 2.08629Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M9.08515 3.4842C9.65508 3.17193 10.3449 3.17193 10.9149 3.4842C11.3659 3.73131 11.6146 4.22392 11.7946 4.64911C11.9901 5.11069 12.198 5.74283 12.4549 6.52401L13.2771 9.02398C13.3976 9.39037 13.4182 9.43092 13.4363 9.45748C13.4647 9.49923 13.5008 9.53527 13.5425 9.56373C13.5691 9.58183 13.6096 9.60243 13.976 9.72293L16.4759 10.5451C17.2571 10.802 17.8893 11.0099 18.3509 11.2054C18.7761 11.3854 19.2687 11.6341 19.5158 12.0851C19.8281 12.6551 19.8281 13.3449 19.5158 13.9149C19.2687 14.3659 18.7761 14.6146 18.3509 14.7946C17.8893 14.9901 17.2572 15.198 16.476 15.4549L13.976 16.2771C13.6096 16.3976 13.5691 16.4182 13.5425 16.4363C13.5008 16.4647 13.4647 16.5008 13.4363 16.5425C13.4182 16.5691 13.3976 16.6096 13.2771 16.976L12.4549 19.476C12.198 20.2571 11.9901 20.8893 11.7946 21.3509C11.6146 21.7761 11.3659 22.2687 10.9149 22.5158C10.3449 22.8281 9.65508 22.8281 9.08515 22.5158C8.63412 22.2687 8.38544 21.7761 8.20538 21.3509C8.00993 20.8893 7.80204 20.2572 7.54515 19.4761L6.72293 16.976C6.60243 16.6096 6.58183 16.5691 6.56373 16.5425C6.53527 16.5008 6.49923 16.4647 6.45748 16.4363C6.43092 16.4182 6.39037 16.3976 6.02398 16.2771L3.52404 15.4549C2.74287 15.198 2.11069 14.9901 1.64911 14.7946C1.22392 14.6146 0.731311 14.3659 0.484197 13.9149C0.171934 13.3449 0.171934 12.6551 0.484197 12.0851C0.731311 11.6341 1.22392 11.3854 1.64911 11.2054C2.11069 11.0099 2.74283 10.802 3.52401 10.5451L6.02398 9.72293C6.39037 9.60243 6.43092 9.58183 6.45748 9.56373C6.49923 9.53527 6.53527 9.49923 6.56373 9.45748C6.58183 9.43092 6.60243 9.39037 6.72293 9.02398L7.54511 6.52406C7.80202 5.74286 8.00992 5.1107 8.20538 4.64911C8.38544 4.22392 8.63412 3.73131 9.08515 3.4842Z" fill="currentColor"/></svg>`;
+const REICON_SPARKLES_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="reicon" style="color:#ffffff;display:block;"><path d="M18.8179 2.08629C19.0253 1.45564 19.129 1.14031 19.2844 1.0552C19.4187 0.9816 19.5813 0.9816 19.7156 1.0552C19.871 1.14031 19.9747 1.45564 20.1821 2.08629L20.4973 3.04489C20.5389 3.17115 20.5596 3.23427 20.5953 3.28664C20.6269 3.33302 20.667 3.37305 20.7134 3.40467C20.7657 3.44037 20.8289 3.46113 20.9551 3.50265L21.9137 3.81792C22.5444 4.02533 22.8597 4.12903 22.9448 4.28437C23.0184 4.4187 23.0184 4.5813 22.9448 4.71563C22.8597 4.87097 22.5444 4.97467 21.9137 5.18208L20.9551 5.49735C20.8289 5.53887 20.7657 5.55963 20.7134 5.59533C20.667 5.62695 20.6269 5.66698 20.5953 5.71336C20.5596 5.76573 20.5389 5.82885 20.4973 5.95511L20.1821 6.91371C19.9747 7.54436 19.871 7.85969 19.7156 7.9448C19.5813 8.0184 19.4187 8.0184 19.2844 7.9448C19.129 7.85969 19.0253 7.54436 18.8179 6.91371L18.5027 5.95511C18.4611 5.82885 18.4404 5.76573 18.4047 5.71336C18.3731 5.66698 18.333 5.62695 18.2866 5.59533C18.2343 5.55963 18.1711 5.53887 18.0449 5.49735L17.0863 5.18208C16.4556 4.97467 16.1403 4.87097 16.0552 4.71563C15.9816 4.5813 15.9816 4.4187 16.0552 4.28437C16.1403 4.12903 16.4556 4.02533 17.0863 3.81792L18.0449 3.50265C18.1711 3.46113 18.2343 3.44037 18.2866 3.40467C18.333 3.37305 18.3731 3.33302 18.4047 3.28664C18.4404 3.23427 18.4611 3.17115 18.5027 3.04489L18.8179 2.08629Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M9.08515 3.4842C9.65508 3.17193 10.3449 3.17193 10.9149 3.4842C11.3659 3.73131 11.6146 4.22392 11.7946 4.64911C11.9901 5.11069 12.198 5.74283 12.4549 6.52401L13.2771 9.02398C13.3976 9.39037 13.4182 9.43092 13.4363 9.45748C13.4647 9.49923 13.5008 9.53527 13.5425 9.56373C13.5691 9.58183 13.6096 9.60243 13.976 9.72293L16.4759 10.5451C17.2571 10.802 17.8893 11.0099 18.3509 11.2054C18.7761 11.3854 19.2687 11.6341 19.5158 12.0851C19.8281 12.6551 19.8281 13.3449 19.5158 13.9149C19.2687 14.3659 18.7761 14.6146 18.3509 14.7946C17.8893 14.9901 17.2572 15.198 16.476 15.4549L13.976 16.2771C13.6096 16.3976 13.5691 16.4182 13.5425 16.4363C13.5008 16.4647 13.4647 16.5008 13.4363 16.5425C13.4182 16.5691 13.3976 16.6096 13.2771 16.976L12.4549 19.476C12.198 20.2571 11.9901 20.8893 11.7946 21.3509C11.6146 21.7761 11.3659 22.2687 10.9149 22.5158C10.3449 22.8281 9.65508 22.8281 9.08515 22.5158C8.63412 22.2687 8.38544 21.7761 8.20538 21.3509C8.00993 20.8893 7.80204 20.2572 7.54515 19.4761L6.72293 16.976C6.60243 16.6096 6.58183 16.5691 6.56373 16.5425C6.53527 16.5008 6.49923 16.4647 6.45748 16.4363C6.43092 16.4182 6.39037 16.3976 6.02398 16.2771L3.52404 15.4549C2.74287 15.198 2.11069 14.9901 1.64911 14.7946C1.22392 14.6146 0.731311 14.3659 0.484197 13.9149C0.171934 13.3449 0.171934 12.6551 0.484197 12.0851C0.731311 11.6341 1.22392 11.3854 1.64911 11.2054C2.11069 11.0099 2.74283 10.802 3.52401 10.5451L6.02398 9.72293C6.39037 9.60243 6.43092 9.58183 6.45748 9.56373C6.49923 9.53527 6.53527 9.49923 6.56373 9.45748C6.58183 9.43092 6.60243 9.39037 6.72293 9.02398L7.54511 6.52406C7.80202 5.74286 8.00992 5.1107 8.20538 4.64911C8.38544 4.22392 8.63412 3.73131 9.08515 3.4842ZM9.82073 4.79196C9.82034 4.79284 9.81872 4.79496 9.81589 4.79864C9.79592 4.82467 9.71576 4.92912 9.58664 5.23402C9.41848 5.63113 9.22965 6.20326 8.95853 7.02764L8.14785 9.49261L8.12768 9.55416C8.04188 9.81652 7.95663 10.0772 7.80314 10.3024C7.66901 10.4991 7.49915 10.669 7.30238 10.8031C7.07723 10.9566 6.81652 11.0419 6.55418 11.1277L6.49261 11.1478L4.02764 11.9585C3.20326 12.2297 2.63113 12.4185 2.23402 12.5866C1.92912 12.7158 1.82467 12.7959 1.79864 12.8159C1.79496 12.8187 1.79284 12.8203 1.79196 12.8207C1.73601 12.9337 1.73601 13.0663 1.79196 13.1793C1.79284 13.1797 1.79496 13.1813 1.79864 13.1841C1.82467 13.2041 1.92912 13.2842 2.23402 13.4134C2.63113 13.5815 3.20326 13.7703 4.02764 14.0415L6.49261 14.8522L6.55416 14.8723C6.81651 14.9581 7.07723 15.0434 7.30238 15.1969C7.49915 15.331 7.66901 15.5009 7.80314 15.6976C7.95663 15.9228 8.04188 16.1835 8.12768 16.4458L8.14785 16.5074L8.95853 18.9724C9.22965 19.7967 9.41848 20.3689 9.58664 20.766C9.71576 21.0709 9.79593 21.1753 9.8159 21.2014C9.81871 21.205 9.82035 21.2072 9.82073 21.208C9.93366 21.264 10.0663 21.264 10.1793 21.208C10.1795 21.2075 10.1802 21.2065 10.1814 21.2049C10.1821 21.204 10.183 21.2028 10.1841 21.2014C10.2041 21.1753 10.2842 21.0709 10.4134 20.766C10.5815 20.3689 10.7703 19.7967 11.0415 18.9724L11.8522 16.5074L11.8723 16.4458C11.9581 16.1835 12.0434 15.9228 12.1969 15.6976C12.331 15.5009 12.5009 15.331 12.6976 15.1969C12.9228 15.0434 13.1835 14.9581 13.4458 14.8723L13.5074 14.8522L15.9724 14.0415C16.7967 13.7703 17.3689 13.5815 17.766 13.4134C18.0709 13.2842 18.1753 13.2041 18.2014 13.1841C18.205 13.1813 18.2072 13.1797 18.208 13.1793C18.264 13.0663 18.264 12.9337 18.208 12.8207C18.2072 12.8203 18.2051 12.8187 18.2014 12.8159C18.1754 12.796 18.0709 12.7158 17.766 12.5866C17.3689 12.4185 16.7967 12.2297 15.9724 11.9585L13.5074 11.1478L13.4458 11.1277C13.1835 11.0419 12.9228 10.9566 12.6976 10.8031C12.5009 10.669 12.331 10.4991 12.1969 10.3024C12.0434 10.0772 11.9581 9.81651 11.8723 9.55416L11.8522 9.49261L11.0415 7.02764C10.7703 6.20326 10.5815 5.63113 10.4134 5.23402C10.2842 4.92912 10.2041 4.82467 10.1841 4.79864C10.1813 4.79496 10.1797 4.79284 10.1793 4.79196C10.0663 4.73601 9.93366 4.73601 9.82073 4.79196Z" fill="currentColor"/> <path d="M19.346 18.0394C19.235 18.1002 19.1609 18.3255 19.0128 18.7759L18.7876 19.4606C18.7579 19.5508 18.7431 19.5959 18.7176 19.6333C18.695 19.6664 18.6664 19.695 18.6333 19.7176C18.5959 19.7431 18.5508 19.7579 18.4606 19.7876L17.7759 20.0128C17.3255 20.1609 17.1002 20.235 17.0394 20.346C16.9869 20.4419 16.9869 20.5581 17.0394 20.654C17.1002 20.765 17.3255 20.8391 17.7759 20.9872L18.4606 21.2124C18.5508 21.2421 18.5959 21.2569 18.6333 21.2824C18.6664 21.305 18.695 21.3336 18.7176 21.3667C18.7431 21.4041 18.7579 21.4492 18.7876 21.5394L19.0128 22.2241C19.1609 22.6745 19.235 22.8998 19.346 22.9606C19.4419 23.0131 19.5581 23.0131 19.654 22.9606C19.765 22.8998 19.8391 22.6745 19.9872 22.2241L20.2124 21.5394C20.2421 21.4492 20.2569 21.4041 20.2824 21.3667C20.305 21.3336 20.3336 21.305 20.3667 21.2824C20.4041 21.2569 20.4492 21.2421 20.5394 21.2124L21.2241 20.9872C21.6745 20.8391 21.8998 20.765 21.9606 20.654C22.0131 20.5581 22.0131 20.4419 21.9606 20.346C21.8998 20.235 21.6745 20.1609 21.2241 20.0128L20.5394 19.7876C20.4492 19.7579 20.4041 19.7431 20.3667 19.7176C20.3336 19.695 20.305 19.6664 20.2824 19.6333C20.2569 19.5959 20.2421 19.5508 20.2124 19.4606L19.9872 18.7759C19.8391 18.3255 19.765 18.1002 19.654 18.0394C19.5581 17.9869 19.4419 17.9869 19.346 18.0394Z" fill="currentColor"/></svg>`;
+
+const CHRONO_FOOTER_LOGO_SVG = `<div style="width:34px;height:34px;border-radius:8px;background-color:#18181b;border:1px solid #27272a;text-align:center;line-height:32px;display:inline-block;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="22" height="22" fill="none" style="vertical-align:middle;display:inline-block;">
+    <path d="M 50 16 C 31.222 16 16 31.222 16 50 C 16 68.778 31.222 84 50 84 C 68.778 84 84 68.778 84 50 C 84 41.075 80.6 32.83 75.075 26.625 L 65.725 35.975 C 69.38 39.8 71.675 44.9 71.675 50 C 71.675 61.97 61.97 71.675 50 71.675 C 38.03 71.675 28.325 61.97 28.325 50 C 28.325 38.03 38.03 28.325 50 28.325 C 55.1 28.325 60.2 30.62 64.025 34.275 L 73.375 24.925 C 67.17 19.4 58.925 16 50 16 Z" fill="#ffffff" />
+    <path d="M 46 35 L 65 23 L 54 54 L 35 65 L 46 35 Z" fill="#ffffff" />
+    <circle cx="50" cy="50" r="4" fill="#18181b" stroke="#ffffff" stroke-width="2.5" />
+  </svg>
+</div>`;
 
 function getTransporter() {
   const host = process.env.SMTP_HOST || "smtp.resend.com";
@@ -156,6 +164,60 @@ function getBaseStyles(): string {
   `;
 }
 
+function renderGoogleDocsStyleFooter(options: {
+  userEmail?: string;
+  isShort?: boolean;
+}): string {
+  const currentYear = new Date().getFullYear();
+  const emailEscaped = escapeHtml(options.userEmail || "your-email@example.com");
+
+  if (options.isShort) {
+    return `
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #27272a;padding-top:24px;margin-top:32px;">
+        <tr>
+          <td align="left" style="vertical-align:top;padding-right:20px;">
+            <p style="margin:0 0 10px 0;font-size:11px;line-height:1.6;color:#71717a;">
+              For your security, this link can only be used once and expires in 24 hours. If you didn't make this request, ignore this email or contact support.
+            </p>
+            <p style="margin:0;font-size:11px;line-height:1.5;color:#52525b;">
+              &copy; ${currentYear} Chrono - cristianobleve.com
+            </p>
+          </td>
+          <td align="right" style="vertical-align:top;width:40px;">
+            ${CHRONO_FOOTER_LOGO_SVG}
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #27272a;padding-top:24px;margin-top:32px;">
+      <tr>
+        <td align="left" style="vertical-align:top;padding-right:20px;">
+          <p style="margin:0 0 6px 0;font-size:11px;line-height:1.6;color:#71717a;">
+            This email was sent to <span style="color:#a1a1aa;">${emailEscaped}</span> because you have an account on Chrono.
+          </p>
+          <p style="margin:0 0 12px 0;font-size:11px;line-height:1.6;color:#71717a;">
+            If you didn't request this, you can safely ignore this email - no changes have been made to your account.
+          </p>
+          <p style="margin:0 0 10px 0;font-size:11px;line-height:1.5;color:#52525b;">
+            &copy; ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.
+          </p>
+          <p style="margin:0;font-size:11px;line-height:1.5;">
+            <a href="https://chrono.cristianobleve.com/resources" target="_blank" style="color:#a1a1aa;text-decoration:none;margin-right:14px;">Help Center</a>
+            <a href="https://chrono.cristianobleve.com/security" target="_blank" style="color:#a1a1aa;text-decoration:none;margin-right:14px;">Privacy Policy</a>
+            <a href="https://chrono.cristianobleve.com/settings/preferences" target="_blank" style="color:#a1a1aa;text-decoration:none;">Unsubscribe from notifications</a>
+          </p>
+        </td>
+        <td align="right" style="vertical-align:top;width:40px;">
+          ${CHRONO_FOOTER_LOGO_SVG}
+        </td>
+      </tr>
+    </table>
+  `;
+}
+
 export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParams): {
   subject: string;
   text: string;
@@ -166,22 +228,27 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
   const roleLabel = formatRole(params.role);
   const inviteUrl = params.inviteUrl;
 
-  const subject = `Hooray! You've been invited to ${params.workspaceName} on Chrono`;
-  const preheader = `Hooray! You're in. ${params.inviterName} invited you to join the ${params.workspaceName} workspace.`;
+  const subject = `You're invited to ${params.workspaceName} - as ${roleLabel}`;
+  const preheader = `${params.inviterName} wants you on the team.`;
+
+  const currentYear = new Date().getFullYear();
 
   const text = [
-    `Hooray! You're in.`,
+    `Join ${params.workspaceName}`,
     ``,
-    `Welcome to ${params.workspaceName}`,
+    `${params.inviterName} invited you to join and collaborate in the ${params.workspaceName} workspace as ${roleLabel} - full visibility into projects, issues, and the roadmap.`,
     ``,
-    `${params.inviterName} invited you to collaborate in the ${params.workspaceName} workspace on Chrono as ${roleLabel}.`,
+    `Workspace: ${params.workspaceName}`,
+    `Assigned role: ${roleLabel}`,
+    `Expires in: 7 days`,
     ``,
-    `To accept your invitation and join the workspace, open this link:`,
+    `Accept invitation:`,
     inviteUrl,
     ``,
-    `This invitation expires in 7 days. If you were not expecting this message, you can safely ignore it.`,
+    `This email was sent to ${params.to} because you have an account on Chrono.`,
+    `If you didn't request this, you can safely ignore this email - no changes have been made to your account.`,
     ``,
-    `Chrono - Directional project and issue tracking for high-tempo teams.`,
+    `© ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.`,
   ].join("\n");
 
   const html = `<!DOCTYPE html>
@@ -265,12 +332,12 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
 
               <!-- Heading -->
               <h1 class="email-title" style="margin:0 0 12px 0;font-size:24px;font-weight:700;color:#ffffff;line-height:1.25;letter-spacing:-0.02em;">
-                Welcome to ${workspaceName}
+                Join ${workspaceName}
               </h1>
 
               <!-- Description -->
               <p style="margin:0 0 24px 0;font-size:14px;line-height:1.6;color:#a1a1aa;">
-                <strong style="color:#ffffff;">${inviterName}</strong> invited you to join and collaborate in the <strong style="color:#ffffff;">${workspaceName}</strong> workspace on Chrono as <strong style="color:#ffffff;">${roleLabel}</strong>.
+                ${inviterName} invited you to join and collaborate in the ${workspaceName} workspace as <strong style="color:#ffffff;">${roleLabel}</strong> - full visibility into projects, issues, and the roadmap.
               </p>
 
               <!-- Workspace Detail Card -->
@@ -289,7 +356,7 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
                   <td style="padding-top:10px;padding-bottom:10px;border-bottom:1px solid #27272a;">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Assigned Role</td>
+                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Assigned role</td>
                         <td align="right">
                           <span class="mono" style="display:inline-block;background-color:#27272a;border:1px solid #3f3f46;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;color:#ffffff;">
                             ${roleLabel}
@@ -303,8 +370,8 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
                   <td style="padding-top:10px;">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Validity</td>
-                        <td align="right" style="font-size:12px;color:#a1a1aa;">Expires in 7 days</td>
+                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Expires in</td>
+                        <td align="right" style="font-size:12px;color:#a1a1aa;">7 days</td>
                       </tr>
                     </table>
                   </td>
@@ -316,7 +383,7 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
                 <tr>
                   <td align="left" style="border-radius:8px;background-color:#ffffff;">
                     <a href="${escapeHtml(inviteUrl)}" target="_blank" style="display:inline-block;padding:12px 24px;font-family:'Söhne','Inter Display',sans-serif;font-size:13px;font-weight:600;color:#09090b;text-decoration:none;border-radius:8px;letter-spacing:-0.01em;">
-                      Accept Invitation & Join
+                      Accept invitation
                     </a>
                   </td>
                 </tr>
@@ -332,19 +399,8 @@ export function renderWorkspaceInviteEmailHtml(params: WorkspaceInviteEmailParam
                 </p>
               </div>
 
-              <!-- Footer Security & Disclaimer -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #27272a;padding-top:20px;">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 8px 0;font-size:11px;line-height:1.5;color:#71717a;">
-                      This invitation was sent to ${escapeHtml(params.to)}. If you were not expecting this invitation, you can safely ignore this email.
-                    </p>
-                    <p style="margin:0;font-size:11px;color:#52525b;line-height:1.5;">
-                      Chrono - Directional project and issue tracking for high-tempo teams.
-                    </p>
-                  </td>
-                </tr>
-              </table>
+              <!-- Google Docs Sharing Style Footer -->
+              ${renderGoogleDocsStyleFooter({ userEmail: params.to, isShort: false })}
 
             </td>
           </tr>
@@ -365,18 +421,24 @@ export function renderPasswordRecoveryEmailHtml(params: PasswordRecoveryEmailPar
 } {
   const resetUrl = params.resetUrl;
   const subject = "Reset your Chrono password";
-  const preheader = "Reset your password for Chrono. Click the link inside to set a new password.";
+  const preheader = "This link expires in 24 hours.";
+
+  const currentYear = new Date().getFullYear();
 
   const text = [
-    `Reset your password`,
+    `Let's get you back in`,
     ``,
-    `We received a request to reset the password for your Chrono account.`,
-    `Click the link below to choose a new password:`,
+    `We received a request to reset the password for your Chrono account. Click the button below to choose a new one and return to your workspace.`,
+    ``,
+    `Request: Password reset`,
+    `Valid for: 24 hours`,
+    ``,
+    `Reset Password:`,
     resetUrl,
     ``,
-    `This link is valid for 24 hours. If you did not request a password reset, no action is needed. Your account remains protected.`,
+    `For your security, this link can only be used once and expires in 24 hours. If you didn't make this request, ignore this email or contact support.`,
     ``,
-    `Chrono - Directional project and issue tracking for high-tempo teams.`,
+    `© ${currentYear} Chrono - cristianobleve.com`,
   ].join("\n");
 
   const html = `<!DOCTYPE html>
@@ -460,12 +522,12 @@ export function renderPasswordRecoveryEmailHtml(params: PasswordRecoveryEmailPar
 
               <!-- Heading -->
               <h1 class="email-title" style="margin:0 0 12px 0;font-size:24px;font-weight:700;color:#ffffff;line-height:1.25;letter-spacing:-0.02em;">
-                Reset your password
+                Let's get you back in
               </h1>
 
               <!-- Description -->
               <p style="margin:0 0 24px 0;font-size:14px;line-height:1.6;color:#a1a1aa;">
-                We received a request to reset the password for your Chrono account. Click the button below to choose a new password and return to your workspace.
+                We received a request to reset the password for your Chrono account. Click the button below to choose a new one and return to your workspace.
               </p>
 
               <!-- Reset Detail Card -->
@@ -475,7 +537,7 @@ export function renderPasswordRecoveryEmailHtml(params: PasswordRecoveryEmailPar
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Request</td>
-                        <td align="right" style="font-size:13px;font-weight:600;color:#ffffff;">Password Reset</td>
+                        <td align="right" style="font-size:13px;font-weight:600;color:#ffffff;">Password reset</td>
                       </tr>
                     </table>
                   </td>
@@ -484,8 +546,8 @@ export function renderPasswordRecoveryEmailHtml(params: PasswordRecoveryEmailPar
                   <td style="padding-top:10px;">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Validity</td>
-                        <td align="right" style="font-size:12px;color:#a1a1aa;">Expires in 24 hours</td>
+                        <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Valid for</td>
+                        <td align="right" style="font-size:12px;color:#a1a1aa;">24 hours</td>
                       </tr>
                     </table>
                   </td>
@@ -513,19 +575,8 @@ export function renderPasswordRecoveryEmailHtml(params: PasswordRecoveryEmailPar
                 </p>
               </div>
 
-              <!-- Footer Security Note -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #27272a;padding-top:20px;">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 8px 0;font-size:11px;line-height:1.5;color:#71717a;">
-                      If you did not request a password reset, you can safely ignore this email. Your password will not change until you access the link above.
-                    </p>
-                    <p style="margin:0;font-size:11px;color:#52525b;line-height:1.5;">
-                      Chrono - Directional project and issue tracking for high-tempo teams.
-                    </p>
-                  </td>
-                </tr>
-              </table>
+              <!-- Google Docs Sharing Style Footer (Short Version) -->
+              ${renderGoogleDocsStyleFooter({ isShort: true })}
 
             </td>
           </tr>
@@ -546,20 +597,26 @@ export function renderWelcomeEmailHtml(params: WelcomeEmailParams): {
 } {
   const name = params.name ? escapeHtml(params.name) : "there";
   const siteUrl = params.siteUrl || "https://chrono.cristianobleve.com";
-  const subject = "Hooray! Welcome to Chrono";
-  const preheader = "Hooray! You're in. Your workspace is ready for action.";
+  const subject = `Welcome aboard, ${params.name || "there"}`;
+  const preheader = "Your workspace is live and ready to go.";
+
+  const currentYear = new Date().getFullYear();
 
   const text = [
-    `Hooray! You're in.`,
+    `Ready to ship with direction`,
     ``,
-    `Welcome to Chrono, ${params.name || ""}`.trim(),
+    `Hi ${params.name || "there"}, your Chrono account is all set. You now have a unified system to manage projects, resolve issues, and coordinate your roadmap.`,
     ``,
-    `Your Chrono account is now active and ready. Start organizing projects, prioritizing issues, and leading your team with clarity.`,
+    `Status: Active`,
+    `Capabilities: Projects, Issues, Timeline & AI Agent`,
     ``,
-    `Open your workspace:`,
+    `Launch Chrono Workspace:`,
     siteUrl,
     ``,
-    `Chrono - Directional project and issue tracking for high-tempo teams.`,
+    `This email was sent to ${params.to} because you have an account on Chrono.`,
+    `If you didn't request this, you can safely ignore this email - no changes have been made to your account.`,
+    ``,
+    `© ${currentYear} Chrono, part of cristianobleve.com. All rights reserved.`,
   ].join("\n");
 
   const html = `<!DOCTYPE html>
@@ -658,7 +715,7 @@ export function renderWelcomeEmailHtml(params: WelcomeEmailParams): {
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td style="font-size:11px;color:#71717a;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Status</td>
-                        <td align="right" style="font-size:13px;font-weight:600;color:#ffffff;">Active Account</td>
+                        <td align="right" style="font-size:13px;font-weight:600;color:#ffffff;">Active</td>
                       </tr>
                     </table>
                   </td>
@@ -686,19 +743,8 @@ export function renderWelcomeEmailHtml(params: WelcomeEmailParams): {
                 </tr>
               </table>
 
-              <!-- Footer -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #27272a;padding-top:20px;">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 8px 0;font-size:11px;line-height:1.5;color:#71717a;">
-                      This notification was sent to ${escapeHtml(params.to)}.
-                    </p>
-                    <p style="margin:0;font-size:11px;color:#52525b;line-height:1.5;">
-                      Chrono - Directional project and issue tracking for high-tempo teams.
-                    </p>
-                  </td>
-                </tr>
-              </table>
+              <!-- Google Docs Sharing Style Footer -->
+              ${renderGoogleDocsStyleFooter({ userEmail: params.to, isShort: false })}
 
             </td>
           </tr>
