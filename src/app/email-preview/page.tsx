@@ -12,6 +12,7 @@ import {
   Sparkles,
   ShieldTick,
   Rocket,
+  Send,
 } from "reicon-react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +33,10 @@ export default function EmailPreviewPage() {
   const [emailData, setEmailData] = useState<EmailPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const [testEmail, setTestEmail] = useState("blevecristiano2018@gmail.com");
+  const [isSending, setIsSending] = useState(false);
+  const [sendResult, setSendResult] = useState<string | null>(null);
 
   useEffect(() => {
     let isCancelled = false;
@@ -61,6 +66,37 @@ export default function EmailPreviewPage() {
     setTimeout(() => {
       setCopiedKey(null);
     }, 2000);
+  };
+
+  const handleSendTestEmail = async (mode: "current" | "all") => {
+    if (!testEmail || isSending) return;
+    setIsSending(true);
+    setSendResult(null);
+
+    try {
+      const res = await fetch("/api/email-preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: testEmail.trim(),
+          type: mode === "all" ? "all" : selectedType,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setSendResult(`Inviata con successo a ${testEmail}`);
+      } else {
+        setSendResult(data.error || "Errore durante l'invio");
+      }
+    } catch (err: any) {
+      setSendResult(err?.message || "Errore di connessione");
+    } finally {
+      setIsSending(false);
+      setTimeout(() => {
+        setSendResult(null);
+      }, 5000);
+    }
   };
 
   const templates: { id: EmailType; label: string; icon: React.ComponentType<{ size?: number; className?: string }> }[] = [
@@ -114,8 +150,27 @@ export default function EmailPreviewPage() {
           })}
         </div>
 
-        {/* Viewport and Tab Controls */}
-        <div className="flex items-center gap-3">
+        {/* Test Send Input & Controls */}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-1.5 bg-[#18181b] border border-[#27272a] rounded-lg px-2.5 py-1">
+            <input
+              type="email"
+              value={testEmail}
+              onChange={(e) => setTestEmail(e.target.value)}
+              placeholder="Indirizzo test..."
+              className="bg-transparent text-xs text-white placeholder:text-zinc-500 outline-none w-48 font-mono"
+            />
+            <button
+              onClick={() => void handleSendTestEmail("current")}
+              disabled={isSending || !testEmail}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-white bg-zinc-800 hover:bg-zinc-700 px-2 py-1 rounded transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Send size={12} />
+              <span>{isSending ? "Invio..." : "Invia"}</span>
+            </button>
+          </div>
+
+          {/* Viewport Controls */}
           <div className="flex items-center gap-1 bg-[#18181b] p-1 rounded-lg border border-[#27272a]">
             <button
               onClick={() => setViewport("desktop")}
@@ -139,6 +194,7 @@ export default function EmailPreviewPage() {
             </button>
           </div>
 
+          {/* Format Tabs */}
           <div className="flex items-center gap-1 bg-[#18181b] p-1 rounded-lg border border-[#27272a]">
             <button
               onClick={() => setTab("visual")}
@@ -181,13 +237,18 @@ export default function EmailPreviewPage() {
         </div>
       </header>
 
-      {/* Subject Bar */}
+      {/* Subject and Status Bar */}
       <section className="bg-[#121316] border-b border-[#27272a] px-6 py-2.5 flex items-center justify-between text-xs text-zinc-400">
         <div className="flex items-center gap-3 overflow-hidden">
           <span className="font-semibold text-zinc-300 shrink-0">Subject:</span>
           <span className="text-zinc-100 font-medium truncate">
             {emailData?.subject || "Loading..."}
           </span>
+          {sendResult && (
+            <span className="text-emerald-400 text-xs font-medium ml-2">
+              {sendResult}
+            </span>
+          )}
         </div>
         {emailData && (
           <button
