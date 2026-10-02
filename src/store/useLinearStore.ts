@@ -29,6 +29,7 @@ import {
   TimelineActionType,
   TimelineEntityType,
   TimelineDiffItem,
+  IssueList,
 } from "@/types";
 import { ParsedProjectImport } from "@/lib/markdownProjectParser";
 import { supabaseSync } from "@/lib/supabaseSync";
@@ -510,6 +511,7 @@ interface LinearState {
   tags: Tag[];
   projectFolders: ProjectFolder[];
   trash: TrashItem[];
+  issueLists: IssueList[];
   pomodoro: PomodoroState;
   preferences: UserPreferences;
   chatSessions: AgentChatSession[];
@@ -541,7 +543,7 @@ interface LinearState {
   // Workspace Actions
   isWorkspaceLoading: boolean;
   switchWorkspace: (workspaceId: string, router?: any) => Promise<void>;
-  createWorkspace: (workspaceData: Partial<Workspace>, includeDemoData?: boolean) => Workspace;
+  createWorkspace: (workspaceData: Partial<Workspace>, includeDemoData?: boolean) => Promise<Workspace>;
   updateWorkspace: (id: string, updates: Partial<Workspace>) => void;
   deleteWorkspace: (id: string) => void;
 
@@ -602,6 +604,11 @@ interface LinearState {
   addTag: (tagData: Omit<Tag, "id">) => Tag;
   updateTag: (id: string, updates: Partial<Tag>) => void;
   deleteTag: (id: string) => void;
+
+  // IssueList Actions
+  createIssueList: (listData: Omit<IssueList, 'id' | 'createdAt' | 'updatedAt'>) => IssueList;
+  updateIssueList: (id: string, updates: Partial<IssueList>) => void;
+  deleteIssueList: (id: string) => void;
 
   // Project Folder Actions
   addProjectFolder: (folderData: Omit<ProjectFolder, "id">) => ProjectFolder;
@@ -697,6 +704,7 @@ export const useLinearStore = create<LinearState>()(
       tags: initialTags,
       projectFolders: initialProjectFolders,
       trash: [],
+      issueLists: [],
       pomodoro: {
         activeIssueId: null,
         mode: "focus",
@@ -932,9 +940,9 @@ export const useLinearStore = create<LinearState>()(
         });
       },
 
-      createWorkspace: (workspaceData, includeDemoData = false) => {
+      createWorkspace: async (workspaceData, includeDemoData = false) => {
         const state = get();
-        const id = "ws-" + Date.now();
+        const id = workspaceData.id || "ws-" + Date.now();
         const wsCount = state.workspaces.length + 1;
         const slug = workspaceData.slug || (workspaceData.name || "workspace")
           .toLowerCase()
@@ -956,6 +964,11 @@ export const useLinearStore = create<LinearState>()(
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
+
+        const syncResult = await supabaseSync.syncWorkspace(newWorkspace);
+        if (syncResult && syncResult.success === false) {
+          throw new Error(syncResult.error || "Impossibile salvare il workspace su Supabase.");
+        }
 
         let updatedProjects = [...state.projects];
         let updatedIssues = [...state.issues];
@@ -992,15 +1005,14 @@ export const useLinearStore = create<LinearState>()(
           }
         }
 
-        set((s) => ({
-          workspaces: [...s.workspaces, newWorkspace],
+        const filteredWorkspaces = state.workspaces.filter((w) => w.id && w.id !== newWorkspace.id);
+        set({
+          workspaces: [...filteredWorkspaces, newWorkspace],
           workspace: newWorkspace,
           currentWorkspaceId: id,
           projects: updatedProjects,
           issues: updatedIssues,
-        }));
-
-        supabaseSync.syncWorkspace(newWorkspace);
+        });
 
         get().addTimelineEvent({
           action: "workspace_created",
@@ -1341,28 +1353,38 @@ export const useLinearStore = create<LinearState>()(
           // STRICT ISOLATION GUARD: If the authenticated user is not a member of any workspace,
           // isolate workspace access while preserving any uncommitted local state.
           if (remoteWorkspaces.length === 0) {
-            if (matchingAccount) {
-              set({
-                supabaseStatus: "connected",
-                workspaces: [],
-                workspace: emptyWorkspace,
-                currentWorkspaceId: "",
-                accounts: [matchingAccount],
-                currentAccountId: matchingAccount.id,
-                currentUser: {
-                  id: matchingAccount.id,
-                  identifier: matchingAccount.identifier,
-                  internalId: matchingAccount.internalId,
-                  name: matchingAccount.name,
-                  username: matchingAccount.username,
-                  email: matchingAccount.email,
-                  role: matchingAccount.role,
-                  avatarUrl: matchingAccount.avatarUrl || get().currentUser.avatarUrl || get().currentUser.avatar || undefined,
-                },
-              });
-            } else {
-              set({ supabaseStatus: "connected" });
-            }
+            set({
+              supabaseStatus: "connected",
+              workspaces: [],
+              workspace: emptyWorkspace,
+              currentWorkspaceId: "",
+              projects: [],
+              issues: [],
+              habits: [],
+              tags: [],
+              projectFolders: [],
+              trash: [],
+              ...(matchingAccount
+                ? {
+                    accounts: [matchingAccount],
+                    currentAccountId: matchingAccount.id,
+                    currentUser: {
+                      id: matchingAccount.id,
+                      identifier: matchingAccount.identifier,
+                      internalId: matchingAccount.internalId,
+                      name: matchingAccount.name,
+                      username: matchingAccount.username,
+                      email: matchingAccount.email,
+                      role: matchingAccount.role,
+                      avatarUrl:
+                        matchingAccount.avatarUrl ||
+                        get().currentUser.avatarUrl ||
+                        get().currentUser.avatar ||
+                        undefined,
+                    },
+                  }
+                : {}),
+            });
             return true;
           }
 
@@ -2013,6 +2035,7 @@ export const useLinearStore = create<LinearState>()(
           identifier,
           internalId: issueData.internalId || `iss_${Math.random().toString(36).substring(2, 9)}`,
           workspaceId: targetWorkspaceId,
+          parentIssueId: issueData.parentIssueId || null,
           title: issueData.title || "Untitled Issue",
           description: issueData.description || "",
           status: issueData.status || "backlog",
@@ -2367,6 +2390,29 @@ export const useLinearStore = create<LinearState>()(
 
         supabaseSync.deleteTag(id);
         get().addToast({ title: "Tag Spostato nel Cestino", type: "info" });
+      },
+
+      createIssueList: (listData) => {
+        const state = get();
+        const newList: IssueList = {
+          ...listData,
+          id: 'list-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+          workspaceId: listData.workspaceId || state.currentWorkspaceId,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        set((s) => ({ issueLists: [...s.issueLists, newList] }));
+        return newList;
+      },
+      updateIssueList: (id, updates) => {
+        set((s) => ({
+          issueLists: s.issueLists.map((l) =>
+            l.id === id ? { ...l, ...updates, updatedAt: new Date().toISOString() } : l
+          ),
+        }));
+      },
+      deleteIssueList: (id) => {
+        set((s) => ({ issueLists: s.issueLists.filter((l) => l.id !== id) }));
       },
 
       // Project Folders Implementation

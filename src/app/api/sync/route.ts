@@ -69,31 +69,6 @@ export async function POST(req: Request) {
         if (!isMember) {
           return NextResponse.json({ error: "Workspace access denied" }, { status: 403 });
         }
-      } else {
-        // Prevent unauthorized/uninvited users from creating arbitrary workspaces.
-        // Allowed only if the user is already an owner or admin of an existing workspace,
-        // or if there are zero workspaces in the system (initial bootstrap).
-        const { count: totalWorkspaces } = await supabaseServer
-          .from("workspaces")
-          .select("id", { count: "exact", head: true });
-
-        if ((totalWorkspaces || 0) > 0) {
-          const { data: userMemberships } = await supabaseServer
-            .from("workspace_members")
-            .select("role")
-            .eq("account_id", auth.accountId);
-
-          const canCreate = (userMemberships || []).some(
-            (m: any) => m.role === "owner" || m.role === "admin"
-          );
-
-          if (!canCreate) {
-            return NextResponse.json(
-              { error: "Accesso su invito: creazione di nuovi workspace consentita solo agli amministratori" },
-              { status: 403 }
-            );
-          }
-        }
       }
     } else if (workspaceId && action !== "pull_all") {
       const isMember = await hasWorkspaceAccess(workspaceId, auth.accountId);

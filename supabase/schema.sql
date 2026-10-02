@@ -97,6 +97,20 @@ CREATE TABLE IF NOT EXISTS project_folders (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 5b. ISSUE LISTS
+CREATE TABLE IF NOT EXISTS issue_lists (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    workspace_id TEXT REFERENCES workspaces(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    color TEXT DEFAULT '#5e6ad2',
+    icon TEXT,
+    filters JSONB DEFAULT '{}'::jsonb,
+    sort_by TEXT DEFAULT 'createdAt',
+    sort_dir TEXT DEFAULT 'desc',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- 6. PROJECTS
 CREATE TABLE IF NOT EXISTS projects (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
@@ -167,6 +181,7 @@ CREATE TABLE IF NOT EXISTS issues (
     workspace_id TEXT REFERENCES workspaces(id) ON DELETE CASCADE,
     team_id TEXT REFERENCES teams(id) ON DELETE CASCADE,
     project_id TEXT REFERENCES projects(id) ON DELETE SET NULL,
+    parent_issue_id TEXT REFERENCES issues(id) ON DELETE SET NULL,
     assignee_id TEXT REFERENCES accounts(id) ON DELETE SET NULL,
     creator_id TEXT REFERENCES accounts(id) ON DELETE SET NULL,
     title TEXT NOT NULL,

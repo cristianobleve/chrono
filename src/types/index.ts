@@ -240,6 +240,7 @@ export interface Issue {
   teamId: string;
   team?: Team;
   workspaceId?: string;
+  parentIssueId?: string | null;
   projectId?: string | null;
   project?: Project | null;
   milestoneId?: string | null;
@@ -263,6 +264,25 @@ export interface Issue {
   estimate?: number | null;
   sortOrder?: number | null;
   completedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IssueList {
+  id: string;
+  name: string;
+  color?: string;
+  icon?: string;
+  workspaceId: string;
+  filters?: {
+    status?: IssueStatus[];
+    priority?: IssuePriority[];
+    assigneeId?: string[];
+    projectId?: string[];
+    labels?: string[];
+  };
+  sortBy?: "priority" | "status" | "dueDate" | "createdAt";
+  sortDir?: "asc" | "desc";
   createdAt: string;
   updatedAt: string;
 }

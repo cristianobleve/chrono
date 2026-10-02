@@ -2,9 +2,12 @@
 
 import React, { useState } from "react";
 import { useLinearStore } from "@/store/useLinearStore";
-import { X, Sparkles, ChevronDown, Check } from "lucide-react";
+import { X, Sparkles, ChevronDown, Check, Loader2 } from "lucide-react";
 import { WorkspaceIcon } from "@/components/workspaces/WorkspaceIcon";
-import { WORKSPACE_COLOR_PALETTES } from "@/components/workspaces/WorkspaceIconPicker";
+import {
+  WorkspaceIconPicker,
+  WORKSPACE_COLOR_PALETTES,
+} from "@/components/workspaces/WorkspaceIconPicker";
 import { useTranslation } from "@/i18n";
 import { LinearSelect } from "@/components/ui/LinearSelect";
 
@@ -15,16 +18,18 @@ const REGION_OPTIONS = [
 
 export const NewWorkspaceModal: React.FC = () => {
   const { t } = useTranslation();
-  const { activeModal, setActiveModal, createWorkspace } = useLinearStore();
+  const { activeModal, setActiveModal, createWorkspace, addToast } = useLinearStore();
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [icon, setIcon] = useState("chrono");
   const [iconBg, setIconBg] = useState(WORKSPACE_COLOR_PALETTES[0].bg);
   const [iconColor, setIconColor] = useState(WORKSPACE_COLOR_PALETTES[0].color);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [region, setRegion] = useState("European Union");
   const [includeDemoData, setIncludeDemoData] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (activeModal !== "new_workspace") return null;
 
@@ -34,31 +39,45 @@ export const NewWorkspaceModal: React.FC = () => {
   };
 
   const handleClose = () => {
+    if (isSubmitting) return;
     setActiveModal(null);
     setName("");
     setSlug("");
     setIcon("chrono");
+    setLogoUrl(null);
     setShowColorPicker(false);
   };
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || isSubmitting) return;
 
-    createWorkspace(
-      {
-        name: name.trim(),
-        slug: slug.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        icon,
-        iconBg,
-        iconColor,
-        region,
-        plan: "Pro",
-      },
-      includeDemoData
-    );
-
-    handleClose();
+    setIsSubmitting(true);
+    try {
+      await createWorkspace(
+        {
+          name: name.trim(),
+          slug: slug.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          icon,
+          iconBg,
+          iconColor,
+          logoUrl,
+          region,
+          plan: "Pro",
+        },
+        includeDemoData
+      );
+      handleClose();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Impossibile salvare il workspace su Supabase.";
+      addToast({
+        title: "Creazione workspace non riuscita",
+        description: message,
+        type: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -94,36 +113,37 @@ export const NewWorkspaceModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowColorPicker(!showColorPicker)}
-                  title="Cambia colore logo"
+                  title="Customize workspace icon or logo"
                   className="rounded-lg p-0.5 hover:ring-1 hover:ring-white/30 transition-all cursor-pointer"
                 >
                   <WorkspaceIcon
                     icon={icon}
                     iconBg={iconBg}
                     iconColor={iconColor}
+                    logoUrl={logoUrl}
                     name={name || "W"}
                     size="md"
                   />
                 </button>
 
-                {/* Color Palette Popover */}
+                {/* Workspace Icon & Logo Picker Popover */}
                 {showColorPicker && (
-                  <div className="absolute left-0 top-11 z-20 p-2 rounded-lg bg-[#18191d] border border-white/10 shadow-xl flex items-center gap-1.5">
-                    {WORKSPACE_COLOR_PALETTES.map((pal) => (
-                      <button
-                        key={pal.name}
-                        type="button"
-                        onClick={() => {
-                          setIconBg(pal.bg);
-                          setIconColor(pal.color);
-                          setShowColorPicker(false);
-                        }}
-                        className="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer"
-                        style={{ backgroundColor: pal.color }}
-                      >
-                        {iconColor === pal.color && <Check className="w-3 h-3 text-black stroke-[3]" />}
-                      </button>
-                    ))}
+                  <div className="absolute left-0 top-11 z-30 animate-fade-in">
+                    <WorkspaceIconPicker
+                      selectedIcon={icon}
+                      selectedBg={iconBg}
+                      selectedColor={iconColor}
+                      logoUrl={logoUrl}
+                      name={name}
+                      onChange={(updates) => {
+                        setIcon(updates.icon);
+                        setIconBg(updates.iconBg);
+                        setIconColor(updates.iconColor);
+                        if (updates.logoUrl !== undefined) {
+                          setLogoUrl(updates.logoUrl);
+                        }
+                      }}
+                    />
                   </div>
                 )}
               </div>
@@ -197,10 +217,11 @@ export const NewWorkspaceModal: React.FC = () => {
             </button>
             <button
               type="submit"
-              disabled={!name.trim()}
-              className="px-4 py-1.5 rounded-lg bg-white hover:bg-zinc-200 disabled:opacity-40 text-black font-semibold text-xs transition-colors cursor-pointer"
+              disabled={!name.trim() || isSubmitting}
+              className="px-4 py-1.5 rounded-lg bg-white hover:bg-zinc-200 disabled:opacity-40 text-black font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              Crea workspace
+              {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              <span>{isSubmitting ? "Salvataggio..." : "Crea workspace"}</span>
             </button>
           </div>
         </form>

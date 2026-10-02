@@ -104,6 +104,7 @@ export const supabaseSync = {
       internal_id: i.internalId || `iss_${i.id}`,
       workspace_id: wsId,
       team_id: teamId,
+      parent_issue_id: i.parentIssueId || null,
       project_id: i.projectId || null,
       assignee_id: i.assigneeId || i.assignee?.id || null,
       creator_id: i.creatorId || i.creator?.id || null,
@@ -471,18 +472,24 @@ export const supabaseSync = {
   /**
    * Sync single workspace to Supabase
    */
-  async syncWorkspace(workspace: Workspace) {
+  async syncWorkspace(workspace: Workspace): Promise<{ success: boolean; error?: string }> {
     const row = this.formatWorkspaceRow(workspace);
     const apiRes = await this.callApiSync("upsert_workspace", row);
-    if (apiRes && apiRes.success) return;
+    if (apiRes && apiRes.success) return { success: true };
+    if (apiRes && !apiRes.success) {
+      return { success: false, error: apiRes.error || "Impossibile salvare il workspace su Supabase" };
+    }
 
     try {
       const { error } = await supabase.from("workspaces").upsert(row);
       if (error) {
         console.warn("Supabase syncWorkspace notice:", error.message || error.details || error);
+        return { success: false, error: error.message };
       }
+      return { success: true };
     } catch (err: any) {
       console.warn("Supabase syncWorkspace failed:", err?.message || err);
+      return { success: false, error: err?.message || "Failed to sync workspace" };
     }
   },
 
@@ -848,6 +855,7 @@ export const supabaseSync = {
         internalId: i.internal_id,
         workspaceId: i.workspace_id,
         teamId: i.team_id || "team-1",
+        parentIssueId: i.parent_issue_id || null,
         projectId: i.project_id,
         assigneeId: i.assignee_id,
         creatorId: i.creator_id,

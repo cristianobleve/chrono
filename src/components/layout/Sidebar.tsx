@@ -20,6 +20,7 @@ import {
   Trash2,
   Settings,
 } from "reicon-react";
+import { Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { WorkspaceSwitcherDropdown } from "@/components/workspaces/WorkspaceSwitcherDropdown";
 import { AccountSwitcherMenu } from "@/components/accounts/AccountSwitcherMenu";
@@ -103,6 +104,19 @@ export const Sidebar: React.FC = () => {
             >
               <TaskSquare size={16} className="text-zinc-400" />
               <span>{t.issues.title}</span>
+            </Link>
+
+            <Link
+              href="/lists"
+              className={cn(
+                "flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-md transition-colors",
+                pathname === "/lists"
+                  ? "bg-zinc-800/80 text-white font-semibold border border-white/5"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
+              )}
+            >
+              <Layers size={16} className="text-zinc-400" />
+              <span>Liste</span>
             </Link>
 
             <Link
