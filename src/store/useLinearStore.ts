@@ -967,7 +967,12 @@ export const useLinearStore = create<LinearState>()(
 
         const syncResult = await supabaseSync.syncWorkspace(newWorkspace);
         if (syncResult && syncResult.success === false) {
-          throw new Error(syncResult.error || "Impossibile salvare il workspace su Supabase.");
+          const isDesktop = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+          if (isDesktop) {
+            console.warn("[Desktop Local] Supabase sync skipped/failed; continuing with local storage.", syncResult.error);
+          } else {
+            throw new Error(syncResult.error || "Impossibile salvare il workspace su Supabase.");
+          }
         }
 
         let updatedProjects = [...state.projects];

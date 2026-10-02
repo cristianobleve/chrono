@@ -1,0 +1,67 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Chrono",
+  "version": "1.0.0",
+  "identifier": "com.cristianobleve.chrono",
+  "build": {
+    "frontendDist": "../out",
+    "devUrl": "http://localhost:3000",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build:desktop"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Chrono",
+        "width": 1360,
+        "height": 860,
+        "minWidth": 960,
+        "minHeight": 640,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "languages": [
+          "Italian",
+          "English"
+        ],
+        "installMode": "currentUser",
+        "displayLanguageSelector": false
+      }
+    }
+  },
+  "plugins": {
+    "autostart": {},
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU0NjBGODlDNDRDM0JDODMKUldTRHZNTkVuUGhnNUxreEdwQmwyRkhxZlFCWVd0eldVcG9OUFZwakQxWUJoN1N0ZEhZVG9FS2QK",
+      "endpoints": [
+        "https://github.com/cristianobleve/chrono/releases/latest/download/latest.json"
+      ]
+    },
+    "sql": {
+      "preload": [
+        "sqlite:chrono.db"
+      ]
+    }
+  }
+}

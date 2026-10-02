@@ -20,6 +20,7 @@ import { NewWorkspaceModal } from "@/components/workspaces/NewWorkspaceModal";
 import { NewAccountModal } from "@/components/accounts/NewAccountModal";
 import { TimelineDrawer } from "@/components/timeline/TimelineDrawer";
 import { NoWorkspaceAccess } from "@/components/layout/NoWorkspaceAccess";
+import { isDesktopApp } from "@/lib/desktop";
 
 export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const isWorkspaceLoading = useLinearStore((state) => state.isWorkspaceLoading);
   const workspace = useLinearStore((state) => state.workspace);
   const workspaces = useLinearStore((state) => state.workspaces);
+  const createWorkspace = useLinearStore((state) => state.createWorkspace);
   const supabaseStatus = useLinearStore((state) => state.supabaseStatus);
   const pathname = usePathname();
   const router = useRouter();
@@ -117,6 +119,21 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeModal, setActiveModal, isStandalone, router]);
+
+  useEffect(() => {
+    if (isDesktopApp() && workspaces.length === 0 && !isWorkspaceLoading) {
+      createWorkspace(
+        {
+          name: "Workspace Personale",
+          slug: "workspace-personale",
+          icon: "chrono",
+        },
+        true
+      ).catch((err) => {
+        console.warn("[Desktop] Errore inizializzazione automatica workspace:", err);
+      });
+    }
+  }, [workspaces.length, isWorkspaceLoading, createWorkspace]);
 
   if (isStandalone) {
     return (

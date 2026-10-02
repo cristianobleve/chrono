@@ -19,10 +19,20 @@ import {
 } from "@/components/marketing/HomeMotion";
 import { AtmosphericClouds } from "@/components/ui/AtmosphericClouds";
 import { ChronoDialBackground } from "@/components/ui/ChronoDialBackground";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { isDesktopApp } from "@/lib/desktop";
 import { useTranslation } from "@/i18n";
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isDesktopApp()) {
+      router.replace("/issues");
+    }
+  }, [router]);
 
   return (
     <MarketingChrome floatingHeader>

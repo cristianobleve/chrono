@@ -5,6 +5,7 @@ import { useLinearStore } from "@/store/useLinearStore";
 import { LinearSelect, SelectOption } from "@/components/ui/LinearSelect";
 import { useTranslation, SupportedLanguage } from "@/i18n";
 import { cn } from "@/lib/utils";
+import { DesktopSettingsSection } from "./DesktopSettingsSection";
 
 export const PreferencesView: React.FC = () => {
   const { preferences, updatePreferences, addToast } = useLinearStore();
@@ -260,6 +261,9 @@ export const PreferencesView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Desktop App Configuration */}
+      <DesktopSettingsSection />
     </div>
   );
 };

@@ -1,6 +1,10 @@
 import React from "react";
 import { ProfileDetailView } from "@/components/profiles/ProfileDetailView";
 
+export function generateStaticParams() {
+  return [{ id: "default" }];
+}
+
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
 }

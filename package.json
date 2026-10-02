@@ -10,11 +10,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:desktop": "node scripts/build-desktop.mjs",
     "start": "next start",
     "lint": "next lint",
     "db:seed": "node prisma/seed-supabase.js",
     "mcp": "tsx src/mcp/server.ts",
-    "test-mcp": "tsx scripts/test-mcp.ts"
+    "test-mcp": "tsx scripts/test-mcp.ts",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build"
   },
   "dependencies": {
     "@lobehub/icons": "^5.16.0",
@@ -28,6 +32,12 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
+    "@tauri-apps/api": "^2.12.1",
+    "@tauri-apps/plugin-autostart": "^2.7.0",
+    "@tauri-apps/plugin-notification": "^2.5.1",
+    "@tauri-apps/plugin-process": "^2.4.0",
+    "@tauri-apps/plugin-sql": "^2.5.0",
+    "@tauri-apps/plugin-updater": "^2.13.1",
     "@types/prismjs": "^1.26.6",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
@@ -49,11 +59,13 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.12.1",
     "@types/node": "^22.13.4",
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^10.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.23.15",

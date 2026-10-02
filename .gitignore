@@ -52,4 +52,6 @@ ehthumbs.db
 graphify-out/
 .agents/
 src-tauri/target/
+src-tauri/*.key
+
 
