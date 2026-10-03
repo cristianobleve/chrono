@@ -681,7 +681,7 @@ export const ru: TranslationDictionary = {
     cardMcpBadge: "17 инструментов на stdio",
     cardMcpComment: "// Взаимодействие с Claude или Cursor через сервер Chrono MCP",
     cardMcpCreatedPrefix: "✓ Задача создана:",
-    cardMcpCreatedProject: "FIR-257 в проекте Nebula Core Engine",
+    cardMcpCreatedProject: "FIR-257 в проекте Chrono Core",
     cardMcpFooterTitle: "Открытая автоматизация для ИИ-агентов",
     cardMcpFooterDesc: "Детерминированный интерфейс по открытому стандарту MCP. Ваши ИИ-ассистенты могут безопасно запрашивать данные и выполнять действия в проекте.",
 

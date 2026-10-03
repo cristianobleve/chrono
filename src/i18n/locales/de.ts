@@ -681,7 +681,7 @@ export const de: TranslationDictionary = {
     cardMcpBadge: "17 Tools über stdio",
     cardMcpComment: "// Interaktion mit Claude oder Cursor über Chrono MCP Server",
     cardMcpCreatedPrefix: "✓ Aufgabe erstellt:",
-    cardMcpCreatedProject: "FIR-257 im Projekt Nebula Core Engine",
+    cardMcpCreatedProject: "FIR-257 im Projekt Chrono Core",
     cardMcpFooterTitle: "Offene Automatisierung für KI-Agenten",
     cardMcpFooterDesc: "Deterministische Schnittstelle gemäß dem offenen MCP-Standard. Ihre KI-Assistenten können die Datenbank abfragen und Projektaktionen sicher ausführen.",
 

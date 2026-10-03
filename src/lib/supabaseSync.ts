@@ -48,8 +48,8 @@ export const supabaseSync = {
    * Format Project to Supabase snake_case columns
    */
   formatProjectRow(p: Project, workspaceId?: string) {
-    const wsId = p.workspaceId || workspaceId || "ws-1790213482796";
-    const teamId = p.teamId && p.teamId !== "team-1" ? p.teamId : `team-${wsId}`;
+    const wsId = p.workspaceId || workspaceId || "";
+    const teamId = p.teamId && p.teamId !== "team-1" ? p.teamId : (wsId ? `team-${wsId}` : "");
     return {
       id: p.id,
       identifier: p.identifier || `PRJ-${Math.floor(Math.random() * 1000)}`,
@@ -96,8 +96,8 @@ export const supabaseSync = {
    * Format Issue to Supabase snake_case columns
    */
   formatIssueRow(i: Issue, workspaceId?: string) {
-    const wsId = i.workspaceId || workspaceId || "ws-1790213482796";
-    const teamId = i.teamId && i.teamId !== "team-1" ? i.teamId : `team-${wsId}`;
+    const wsId = i.workspaceId || workspaceId || "";
+    const teamId = i.teamId && i.teamId !== "team-1" ? i.teamId : (wsId ? `team-${wsId}` : "");
     return {
       id: i.id,
       identifier: i.identifier || `ISS-${Math.floor(Math.random() * 1000)}`,

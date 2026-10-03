@@ -21,6 +21,7 @@ import {
   Command,
 } from "reicon-react";
 import { ChronoLogo } from "@/components/ui/ChronoLogo";
+import { getReicon } from "@/lib/icons/reiconRegistry";
 import { cn } from "@/lib/utils";
 
 export interface WorkspaceIconProps {
@@ -92,6 +93,9 @@ export const WorkspaceIcon: React.FC<WorkspaceIconProps> = ({
   } else if (iconEntry) {
     const IconComp = iconEntry.component;
     iconContent = <IconComp size={currentSize.iconSize} color="currentColor" className="shrink-0" />;
+  } else if (getReicon(normalizedIcon)) {
+    const ReiconComp = getReicon(normalizedIcon)!;
+    iconContent = <ReiconComp size={currentSize.iconSize} color="currentColor" className="shrink-0" />;
   } else if (icon && icon.length <= 2) {
     // Single letter initial or emoji
     iconContent = <span className={currentSize.text}>{icon}</span>;

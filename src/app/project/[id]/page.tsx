@@ -2,10 +2,7 @@ import React from "react";
 import { ProjectDetailView } from "@/components/projects/ProjectDetailView";
 
 export function generateStaticParams() {
-  return [
-    { id: "nebula-core-engine" },
-    { id: "default" },
-  ];
+  return [{ id: "default" }];
 }
 
 interface ProjectPageProps {

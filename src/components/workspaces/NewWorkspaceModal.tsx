@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useLinearStore } from "@/store/useLinearStore";
-import { X, Sparkles, ChevronDown, Check, Loader2 } from "lucide-react";
+import { X, ChevronDown, Check, Loader2 } from "lucide-react";
 import { WorkspaceIcon } from "@/components/workspaces/WorkspaceIcon";
 import {
   WorkspaceIconPicker,
@@ -27,7 +27,6 @@ export const NewWorkspaceModal: React.FC = () => {
   const [iconColor, setIconColor] = useState(WORKSPACE_COLOR_PALETTES[0].color);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [region, setRegion] = useState("European Union");
-  const [includeDemoData, setIncludeDemoData] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -54,19 +53,16 @@ export const NewWorkspaceModal: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      await createWorkspace(
-        {
-          name: name.trim(),
-          slug: slug.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          icon,
-          iconBg,
-          iconColor,
-          logoUrl,
-          region,
-          plan: "Pro",
-        },
-        includeDemoData
-      );
+      await createWorkspace({
+        name: name.trim(),
+        slug: slug.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        icon,
+        iconBg,
+        iconColor,
+        logoUrl,
+        region,
+        plan: "Pro",
+      });
       handleClose();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Impossibile salvare il workspace su Supabase.";
@@ -192,19 +188,6 @@ export const NewWorkspaceModal: React.FC = () => {
             />
           </div>
 
-          {/* Include Showcase Demo Data Option */}
-          <label className="flex items-center gap-2.5 p-2.5 rounded-lg border border-white/5 bg-[#141518]/60 hover:bg-[#141518] transition-colors cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={includeDemoData}
-              onChange={(e) => setIncludeDemoData(e.target.checked)}
-              className="rounded border-white/20 bg-zinc-900 text-white focus:ring-0 cursor-pointer accent-white"
-            />
-            <span className="text-[11px] text-zinc-300 flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-amber-400" />
-              Includi dati dimostrativi (Nebula Core)
-            </span>
-          </label>
 
           {/* Footer Actions */}
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/5">

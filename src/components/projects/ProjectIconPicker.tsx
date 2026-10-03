@@ -3,40 +3,19 @@
 import React, { useState, useMemo } from "react";
 import { ProjectIconBadge } from "@/components/ui/ProjectIconBadge";
 import {
+  CURATED_REICONS,
+  ICON_CATEGORIES,
+  IconCategory,
+  searchReicons,
+} from "@/lib/icons/reiconRegistry";
+import {
   X,
   Check,
   Upload,
-  Sparkles,
   Image as ImageIcon,
   Palette,
   Search,
-  Database,
-  Server,
   Bolt,
-  Layers,
-  Box,
-  Shield,
-  BrowserTerminal,
-  Globe,
-  Cpu,
-  Flame,
-  Activity,
-  Compass,
-  Code,
-  Rocket,
-  Lock,
-  Key,
-  Folder,
-  HardDrive,
-  Star,
-  Bookmark,
-  ChartBar,
-  Cloud,
-  Route,
-  Camera,
-  CheckCircle,
-  Hashtag,
-  ArchiveBox,
 } from "reicon-react";
 import { cn } from "@/lib/utils";
 
@@ -58,36 +37,12 @@ export const COLOR_PRESETS: ColorPreset[] = [
   { id: "slate", name: "Obsidian Slate", bg: "#15171d", color: "#ffffff" },
 ];
 
-export const CURATED_REICON_ICONS = [
-  { id: "database", name: "Database", icon: Database },
-  { id: "server", name: "Server", icon: Server },
-  { id: "bolt", name: "Bolt", icon: Bolt },
-  { id: "layers", name: "Layers", icon: Layers },
-  { id: "box", name: "Box", icon: Box },
-  { id: "shield", name: "Shield", icon: Shield },
-  { id: "terminal", name: "Terminal", icon: BrowserTerminal },
-  { id: "globe", name: "Globe", icon: Globe },
-  { id: "sparkles", name: "Sparkles", icon: Sparkles },
-  { id: "cpu", name: "CPU", icon: Cpu },
-  { id: "flame", name: "Flame", icon: Flame },
-  { id: "activity", name: "Activity", icon: Activity },
-  { id: "compass", name: "Compass", icon: Compass },
-  { id: "code", name: "Code", icon: Code },
-  { id: "rocket", name: "Rocket", icon: Rocket },
-  { id: "lock", name: "Lock", icon: Lock },
-  { id: "key", name: "Key", icon: Key },
-  { id: "folder", name: "Folder", icon: Folder },
-  { id: "harddrive", name: "Hard Drive", icon: HardDrive },
-  { id: "star", name: "Star", icon: Star },
-  { id: "bookmark", name: "Bookmark", icon: Bookmark },
-  { id: "chartbar", name: "Chart", icon: ChartBar },
-  { id: "cloud", name: "Cloud", icon: Cloud },
-  { id: "route", name: "Route", icon: Route },
-  { id: "camera", name: "Camera", icon: Camera },
-  { id: "checkcircle", name: "Check", icon: CheckCircle },
-  { id: "hashtag", name: "Tag", icon: Hashtag },
-  { id: "archivebox", name: "Archive", icon: ArchiveBox },
-];
+export const CURATED_REICON_ICONS = CURATED_REICONS.map((i) => ({
+  id: i.id,
+  name: i.name,
+  icon: i.component,
+  category: i.category,
+}));
 
 interface ProjectIconPickerProps {
   isOpen: boolean;
@@ -121,15 +76,12 @@ export const ProjectIconPicker: React.FC<ProjectIconPickerProps> = ({
       : ""
   );
   const [mode, setMode] = useState<"reicon" | "presets" | "image">("reicon");
+  const [selectedCategory, setSelectedCategory] = useState<IconCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredIcons = useMemo(() => {
-    if (!searchQuery.trim()) return CURATED_REICON_ICONS;
-    const q = searchQuery.toLowerCase().trim();
-    return CURATED_REICON_ICONS.filter(
-      (item) => item.id.includes(q) || item.name.toLowerCase().includes(q)
-    );
-  }, [searchQuery]);
+    return searchReicons(searchQuery, selectedCategory);
+  }, [searchQuery, selectedCategory]);
 
   if (!isOpen) return null;
 
@@ -273,15 +225,34 @@ export const ProjectIconPicker: React.FC<ProjectIconPickerProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cerca icone Reicon (database, bolt, server, rocket, shield...)"
+                placeholder="Cerca tra 331 icone (database, terminal, git, security...)"
                 className="w-full pl-9 pr-3.5 py-2 rounded-[12px] bg-zinc-900/60 border border-white/10 focus:border-white text-white text-xs placeholder:text-zinc-500 focus:outline-none"
               />
             </div>
 
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar text-[11px]">
+              {ICON_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-full whitespace-nowrap transition-colors border cursor-pointer",
+                    selectedCategory === cat.id
+                      ? "bg-white text-black border-white font-medium"
+                      : "bg-zinc-900/60 text-zinc-400 border-white/5 hover:text-white hover:bg-zinc-800"
+                  )}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
             {/* Reicon Icons Grid */}
-            <div className="grid grid-cols-7 gap-2 max-h-[190px] overflow-y-auto p-1 custom-scrollbar">
+            <div className="grid grid-cols-7 gap-2 max-h-[200px] overflow-y-auto p-1 custom-scrollbar">
               {filteredIcons.map((item) => {
-                const IconComp = item.icon;
+                const IconComp = item.component;
                 const isSelected = currentSelectedIcon.toLowerCase() === item.id && !imageUrl;
                 return (
                   <button
@@ -290,7 +261,7 @@ export const ProjectIconPicker: React.FC<ProjectIconPickerProps> = ({
                     title={item.name}
                     onClick={() => handleSelectReicon(item.id)}
                     className={cn(
-                      "h-11 rounded-[10px] flex flex-col items-center justify-center gap-1 transition-all border cursor-pointer",
+                      "h-11 rounded-[10px] flex flex-col items-center justify-center gap-1 transition-all border cursor-pointer group",
                       isSelected
                         ? "bg-white text-black border-white shadow-md scale-105"
                         : "bg-zinc-900/40 text-zinc-400 hover:text-white hover:bg-zinc-800/80 border-white/5"

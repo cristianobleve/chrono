@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import {
   WorkspaceIcon,
   WORKSPACE_ICON_LIST,
 } from "@/components/workspaces/WorkspaceIcon";
+import { searchReicons } from "@/lib/icons/reiconRegistry";
 import { cn } from "@/lib/utils";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 
@@ -19,20 +20,7 @@ export const WORKSPACE_COLOR_PALETTES = [
   { name: "Teal Matrix", bg: "#042422", color: "#14b8a6" },
 ];
 
-export const WORKSPACE_EMOJIS = [
-  "🚀",
-  "⚡",
-  "💎",
-  "🛡️",
-  "🌐",
-  "📦",
-  "🔥",
-  "🧠",
-  "🎯",
-  "⚙️",
-  "🌟",
-  "💡",
-];
+
 
 export interface WorkspaceIconPickerProps {
   selectedIcon: string;
@@ -56,9 +44,11 @@ export const WorkspaceIconPicker: React.FC<WorkspaceIconPickerProps> = ({
   name,
   onChange,
 }) => {
-  const [tab, setTab] = useState<"icons" | "upload" | "emojis" | "initial">(
+  const [tab, setTab] = useState<"icons" | "reicon" | "upload" | "initial">(
     logoUrl ? "upload" : "icons"
   );
+  const [reiconQuery, setReiconQuery] = useState("");
+  const reiconList = useMemo(() => searchReicons(reiconQuery), [reiconQuery]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,6 +123,18 @@ export const WorkspaceIconPicker: React.FC<WorkspaceIconPickerProps> = ({
         </button>
         <button
           type="button"
+          onClick={() => setTab("reicon")}
+          className={cn(
+            "flex-1 py-1 rounded-[6px] font-medium transition-all cursor-pointer",
+            tab === "reicon"
+              ? "bg-zinc-800 text-white shadow-sm"
+              : "text-zinc-400 hover:text-white"
+          )}
+        >
+          Libreria (331)
+        </button>
+        <button
+          type="button"
           onClick={() => setTab("upload")}
           className={cn(
             "flex-1 py-1 rounded-[6px] font-medium transition-all cursor-pointer",
@@ -142,18 +144,6 @@ export const WorkspaceIconPicker: React.FC<WorkspaceIconPickerProps> = ({
           )}
         >
           Image
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("emojis")}
-          className={cn(
-            "flex-1 py-1 rounded-[6px] font-medium transition-all cursor-pointer",
-            tab === "emojis"
-              ? "bg-zinc-800 text-white shadow-sm"
-              : "text-zinc-400 hover:text-white"
-          )}
-        >
-          Emoji
         </button>
         <button
           type="button"
@@ -272,34 +262,48 @@ export const WorkspaceIconPicker: React.FC<WorkspaceIconPickerProps> = ({
         </div>
       )}
 
-      {/* Tab: Emojis */}
-      {tab === "emojis" && (
-        <div className="grid grid-cols-6 gap-2 max-h-36 overflow-y-auto pr-1">
-          {WORKSPACE_EMOJIS.map((emoji) => {
-            const isSelected = !logoUrl && selectedIcon === emoji;
-            return (
-              <button
-                key={emoji}
-                type="button"
-                onClick={() =>
-                  onChange({
-                    icon: emoji,
-                    iconBg: selectedBg,
-                    iconColor: selectedColor,
-                    logoUrl: null,
-                  })
-                }
-                className={cn(
-                  "p-2 rounded-lg border text-base flex items-center justify-center transition-all cursor-pointer",
-                  isSelected
-                    ? "bg-white/10 border-white/30 ring-1 ring-white/20 shadow-sm"
-                    : "bg-zinc-900 border-white/5 hover:border-white/20"
-                )}
-              >
-                {emoji}
-              </button>
-            );
-          })}
+      {/* Tab: Reicon Library (331 Icons) */}
+      {tab === "reicon" && (
+        <div className="flex flex-col gap-2 py-1">
+          <input
+            type="text"
+            value={reiconQuery}
+            onChange={(e) => setReiconQuery(e.target.value)}
+            placeholder="Cerca tra 331 icone (es. server, database, code)..."
+            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white text-[11px] placeholder:text-zinc-500 focus:outline-none focus:border-white/30"
+          />
+          <div className="grid grid-cols-6 gap-1.5 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+            {reiconList.map((item) => {
+              const isSelected = !logoUrl && selectedIcon.toLowerCase() === item.id;
+              const IconComponent = item.component;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() =>
+                    onChange({
+                      icon: item.id,
+                      iconBg: selectedBg,
+                      iconColor: selectedColor,
+                      logoUrl: null,
+                    })
+                  }
+                  className={cn(
+                    "p-2 rounded-lg border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer",
+                    isSelected
+                      ? "bg-white/10 border-white/30 text-white ring-1 ring-white/20 shadow-sm"
+                      : "bg-zinc-900 border-white/5 text-zinc-400 hover:text-white hover:border-white/20"
+                  )}
+                  title={item.name}
+                >
+                  <IconComponent className="w-4 h-4 shrink-0" />
+                  <span className="text-[7.5px] truncate w-full text-center opacity-70">
+                    {item.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 

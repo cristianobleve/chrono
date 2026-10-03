@@ -128,7 +128,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
           slug: "workspace-personale",
           icon: "chrono",
         },
-        true
+        false
       ).catch((err) => {
         console.warn("[Desktop] Errore inizializzazione automatica workspace:", err);
       });
