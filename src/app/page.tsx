@@ -71,8 +71,14 @@ export default function HomePage() {
                     {t.home.heroCta}
                   </Link>
                   <Link
+                    href="/download"
+                    className="flex h-10 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-5 text-xs sm:text-sm font-medium text-zinc-200 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    Scarica Desktop v2.0.0
+                  </Link>
+                  <Link
                     href="/product"
-                    className="flex h-10 items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-5 text-xs sm:text-sm font-medium text-zinc-300 transition-colors hover:border-white/40 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="flex h-10 items-center gap-2 rounded-full border border-transparent px-4 text-xs sm:text-sm font-medium text-zinc-400 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
                     {t.home.heroSecondaryCta}
                   </Link>

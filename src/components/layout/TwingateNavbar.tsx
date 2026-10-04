@@ -137,12 +137,12 @@ export const TwingateNavbar: React.FC = () => {
       {/* Clean Floating Bar: Zero nested background boxes */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-3.5 h-[50px] sm:h-[54px] rounded-[10px] bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex items-center justify-between pointer-events-auto transition-all gap-2">
         {/* Left: Workspace Selector (Clean ghost) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
+        <div data-tour="workspace-switcher" className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
           <WorkspaceSwitcherDropdown variant="navbar" />
         </div>
 
         {/* Center: Flat Navigation Links (Visible on large screens >= 1024px to guarantee no overlap with workspace or tools) */}
-        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
+        <nav data-tour="main-nav" className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
           {mainNavItems.map((item) => {
             const isActive = item.match(pathname);
             const Icon = item.icon;
@@ -168,6 +168,7 @@ export const TwingateNavbar: React.FC = () => {
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Ghost Search Trigger */}
           <button
+            data-tour="search-command"
             type="button"
             onClick={() => setActiveModal("command_menu")}
             className="flex items-center justify-center lg:justify-between w-8 h-8 lg:w-36 xl:w-48 px-2 lg:px-2.5 rounded-[6px] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors text-xs cursor-pointer group shrink-0"
@@ -186,6 +187,7 @@ export const TwingateNavbar: React.FC = () => {
 
           {/* New Issue Button: White "+ Nuovo" action button */}
           <button
+            data-tour="new-issue-btn"
             type="button"
             onClick={() => setActiveModal("new_issue")}
             className="h-8 px-2 sm:px-3 rounded-[6px] bg-white hover:bg-zinc-200 text-zinc-950 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors cursor-pointer shadow-sm shrink-0"

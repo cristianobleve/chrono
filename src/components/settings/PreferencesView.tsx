@@ -6,6 +6,7 @@ import { LinearSelect, SelectOption } from "@/components/ui/LinearSelect";
 import { useTranslation, SupportedLanguage } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { DesktopSettingsSection } from "./DesktopSettingsSection";
+import { startChronoTour } from "@/lib/onboarding/chronoTour";
 
 export const PreferencesView: React.FC = () => {
   const { preferences, updatePreferences, addToast } = useLinearStore();
@@ -257,6 +258,32 @@ export const PreferencesView: React.FC = () => {
                   preferences.usePointerCursors ? "translate-x-5 bg-zinc-950" : "translate-x-0 bg-white"
                 )}
               />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Onboarding Tour Section */}
+      <div className="flex flex-col gap-2">
+        <h2 className="text-xs font-bold text-white uppercase tracking-wider text-zinc-500">
+          Guida e Tutorial
+        </h2>
+
+        <div className="p-6 rounded-[16px] bg-zinc-950 border border-white/10 flex flex-col gap-5 text-xs">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-0.5">
+              <span className="font-semibold text-white">Tour introduttivo</span>
+              <span className="text-[11px] text-zinc-400">
+                Ripercorri i passaggi chiave dell'interfaccia, della navigazione e delle scorciatoie da tastiera.
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => startChronoTour({ force: true })}
+              className="px-3.5 py-1.5 rounded-[8px] bg-white text-zinc-950 font-semibold text-xs hover:bg-zinc-200 transition-colors cursor-pointer shrink-0"
+            >
+              Avvia tour
             </button>
           </div>
         </div>

@@ -21,6 +21,7 @@ import { NewAccountModal } from "@/components/accounts/NewAccountModal";
 import { TimelineDrawer } from "@/components/timeline/TimelineDrawer";
 import { NoWorkspaceAccess } from "@/components/layout/NoWorkspaceAccess";
 import { isDesktopApp } from "@/lib/desktop";
+import { startChronoTour } from "@/lib/onboarding/chronoTour";
 
 export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t } = useTranslation();
@@ -134,6 +135,15 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       });
     }
   }, [workspaces.length, isWorkspaceLoading, createWorkspace]);
+
+  useEffect(() => {
+    if (workspaces.length > 0 && !isStandalone && !isWorkspaceLoading) {
+      const timer = setTimeout(() => {
+        startChronoTour();
+      }, 750);
+      return () => clearTimeout(timer);
+    }
+  }, [workspaces.length, isStandalone, isWorkspaceLoading]);
 
   if (isStandalone) {
     return (

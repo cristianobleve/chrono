@@ -1,0 +1,89 @@
+/* Chrono Driver.js Theme - Monochromatic & High Contrast */
+.chrono-driver-popover.driver-popover {
+  background-color: #0c0d10 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85) !important;
+  padding: 16px 18px !important;
+  max-width: 320px !important;
+  font-family: inherit !important;
+}
+
+.chrono-driver-popover .driver-popover-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.chrono-driver-popover .driver-popover-description {
+  font-size: 12px !important;
+  color: #a1a1aa !important;
+  line-height: 1.5 !important;
+  margin-bottom: 14px !important;
+}
+
+.chrono-driver-popover .driver-popover-progress-text {
+  font-size: 10px !important;
+  font-family: ui-monospace, SFMono-Regular, monospace !important;
+  color: #71717a !important;
+}
+
+.chrono-driver-popover .driver-popover-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.chrono-driver-popover .driver-popover-next-btn {
+  background-color: #ffffff !important;
+  color: #09090b !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease !important;
+  text-shadow: none !important;
+}
+
+.chrono-driver-popover .driver-popover-next-btn:hover {
+  opacity: 0.85 !important;
+}
+
+.chrono-driver-popover .driver-popover-prev-btn {
+  background: transparent !important;
+  color: #a1a1aa !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 5px 10px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  text-shadow: none !important;
+}
+
+.chrono-driver-popover .driver-popover-prev-btn:hover {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.chrono-driver-popover .driver-popover-close-btn {
+  color: #71717a !important;
+  transition: color 0.15s ease !important;
+}
+
+.chrono-driver-popover .driver-popover-close-btn:hover {
+  color: #ffffff !important;
+}
+
+.chrono-driver-popover .driver-popover-arrow {
+  border-color: #0c0d10 !important;
+}

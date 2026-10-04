@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   isDesktopApp,
   isAutostartEnabled,
@@ -183,9 +184,15 @@ export const DesktopSettingsSection: React.FC = () => {
             <div className="flex flex-col gap-1">
               <span className="font-semibold text-white">Accesso da browser rilevato</span>
               <span className="text-[11px] text-zinc-400">
-                La versione desktop standalone include avvio automatico, tray icon, basso consumo di RAM e modalita offline senza server esterni.
+                La versione desktop standalone include avvio automatico, tray icon, basso consumo di RAM e aggiornamenti autonomi.
               </span>
             </div>
+            <Link
+              href="/download"
+              className="px-3.5 py-1.5 rounded-[8px] bg-white text-zinc-950 font-semibold text-xs hover:bg-zinc-200 transition-colors shrink-0"
+            >
+              Scarica Desktop v2.0.0
+            </Link>
           </div>
         )}
       </div>

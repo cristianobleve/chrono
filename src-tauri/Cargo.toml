@@ -1,6 +1,6 @@
 [package]
 name = "chrono_desktop"
-version = "1.0.0"
+version = "2.0.0"
 description = "Chrono Desktop - Issue tracking and project management"
 authors = ["Cristiano Bleve"]
 license = "MIT"

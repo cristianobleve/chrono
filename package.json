@@ -1,6 +1,6 @@
 {
   "name": "chrono",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Issue tracking and project management for software teams",
   "license": "MIT",
   "repository": {
@@ -43,6 +43,7 @@
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",
+    "driver.js": "^1.9.0",
     "lucide-react": "^0.475.0",
     "motion": "^12.4.7",
     "next": "^15.2.0",

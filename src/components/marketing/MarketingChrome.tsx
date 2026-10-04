@@ -19,6 +19,7 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
     { href: "/product#issues", label: t.issues.title },
     { href: "/product#timeline", label: t.nav.timeline },
     { href: "/product#agent", label: t.nav.agent },
+    { href: "/download", label: "Desktop Windows (v2.0.0)" },
   ];
 
   const languageOptions: SelectOption[] = languages.map((l) => ({
@@ -116,8 +117,11 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
                 <Link href="/security" className="block border-b border-white/10 px-3 py-2.5 text-xs text-zinc-300">
                   {t.nav.security}
                 </Link>
-                <Link href="/resources" className="block px-3 py-2.5 text-xs text-zinc-300">
+                <Link href="/resources" className="block border-b border-white/10 px-3 py-2.5 text-xs text-zinc-300">
                   {t.nav.resources}
+                </Link>
+                <Link href="/download" className="block px-3 py-2.5 text-xs text-white font-medium">
+                  Scarica Desktop v2.0.0
                 </Link>
               </div>
             </details>
@@ -150,6 +154,7 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
                   <Link href="/product#issues" className="hover:text-white transition-colors">{t.issues.title}</Link>
                   <Link href="/product#timeline" className="hover:text-white transition-colors">{t.nav.timeline}</Link>
                   <Link href="/product#agent" className="hover:text-white transition-colors">{t.nav.agent}</Link>
+                  <Link href="/download" className="hover:text-white transition-colors">Scarica Desktop</Link>
                 </div>
               </div>
               <div>
@@ -164,6 +169,7 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
                 <h3 className="font-heading text-sm font-medium text-white">{t.footer.resourcesHeading}</h3>
                 <div className="mt-4 grid gap-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
                   <Link href="/resources" className="hover:text-white transition-colors">{t.nav.resources}</Link>
+                  <Link href="/download" className="hover:text-white transition-colors">Download Windows v2.0.0</Link>
                   <Link href="/projects" className="hover:text-white transition-colors">{t.footer.openApp}</Link>
                   <Link href="/settings/database" className="hover:text-white transition-colors">{t.footer.systemStatus}</Link>
                 </div>
