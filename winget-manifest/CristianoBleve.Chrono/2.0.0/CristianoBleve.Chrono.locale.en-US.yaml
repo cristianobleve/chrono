@@ -1,0 +1,26 @@
+# Created using winget
+PackageIdentifier: CristianoBleve.Chrono
+PackageVersion: 2.0.0
+PackageLocale: en-US
+Publisher: Cristiano Bleve
+PublisherUrl: https://github.com/cristianobleve
+PublisherSupportUrl: https://github.com/cristianobleve/chrono/issues
+Author: Cristiano Bleve
+PackageName: Chrono
+PackageUrl: https://github.com/cristianobleve/chrono
+License: MIT
+LicenseUrl: https://github.com/cristianobleve/chrono/blob/main/LICENSE
+Copyright: Copyright (c) 2026 Cristiano Bleve
+ShortDescription: Issue tracking and project management for software teams
+Description: Chrono is an issue tracking and project management platform built for modern engineering teams. It provides fast keyboard-first workflows, SQLite local caching, offline support, and full Model Context Protocol (MCP) integration.
+Moniker: chrono
+Tags:
+  - project-management
+  - issue-tracker
+  - tauri
+  - rust
+  - productivity
+  - mcp
+ReleaseNotesUrl: https://github.com/cristianobleve/chrono/releases/tag/v2.0.0
+ManifestType: defaultLocale
+ManifestVersion: 1.9.0
