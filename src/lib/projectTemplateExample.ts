@@ -10,7 +10,7 @@ export const sampleProjectMarkdown = `# Cloud Infrastructure & Database Migratio
 - **Icon Color**: #38bdf8
 - **Icon Bg**: #082f49
 - **Cover**: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80
-- **Lead**: Cristiano Bleve
+- **Lead**: Team Lead
 
 ## Description
 Questo progetto ha l'obiettivo di modernizzare l'intera pipeline di persistenza dati del workspace.

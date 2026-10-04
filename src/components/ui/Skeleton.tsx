@@ -19,7 +19,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className, ...props }) => {
   );
 };
 
-// 1. Project Card Skeleton for ProjectsListView
 export const ProjectCardSkeleton: React.FC = () => {
   return (
     <div className="p-5 rounded-[16px] bg-zinc-950 border border-white/10 flex flex-col justify-between gap-4 h-52 animate-pulse">
@@ -50,7 +49,6 @@ export const ProjectCardSkeleton: React.FC = () => {
   );
 };
 
-// 2. Issue Row Skeleton for IssuesHubView
 export const IssueRowSkeleton: React.FC = () => {
   return (
     <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between gap-4 animate-pulse bg-zinc-950/50">
@@ -67,7 +65,6 @@ export const IssueRowSkeleton: React.FC = () => {
   );
 };
 
-// 3. Unsplash Photo Grid Skeleton for ProjectCoverPicker
 export const UnsplashPhotoSkeleton: React.FC = () => {
   return (
     <div className="h-28 rounded-[12px] bg-zinc-900 border border-white/5 animate-pulse relative overflow-hidden flex flex-col justify-end p-2 gap-1.5">
@@ -77,7 +74,6 @@ export const UnsplashPhotoSkeleton: React.FC = () => {
   );
 };
 
-// 4. Agent Reasoning Bubble Skeleton for LinearAgentView
 export const AgentMessageSkeleton: React.FC = () => {
   return (
     <div className="flex gap-4 text-xs max-w-[85%] self-start animate-pulse">

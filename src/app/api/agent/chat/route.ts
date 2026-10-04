@@ -393,11 +393,10 @@ function parseAgentResponse(rawText: string, promptText: string, workspaceContex
 function generateDynamicFallback(prompt: string, history: any[], workspaceContext: any) {
   const text = prompt.trim();
   const lower = text.toLowerCase();
-  const teamName = workspaceContext?.team?.name || "First";
+  const teamName = workspaceContext?.team?.name || "Core";
   const projects = workspaceContext?.projects || [];
 
-  // Extract targetId if present in prompt (e.g. proj-123, prj_abc, PRJ-1, FIR-1, iss_abc)
-  const targetIdMatch = text.match(/(?:proj-[a-zA-Z0-9_-]+|prj_[a-zA-Z0-9_-]+|PRJ-\d+|issue-[a-zA-Z0-9_-]+|iss_[a-zA-Z0-9_-]+|FIR-\d+)/i);
+  const targetIdMatch = text.match(/(?:proj-[a-zA-Z0-9_-]+|prj_[a-zA-Z0-9_-]+|PRJ-\d+|issue-[a-zA-Z0-9_-]+|iss_[a-zA-Z0-9_-]+|[A-Z]{2,5}-\d+)/i);
   const targetId = targetIdMatch ? targetIdMatch[0] : null;
 
   // Extract any excluded ID or names (e.g. "lasciando escluso proj-...", "tranne ASDASD", "eccetto ...")

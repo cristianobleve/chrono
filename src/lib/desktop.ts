@@ -8,6 +8,17 @@ export function isDesktopApp(): boolean {
   return "__TAURI_INTERNALS__" in window;
 }
 
+export type DesktopPlatform = "windows" | "macos" | "linux" | "unknown";
+
+export function getClientPlatform(): DesktopPlatform {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return "unknown";
+  const userAgent = navigator.userAgent.toLowerCase();
+  if (userAgent.includes("mac") || userAgent.includes("darwin")) return "macos";
+  if (userAgent.includes("win")) return "windows";
+  if (userAgent.includes("linux")) return "linux";
+  return "unknown";
+}
+
 export interface DesktopUpdateInfo {
   available: boolean;
   version?: string;

@@ -56,11 +56,11 @@ export function ChronoDialBackground({ className }: ChronoDialBackgroundProps) {
     // Orbital nodes along the timeline rings
     const nodes: OrbitalNode[] = [
       { radius: 180, angle: 0.8, speed: 0.0018, size: 3.5, label: "M1", type: "milestone", pulse: 0 },
-      { radius: 180, angle: 3.4, speed: 0.0018, size: 3, label: "FIR-248", type: "issue", pulse: 0 },
+      { radius: 180, angle: 3.4, speed: 0.0018, size: 3, label: "CHR-101", type: "issue", pulse: 0 },
       { radius: 280, angle: 1.6, speed: -0.0012, size: 4, label: "SYNC", type: "sync", pulse: 0 },
       { radius: 280, angle: 4.8, speed: -0.0012, size: 3.5, label: "M2", type: "milestone", pulse: 0 },
       { radius: 390, angle: 2.2, speed: 0.0009, size: 3.5, label: "AGENT", type: "agent", pulse: 0 },
-      { radius: 390, angle: 5.5, speed: 0.0009, size: 3, label: "FIR-251", type: "issue", pulse: 0 },
+      { radius: 390, angle: 5.5, speed: 0.0009, size: 3, label: "CHR-102", type: "issue", pulse: 0 },
       { radius: 520, angle: 0.4, speed: -0.0006, size: 3, label: "EPOCH", type: "sync", pulse: 0 },
     ];
 

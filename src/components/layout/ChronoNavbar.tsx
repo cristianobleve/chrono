@@ -27,7 +27,7 @@ import { useHydrated } from "@/lib/userUtils";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 import { useTranslation } from "@/i18n";
 
-export const TwingateNavbar: React.FC = () => {
+export const ChronoNavbar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const {
@@ -112,7 +112,6 @@ export const TwingateNavbar: React.FC = () => {
     if (typeof window !== "undefined") {
       try {
         localStorage.removeItem("chrono_app_store_v8");
-        localStorage.removeItem("linear-clone-storage");
       } catch (_) {}
     }
 

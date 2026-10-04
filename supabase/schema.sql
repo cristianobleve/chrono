@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS tags (
 -- 10. ISSUES / TASKS
 CREATE TABLE IF NOT EXISTS issues (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-    identifier TEXT NOT NULL, -- e.g. "FIR-1"
+    identifier TEXT NOT NULL, -- e.g. "CHR-1"
     internal_id TEXT,
     workspace_id TEXT REFERENCES workspaces(id) ON DELETE CASCADE,
     team_id TEXT REFERENCES teams(id) ON DELETE CASCADE,

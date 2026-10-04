@@ -7,7 +7,7 @@ import { useLinearStore } from "@/store/useLinearStore";
 import { DecryptedText } from "@/components/ui/react-bits/DecryptedText";
 
 interface InternalIdBadgeProps {
-  id: string; // e.g. "PRJ-1" or "FIR-4" or "USR-01"
+  id: string; // e.g. "PRJ-1", "CHR-4", or "USR-01"
   internalId?: string; // e.g. "prj_casd_98f" or "iss_49821"
   className?: string;
   size?: "xs" | "sm" | "md";

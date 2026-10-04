@@ -231,7 +231,7 @@ export interface PomodoroSession {
 
 export interface Issue {
   id: string;
-  identifier: string; // e.g. "FIR-1"
+  identifier: string; // e.g. "CHR-1"
   internalId?: string; // e.g. "iss_casd_481"
   title: string;
   description?: string;
@@ -432,7 +432,7 @@ export interface TimelineEvent {
   action: TimelineActionType;
   entityType: TimelineEntityType;
   entityId: string;
-  entityIdentifier?: string; // e.g. "PRJ-1", "FIR-12"
+  entityIdentifier?: string; // e.g. "PRJ-1", "CHR-12"
   entityTitle: string;
   entityHref?: string; // e.g. "/project/prj-1" or "/issues"
   description: string;

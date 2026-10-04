@@ -30,7 +30,7 @@ import { useTranslation } from "@/i18n";
 
 type InboxFilterTab = "today" | "next7days" | "inbox" | "completed";
 
-export const TickTickInboxView: React.FC = () => {
+export const InboxView: React.FC = () => {
   const { t } = useTranslation();
   const { issues, createIssue, updateIssue, moveIssueToStatus, setSelectedIssueId, projects, tags, addToast } = useLinearStore();
 
@@ -146,7 +146,6 @@ export const TickTickInboxView: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col md:flex-row h-full bg-black select-none text-ink pb-20 overflow-hidden">
-      {/* 1. Left TickTick Sub-navigation Sidebar */}
       <div className="w-full md:w-64 bg-zinc-950 border-r border-white/5 p-4 flex flex-col gap-4 shrink-0">
         <div className="flex items-center gap-2.5 px-2">
           <div className="w-8 h-8 rounded-lg bg-zinc-850 text-white border border-white/10 flex items-center justify-center font-bold">
@@ -263,7 +262,6 @@ export const TickTickInboxView: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Capture Input Box (TickTick Style) */}
         <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/10 flex flex-col gap-3 shadow-xl">
           <div className="flex items-center gap-3">
             <Plus className="w-4 h-4 text-zinc-400 shrink-0" />

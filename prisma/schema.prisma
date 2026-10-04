@@ -78,7 +78,7 @@ model Project {
 
 model Issue {
   id          String        @id @default(cuid())
-  identifier  String        @unique // e.g. "FIR-1"
+  identifier  String        @unique // e.g. "CHR-1"
   title       String
   description String?
   status      String        @default("backlog") // backlog, todo, in_progress, done, canceled

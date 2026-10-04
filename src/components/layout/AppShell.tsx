@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from "react";
 import { useLinearStore } from "@/store/useLinearStore";
-import { TwingateNavbar } from "@/components/layout/TwingateNavbar";
-import { TwingateFooter } from "@/components/layout/TwingateFooter";
+import { ChronoNavbar } from "@/components/layout/ChronoNavbar";
+import { ChronoFooter } from "@/components/layout/ChronoFooter";
 import { SettingsSidebar } from "@/components/settings/SettingsSidebar";
 import { CommandMenu } from "@/components/command-menu/CommandMenu";
 import { NewProjectModal } from "@/components/projects/NewProjectModal";
@@ -165,8 +165,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   return (
     <div className="h-screen min-h-screen w-full flex flex-col bg-[#09090b] text-ink overflow-x-hidden select-none">
-      {/* 1. Twingate Master Header & Ribbon */}
-      <TwingateNavbar />
+      <ChronoNavbar />
 
       {supabaseStatus !== "connected" && (
         <div
@@ -191,34 +190,29 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
         </div>
       )}
 
-      {/* 2. Main Page Container */}
       {workspaces.length === 0 ? (
-        /* Empty Workspace Guard */
         <main className="flex-1 flex flex-col w-full min-h-0 pt-20 md:pt-24 bg-[#09090b]">
           <NoWorkspaceAccess />
-          <TwingateFooter />
+          <ChronoFooter />
         </main>
       ) : isAgent || isImport ? (
-        /* Agent Cockpit & Markdown Editor: 100% fixed viewport height with zero body scroll */
         <main className="flex-1 flex flex-col w-full min-h-0 overflow-hidden bg-[#09090b] pt-20 md:pt-24">
           {children}
         </main>
       ) : isSettings ? (
-        /* Settings View: 2-column layout (Sidebar + Content + docked Footer) */
         <div className="flex-1 flex min-h-0 w-full overflow-hidden bg-[#09090b]">
           <aside className="w-64 border-r border-white/5 bg-[#09090b] shrink-0 overflow-y-auto hidden md:flex flex-col pt-20 md:pt-24">
             <SettingsSidebar />
           </aside>
           <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-[#09090b] pt-20 md:pt-24">
             <main className="flex-1 flex flex-col w-full">{children}</main>
-            <TwingateFooter />
+            <ChronoFooter />
           </div>
         </div>
       ) : (
-        /* Standard Pages (Projects, Issues, Views, etc.) */
         <div className={cn("flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden bg-[#09090b]", !isFullBleed && "pt-20 md:pt-24")}>
           <main className="flex-1 flex flex-col w-full">{children}</main>
-          <TwingateFooter />
+          <ChronoFooter />
         </div>
       )}
 

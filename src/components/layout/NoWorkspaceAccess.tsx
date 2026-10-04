@@ -207,7 +207,6 @@ export const NoWorkspaceAccess: React.FC = () => {
     if (typeof window !== "undefined") {
       try {
         localStorage.removeItem("chrono_app_store_v8");
-        localStorage.removeItem("linear-clone-storage");
       } catch {}
     }
 

@@ -162,7 +162,7 @@ async function seedDatabase() {
         workspace_id: "ws-1",
         team_id: "team-1",
         folder_id: "folder-core",
-        name: "CASD — Autonomous Distributed System",
+        name: "CASD - Autonomous Distributed System",
         slug: "casd-7b27a4e7f59c",
         summary: "High-performance decentralized coordination protocol.",
         description: "# CASD Architecture Overview\n\nModular distributed state machine with Raft consensus and zero-downtime hot reloading.",
@@ -264,7 +264,7 @@ async function seedDatabase() {
     const issues = [
       {
         id: "issue-1",
-        identifier: "FIR-1",
+        identifier: "CHR-1",
         internal_id: "iss_cmd_k_01",
         workspace_id: "ws-1",
         team_id: "team-1",
@@ -284,7 +284,7 @@ async function seedDatabase() {
       },
       {
         id: "issue-2",
-        identifier: "FIR-2",
+        identifier: "CHR-2",
         internal_id: "iss_sync_postgres_02",
         workspace_id: "ws-1",
         team_id: "team-1",
@@ -304,7 +304,7 @@ async function seedDatabase() {
       },
       {
         id: "issue-3",
-        identifier: "FIR-3",
+        identifier: "CHR-3",
         internal_id: "iss_kanban_dnd_03",
         workspace_id: "ws-1",
         team_id: "team-1",
@@ -324,7 +324,7 @@ async function seedDatabase() {
       },
       {
         id: "issue-4",
-        identifier: "FIR-4",
+        identifier: "CHR-4",
         internal_id: "iss_habits_04",
         workspace_id: "ws-1",
         team_id: "team-1",

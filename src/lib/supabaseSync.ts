@@ -930,7 +930,7 @@ export const supabaseSync = {
       let cachedAccounts: Account[] = [];
       if (typeof window !== "undefined") {
         try {
-          const raw = localStorage.getItem("linear-clone-storage");
+          const raw = localStorage.getItem("chrono_app_store_v8");
           if (raw) {
             const parsed = JSON.parse(raw);
             if (parsed?.state?.accounts) {

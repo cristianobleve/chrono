@@ -499,9 +499,9 @@ server.tool(
 
 server.tool(
   "get_issue",
-  "Get complete details of a single issue by ID or identifier (e.g. 'FIR-1')",
+  "Get complete details of a single issue by ID or identifier (e.g. 'CHR-1')",
   {
-    issueId: z.string().describe("Issue ID (e.g. issue-1) or identifier (e.g. FIR-1)"),
+    issueId: z.string().describe("Issue ID (e.g. issue-1) or identifier (e.g. CHR-1)"),
   },
   async ({ issueId }) => {
     try {
@@ -564,7 +564,7 @@ server.tool(
     try {
       const wsId = await getDefaultWorkspaceId(workspaceId);
       const id = `issue-${crypto.randomBytes(4).toString("hex")}`;
-      const identifier = `FIR-${Math.floor(100 + Math.random() * 900)}`;
+      const identifier = `CHR-${Math.floor(100 + Math.random() * 900)}`;
 
       const newIssue = {
         id,
@@ -604,7 +604,7 @@ server.tool(
   "update_issue",
   "Update an existing issue's status, priority, title, description, or assignment",
   {
-    issueId: z.string().describe("Issue ID (e.g. issue-1) or identifier (e.g. FIR-1)"),
+    issueId: z.string().describe("Issue ID (e.g. issue-1) or identifier (e.g. CHR-1)"),
     title: z.string().optional(),
     description: z.string().optional(),
     status: z

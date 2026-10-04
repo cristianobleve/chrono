@@ -51,7 +51,7 @@
   <!-- Card 1 -->
   <rect x="36" y="105" width="240" height="100" rx="6" fill="#18181b" stroke="#27272a"/>
   <rect x="48" y="117" width="44" height="16" rx="3" fill="#082f49"/>
-  <text x="54" y="129" class="id-font" fill="#38bdf8">FIR-4</text>
+  <text x="54" y="129" class="id-font" fill="#38bdf8">CHR-4</text>
   <text x="48" y="152" class="app-text title-font">Global Keyboard Listeners</text>
   <text x="48" y="170" class="app-text meta-font">Instant shortcut handling for C and N</text>
   <rect x="48" y="180" width="60" height="16" rx="4" fill="#27272a"/>
@@ -60,7 +60,7 @@
   <!-- Card 2 -->
   <rect x="36" y="217" width="240" height="100" rx="6" fill="#18181b" stroke="#27272a"/>
   <rect x="48" y="229" width="44" height="16" rx="3" fill="#064e3b"/>
-  <text x="54" y="241" class="id-font" fill="#34d399">FIR-5</text>
+  <text x="54" y="241" class="id-font" fill="#34d399">CHR-5</text>
   <text x="48" y="264" class="app-text title-font">PostgreSQL Realtime Channel</text>
   <text x="48" y="282" class="app-text meta-font">Sync state cache on client mutation</text>
   <rect x="48" y="292" width="60" height="16" rx="4" fill="#064e3b"/>
@@ -76,7 +76,7 @@
   <!-- Card 3 -->
   <rect x="320" y="105" width="240" height="100" rx="6" fill="#18181b" stroke="#3b82f6"/>
   <rect x="332" y="117" width="44" height="16" rx="3" fill="#1e1b4b"/>
-  <text x="338" y="129" class="id-font" fill="#818cf8">FIR-1</text>
+  <text x="338" y="129" class="id-font" fill="#818cf8">CHR-1</text>
   <text x="332" y="152" class="app-text title-font">Command Palette Modal</text>
   <text x="332" y="170" class="app-text meta-font">Fuzzy action query with Cmd+K hook</text>
   <rect x="332" y="180" width="56" height="16" rx="4" fill="#1e1b4b"/>
@@ -87,7 +87,7 @@
   <!-- Card 4 -->
   <rect x="320" y="217" width="240" height="100" rx="6" fill="#18181b" stroke="#a855f7"/>
   <rect x="332" y="229" width="44" height="16" rx="3" fill="#2e1065"/>
-  <text x="338" y="241" class="id-font" fill="#c084fc">FIR-3</text>
+  <text x="338" y="241" class="id-font" fill="#c084fc">CHR-3</text>
   <text x="332" y="264" class="app-text title-font">Chrono AI Reasoning Engine</text>
   <text x="332" y="282" class="app-text meta-font">Multi-turn backlog analysis with tool use</text>
   <rect x="332" y="292" width="62" height="16" rx="4" fill="#2e1065"/>
@@ -105,7 +105,7 @@
   <!-- Card 5 -->
   <rect x="604" y="105" width="240" height="100" rx="6" fill="#18181b" stroke="#10b981"/>
   <rect x="616" y="117" width="44" height="16" rx="3" fill="#064e3b"/>
-  <text x="622" y="129" class="id-font" fill="#34d399">FIR-2</text>
+  <text x="622" y="129" class="id-font" fill="#34d399">CHR-2</text>
   <text x="616" y="152" class="app-text title-font">Row Level Security Policies</text>
   <text x="616" y="170" class="app-text meta-font">Tenant boundary verification on all tables</text>
   <rect x="616" y="180" width="54" height="16" rx="4" fill="#064e3b"/>

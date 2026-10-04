@@ -1,5 +1,5 @@
 import React from "react";
-import { MillenniumInstallerDialog } from "@/components/installer/MillenniumInstallerDialog";
+import { ChronoInstallerDialog } from "@/components/installer/ChronoInstallerDialog";
 
 export const metadata = {
   title: "Chrono Setup",
@@ -8,7 +8,7 @@ export const metadata = {
 export default function InstallerPage() {
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#0c0d10] text-white flex flex-col">
-      <MillenniumInstallerDialog isStandaloneWindow={true} />
+      <ChronoInstallerDialog isStandaloneWindow={true} />
     </div>
   );
 }

@@ -29,7 +29,6 @@ export function MarketingChrome({ children, floatingHeader = false }: MarketingC
 
   return (
     <main className="min-h-screen bg-[#08090b] text-zinc-100 flex flex-col justify-between">
-      {/* Salix-inspired floating pill header */}
       <div
         className={
           floatingHeader

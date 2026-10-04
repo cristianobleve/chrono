@@ -23,10 +23,13 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isDesktopApp } from "@/lib/desktop";
 import { useTranslation } from "@/i18n";
+import { useLinearStore } from "@/store/useLinearStore";
+import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { issues, projects, currentUser, team } = useLinearStore();
 
   useEffect(() => {
     if (isDesktopApp()) {
@@ -34,22 +37,70 @@ export default function HomePage() {
     }
   }, [router]);
 
+  const teamPrefix = team?.key || "COR";
+  const userInitials = currentUser?.name
+    ? currentUser.name.trim().slice(0, 2).toUpperCase()
+    : "CR";
+
+  const previewIssues = issues.length >= 3
+    ? issues.slice(0, 3).map((iss, idx) => ({
+        id: iss.id,
+        identifier: iss.identifier || `${teamPrefix}-${100 + idx + 1}`,
+        title: iss.title,
+        tag: iss.labels?.[0] || (idx === 0 ? "Backend" : idx === 1 ? "MCP" : "Frontend"),
+        priority: iss.priority === "urgent" ? t.home.cardBacklogRow1Priority : iss.priority === "high" ? t.home.cardBacklogRow2Priority : t.home.cardBacklogRow3Priority,
+        badgeBg: iss.priority === "urgent" ? "bg-red-500/10 border-red-500/20 text-red-400" : iss.priority === "high" ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-500/10 border-zinc-500/20 text-zinc-400",
+        dotColor: iss.priority === "urgent" ? "bg-red-400" : iss.priority === "high" ? "bg-amber-400" : "bg-zinc-400",
+        initials: idx === 0 ? userInitials : idx === 1 ? "AI" : "TM",
+        isDone: iss.status === "done",
+      }))
+    : [
+        {
+          id: "preview-1",
+          identifier: `${teamPrefix}-101`,
+          title: t.home.cardBacklogRow1Title,
+          tag: t.home.cardBacklogRow1Tag,
+          priority: t.home.cardBacklogRow1Priority,
+          badgeBg: "bg-red-500/10 border-red-500/20 text-red-400",
+          dotColor: "bg-red-400",
+          initials: userInitials,
+          isDone: true,
+        },
+        {
+          id: "preview-2",
+          identifier: `${teamPrefix}-102`,
+          title: t.home.cardBacklogRow2Title,
+          tag: t.home.cardBacklogRow2Tag,
+          priority: t.home.cardBacklogRow2Priority,
+          badgeBg: "bg-amber-500/10 border-amber-500/20 text-amber-400",
+          dotColor: "bg-amber-400",
+          initials: "AI",
+          isDone: false,
+        },
+        {
+          id: "preview-3",
+          identifier: `${teamPrefix}-103`,
+          title: t.home.cardBacklogRow3Title,
+          tag: t.home.cardBacklogRow3Tag,
+          priority: t.home.cardBacklogRow3Priority,
+          badgeBg: "bg-zinc-500/10 border-zinc-500/20 text-zinc-400",
+          dotColor: "bg-zinc-400",
+          initials: "TM",
+          isDone: false,
+        },
+      ];
+
   return (
     <MarketingChrome floatingHeader>
       <div className="relative w-full">
-        {/* Enormous Framed Rectangular Block with 5px padding from each side */}
         <section
           className="p-[5px] w-full"
           aria-labelledby="hero-title"
         >
           <div className="relative w-full h-[calc(100vh-10px)] min-h-[660px] max-h-[1150px] rounded-[22px] sm:rounded-[26px] border border-white/10 bg-[#07080a] overflow-hidden flex flex-col items-center justify-center shadow-[0_0_60px_rgba(0,0,0,0.9)]">
-            {/* Atmospheric Volumetric Clouds WebGL Shader */}
             <AtmosphericClouds className="absolute inset-0 z-0" speed={0.7} cloudCount={5} />
-
-            {/* Subtle radial vignette overlay for crisp typographic contrast */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,8,11,0.55)_0%,rgba(7,8,11,0.22)_45%,rgba(7,8,11,0.88)_100%)] pointer-events-none z-[1]" />
 
-            {/* Main Hero Content Vertically Centered in Available Screen Height */}
             <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto">
               <HeroMotion className="flex flex-col items-center">
                 <h1
@@ -92,7 +143,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Feature Bento Grid */}
         <section id="features" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24" aria-labelledby="features-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-16">
             <h2 id="features-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
@@ -104,7 +154,6 @@ export default function HomePage() {
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1: Issue & Backlog */}
             <MotionCard delay={0.05} className="lg:col-span-2 relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -119,62 +168,40 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Issue UI Rows */}
                 <div className="mt-5 space-y-2.5">
-                  <div className="flex items-center justify-between rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs transition-colors hover:border-white/20">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="h-4 w-4 rounded border border-white/20 flex items-center justify-center text-[10px] text-emerald-400">
-                        ✓
-                      </span>
-                      <span className="font-mono text-zinc-400 shrink-0">FIR-248</span>
-                      <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow1Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow1Tag}</span>
+                  {previewIssues.map((issue) => (
+                    <div
+                      key={issue.id}
+                      className="flex items-center justify-between rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs transition-colors hover:border-white/20"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          className={cn(
+                            "h-4 w-4 rounded border flex items-center justify-center text-[10px]",
+                            issue.isDone
+                              ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
+                              : "border-white/20"
+                          )}
+                        >
+                          {issue.isDone ? "✓" : ""}
+                        </span>
+                        <span className="font-mono text-zinc-400 shrink-0">{issue.identifier}</span>
+                        <span className="text-zinc-200 font-medium truncate">{issue.title}</span>
+                        <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">
+                          {issue.tag}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0 ml-3">
+                        <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border", issue.badgeBg)}>
+                          <span className={cn("h-1.5 w-1.5 rounded-full", issue.dotColor)} />
+                          {issue.priority}
+                        </span>
+                        <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
+                          {issue.initials}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0 ml-3">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/20 px-2 py-0.5 text-[10px] text-red-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
-                        {t.home.cardBacklogRow1Priority}
-                      </span>
-                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
-                        CB
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs transition-colors hover:border-white/20">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="h-4 w-4 rounded border border-white/20" />
-                      <span className="font-mono text-zinc-400 shrink-0">FIR-249</span>
-                      <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow2Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow2Tag}</span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0 ml-3">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] text-amber-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                        {t.home.cardBacklogRow2Priority}
-                      </span>
-                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-white font-medium">
-                        AI
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs transition-colors hover:border-white/20">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="h-4 w-4 rounded border border-white/20" />
-                      <span className="font-mono text-zinc-400 shrink-0">FIR-251</span>
-                      <span className="text-zinc-200 font-medium truncate">{t.home.cardBacklogRow3Title}</span>
-                      <span className="hidden sm:inline-block rounded bg-white/[0.06] border border-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">{t.home.cardBacklogRow3Tag}</span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0 ml-3">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-zinc-500/10 border border-zinc-500/20 px-2 py-0.5 text-[10px] text-zinc-400">
-                        {t.home.cardBacklogRow3Priority}
-                      </span>
-                      <span className="h-6 w-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] text-zinc-300 font-medium">
-                        MR
-                      </span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -186,18 +213,20 @@ export default function HomePage() {
               </div>
             </MotionCard>
 
-            {/* Card 2: Milestone & Timeline */}
             <MotionCard delay={0.1} className="relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
                     <FolderKanban className="h-4 w-4 text-zinc-300" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">{t.home.cardMilestoneTitle}</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+                      {projects.length > 0 ? projects[0].name : t.home.cardMilestoneTitle}
+                    </span>
                   </div>
-                  <span className="rounded-full bg-white/[0.08] border border-white/10 px-2 py-0.5 text-[10px] text-zinc-200">{t.home.cardMilestoneBadge}</span>
+                  <span className="rounded-full bg-white/[0.08] border border-white/10 px-2 py-0.5 text-[10px] text-zinc-200">
+                    {projects.length > 0 ? `${projects.length} ${t.projects.title}` : t.home.cardMilestoneBadge}
+                  </span>
                 </div>
 
-                {/* Progress UI */}
                 <div className="mt-5 rounded-lg border border-white/10 bg-[#121418]/80 p-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-zinc-300 font-medium">{t.home.cardMilestoneStatusLabel}</span>
@@ -212,18 +241,31 @@ export default function HomePage() {
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-white/10 space-y-2 text-xs">
-                    <div className="flex items-center gap-2 text-zinc-300">
-                      <span className="text-emerald-400">✓</span>
-                      <span>{t.home.cardMilestoneItem1}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-zinc-300">
-                      <span className="text-emerald-400">✓</span>
-                      <span>{t.home.cardMilestoneItem2}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-zinc-400">
-                      <span className="text-zinc-500">○</span>
-                      <span>{t.home.cardMilestoneItem3}</span>
-                    </div>
+                    {projects.length > 0 && projects[0].milestones && projects[0].milestones.length > 0 ? (
+                      projects[0].milestones.slice(0, 3).map((m, idx) => (
+                        <div key={m.id || idx} className="flex items-center gap-2 text-zinc-300">
+                          <span className={m.completed ? "text-emerald-400" : "text-zinc-500"}>
+                            {m.completed ? "✓" : "○"}
+                          </span>
+                          <span className="truncate">{m.name}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2 text-zinc-300">
+                          <span className="text-emerald-400">✓</span>
+                          <span>{t.home.cardMilestoneItem1}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-zinc-300">
+                          <span className="text-emerald-400">✓</span>
+                          <span>{t.home.cardMilestoneItem2}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-zinc-400">
+                          <span className="text-zinc-500">○</span>
+                          <span>{t.home.cardMilestoneItem3}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -236,7 +278,6 @@ export default function HomePage() {
               </div>
             </MotionCard>
 
-            {/* Card 3: Keyboard Command Bar */}
             <MotionCard delay={0.15} className="relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -247,7 +288,6 @@ export default function HomePage() {
                   <kbd className="rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-mono text-zinc-200">⌘K</kbd>
                 </div>
 
-                {/* Command bar input mockup */}
                 <div className="mt-5 rounded-lg border border-white/10 bg-[#121418]/80 p-3 text-xs">
                   <div className="flex items-center gap-2 border-b border-white/10 pb-2 text-zinc-500">
                     <Search className="h-3.5 w-3.5 text-zinc-500" />
@@ -278,7 +318,6 @@ export default function HomePage() {
               </div>
             </MotionCard>
 
-            {/* Card 4: Agent & MCP Protocol */}
             <MotionCard delay={0.2} className="lg:col-span-2 relative rounded-2xl border border-white/10 bg-[#0e1014]/90 backdrop-blur-md p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
               <div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -292,7 +331,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Agent execution terminal mockup */}
                 <div className="mt-5 rounded-lg border border-white/10 bg-[#121418]/80 p-4 font-mono text-xs">
                   <div className="text-zinc-500 mb-2">{t.home.cardMcpComment}</div>
                   <div className="text-zinc-300">
@@ -320,7 +358,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 3-Step Process */}
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="process-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-14">
             <h2 id="process-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
@@ -373,7 +410,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* System Specifications Grid */}
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="specs-title">
           <FadeIn className="text-center max-w-3xl mx-auto mb-14">
             <h2 id="specs-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
@@ -419,7 +455,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Interactive FAQ Accordion */}
         <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 border-t border-white/10" aria-labelledby="faq-title">
           <FadeIn className="text-center max-w-2xl mx-auto mb-14">
             <h2 id="faq-title" className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight text-white">
@@ -473,16 +508,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Full-Width Compact Framed Call to Action Island with Chrono Dial Background */}
         <section className="p-[5px] w-full" aria-labelledby="cta-title">
           <div className="relative w-full rounded-[22px] sm:rounded-[26px] border border-white/10 overflow-hidden bg-[#07080b] py-16 sm:py-20 md:py-24 px-4 sm:px-8 flex items-center justify-center">
-            {/* Background: Chrono Precision Dial / Chronogram Engine */}
             <ChronoDialBackground />
-
-            {/* Contrast vignette to ensure perfect text readability */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(7,8,11,0.60)_0%,rgba(7,8,11,0.30)_50%,rgba(7,8,11,0.92)_100%)] pointer-events-none z-[1]" />
 
-            {/* Content centered in the wide banner */}
             <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-3xl mx-auto">
               <FadeIn className="flex flex-col items-center">
                 <h2

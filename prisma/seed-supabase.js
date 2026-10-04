@@ -13,9 +13,9 @@ async function seedSupabase() {
   const { data: wsData, error: wsError } = await supabase
     .from("workspaces")
     .upsert({
-      name: "first",
-      slug: "asdpallestragcc",
-      icon: "first",
+      name: "Chrono Workspace",
+      slug: "chrono-workspace",
+      icon: "chrono",
     }, { onConflict: "slug" })
     .select()
     .single();
@@ -24,14 +24,14 @@ async function seedSupabase() {
     console.error("Error creating workspace:", wsError);
     return;
   }
-  console.log("✓ Workspace created/synced:", wsData.name);
+  console.log("Workspace created/synced:", wsData.name);
 
   // 2. Create Team
   const { data: teamData, error: teamError } = await supabase
     .from("teams")
     .upsert({
-      name: "First",
-      key: "FIR",
+      name: "Core",
+      key: "CHR",
       workspace_id: wsData.id,
     }, { onConflict: "key" })
     .select()
@@ -41,16 +41,16 @@ async function seedSupabase() {
     console.error("Error creating team:", teamError);
     return;
   }
-  console.log("✓ Team created/synced:", teamData.name);
+  console.log("Team created/synced:", teamData.name);
 
-  // 3. Create Project CASD
+  // 3. Create Project Chrono Core
   const { data: projData, error: projError } = await supabase
     .from("projects")
     .upsert({
-      name: "CASD",
-      slug: "casd-7b27a4e7f59c",
-      summary: "Add a short summary...",
-      description: "adssadadsads",
+      name: "Chrono Core",
+      slug: "chrono-core",
+      summary: "Chrono Core platform development.",
+      description: "Core features and desktop distribution.",
       status: "Backlog",
       priority: "none",
       team_id: teamData.id,
@@ -61,12 +61,12 @@ async function seedSupabase() {
   if (projError) {
     console.error("Error creating project:", projError);
   } else {
-    console.log("✓ Project created/synced:", projData.name);
+    console.log("Project created/synced:", projData.name);
 
     // 4. Create Issues
     const issuesToInsert = [
       {
-        identifier: "FIR-1",
+        identifier: "CHR-1",
         title: "Implement Command+K Global Quick Search",
         description: "Build an ultra-fast modal for global search, shortcuts and action execution.",
         status: "in_progress",
@@ -77,7 +77,7 @@ async function seedSupabase() {
         labels: ["Frontend", "UX"],
       },
       {
-        identifier: "FIR-2",
+        identifier: "CHR-2",
         title: "Design System Hairline Borders and Surface Ladder",
         description: "Verify #010102 canvas and #0f1011 surface 1 token application across all cards.",
         status: "done",
@@ -88,8 +88,8 @@ async function seedSupabase() {
         labels: ["Design System", "Core"],
       },
       {
-        identifier: "FIR-3",
-        title: "Linear Agent Conversational Workspace Assistant",
+        identifier: "CHR-3",
+        title: "Chrono Agent Conversational Workspace Assistant",
         description: "Support natural language queries, project summaries, and issue generation.",
         status: "todo",
         priority: "medium",
@@ -99,7 +99,7 @@ async function seedSupabase() {
         labels: ["AI", "Agent"],
       },
       {
-        identifier: "FIR-4",
+        identifier: "CHR-4",
         title: "Keyboard Shortcuts [N then P] and [C]",
         description: "Add keyboard listeners for instant project creation and issue logging.",
         status: "backlog",
@@ -117,10 +117,10 @@ async function seedSupabase() {
         .upsert(issue, { onConflict: "identifier" });
       if (issueErr) console.error("Error creating issue:", issueErr);
     }
-    console.log("✓ Issues created/synced (4 issues)");
+    console.log("Issues created/synced (4 issues)");
   }
 
-  console.log("🚀 Supabase Database seeded successfully!");
+  console.log("Supabase Database seeded successfully.");
 }
 
 seedSupabase();

@@ -18,7 +18,9 @@
     "test-mcp": "tsx scripts/test-mcp.ts",
     "tauri": "tauri",
     "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "desktop:build": "tauri build",
+    "desktop:build:windows": "tauri build --bundles nsis",
+    "desktop:build:mac": "tauri build --bundles dmg,app"
   },
   "dependencies": {
     "@lobehub/icons": "^5.16.0",
